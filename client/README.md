@@ -44,3 +44,16 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+
+<!-- LIBS -->
+Map --> React leaflet :
+`npm i react react-dom leaflet` 
+`npm i react-leaflet` 
+If typescript :
+`npm i D @types/leaflet`
+leaflet cluster :
+`npm i react-leaflet-cluster` 
+
+Router :
+`npm i -D react-router-dom`

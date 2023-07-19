@@ -1,0 +1,28 @@
+{
+  "tanks": {
+    "1": {
+      "name": "El-inn",
+      "latLng": [32.4712, 3.6876],
+      "status": "FULL",
+      "lastCheck": 15
+    },
+    "2": {
+      "name": "Zaydi",
+      "latLng": [32.47, 3.688],
+      "status": "EMPTY",
+      "lastCheck": 7
+    },
+    "3": {
+      "name": "Dorat",
+      "latLng": [32.4718, 3.688],
+      "status": "HALFFULL",
+      "lastCheck": 2
+    },
+    "4": {
+      "name": "El-kherajet",
+      "latLng": [32.4715, 3.646],
+      "status": "FULL",
+      "lastCheck": 80
+    }
+  }
+}

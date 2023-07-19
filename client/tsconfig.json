@@ -6,6 +6,10 @@
       "dom.iterable",
       "esnext"
     ],
+    // If using styled-component :
+    // "paths": {
+    //   "@mui/styled-engine": ["./node_modules/@mui/styled-engine-sc"]
+    // },
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
