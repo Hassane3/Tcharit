@@ -4,13 +4,37 @@
       "name": "El-inn",
       "latLng": [32.4712, 3.6876],
       "status": "FULL",
-      "lastCheck": 15
+      "lastCheck": 15,
+      "checks": {
+        "1": {
+          "date": 23,
+          "time": 12,
+          "userType": "ANONYM"
+        },
+        "2": {
+          "date": 9,
+          "time": 15,
+          "userType": "TANKCHEF"
+        }
+      }
     },
     "2": {
       "name": "Zaydi",
       "latLng": [32.47, 3.688],
       "status": "EMPTY",
-      "lastCheck": 7
+      "lastCheck": 7,
+      "checks": {
+        "1": {
+          "date": 23,
+          "time": 12,
+          "userType": "ANONYM"
+        },
+        "2": {
+          "date": 9,
+          "time": 15,
+          "userType": "TANKCHEF"
+        }
+      }
     },
     "3": {
       "name": "Dorat",

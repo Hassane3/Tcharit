@@ -1,8 +1,27 @@
 // import express from 'express';
 // import cors from "cors";
 import http from 'node:http';
+import { initializeApp } from "firebase/app";
+import {getDatabase} from "firebase/database";
+// import { getAnalytics } from "firebase/analytics";
 
-// const app = express();
+const firebaseConfig = {
+  apiKey: "AIzaSyCxpSn9MzF0CJZsfR_7s42S8_a52dskQX4",
+  authDomain: "tchari.firebaseapp.com",
+  databaseURL: "https://tchari-default-rtdb.firebaseio.com",
+  projectId: "tchari",
+  storageBucket: "tchari.appspot.com",
+  messagingSenderId: "294891691900",
+  appId: "1:294891691900:web:c11d262e460c9407ee8ef9",
+  measurementId: "G-M7T6TYNY74"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+// const analytics = getAnalytics(app);
+export const db = getDatabase(app);
+
+
 const port = 8000;
 
 // app.use(cors());
