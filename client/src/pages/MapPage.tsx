@@ -33,10 +33,16 @@ export interface tankDataProps {
   id: number;
   name: string;
   // description: string;
-  latLng: [number, number];
+  // latLng: [number, number]
+  latLng: latLngProps;
   status: TankStatus;
   lastCheck: number;
   posts: [postsProps];
+}
+
+export interface latLngProps {
+  lat: number;
+  lng: number;
 }
 export interface postsProps {
   // date: Date;

@@ -93,7 +93,12 @@ const Tank = (tanksData: tanksDataProps) => {
         //   return posts;
         // }}
       />
-      <BottomNav />
+      {selectedTankData && (
+        <BottomNav
+          lat={selectedTankData.latLng.lat}
+          lng={selectedTankData.latLng.lng}
+        />
+      )}
     </div>
   );
 };

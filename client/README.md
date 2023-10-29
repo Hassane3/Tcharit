@@ -85,13 +85,15 @@ To do :
                 - If user click on it {
                     Another box with some infos (specialy geoloc permission)
                     if user click  on "continu" {
-            ///////HERE//////////////
-                Geoloc error : i think the navigator.geoloc is running in loop why i dont get neither succes or error console.
+                        
+                Geoloc error : i think the navigator.geoloc is running in loop why i dont get neither succes or error console ==> Doesnt work on Opera.
                 May be try on mobile.
+
                         if (geoloc desactivated){
                             Ask to activate
                         }else {
                             - get user geoloc;
+    ***************HERE***************                        
                             if user geoloc is > tank geoloc (to find the calcul) {
                                 - alert("Your are far from the tank, try to come closer to the tank");
                             }else {
