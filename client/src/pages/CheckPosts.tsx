@@ -16,7 +16,9 @@ const CheckPosts = (props: { posts: [postsProps] | undefined }) => {
         {props.posts &&
           props.posts.map((post) => (
             <div>
-              <span>{post?.status}</span>
+              <span>{post?.userType} ****</span>
+              <span>{post?.status} ****</span>
+              <span>{post?.date} ****</span>
               {/* <span>{myDate}</span> */}
             </div>
           ))}

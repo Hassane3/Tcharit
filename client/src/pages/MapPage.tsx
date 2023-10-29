@@ -39,7 +39,8 @@ export interface tankDataProps {
   posts: [postsProps];
 }
 export interface postsProps {
-  date: Date;
+  // date: Date;
+  date: number;
   status: TankStatus;
   userType: UserType;
 }

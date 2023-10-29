@@ -17,6 +17,7 @@ import { tankDataProps, tanksDataProps } from "./MapPage";
 import { Button } from "@mui/material";
 import { LatLng } from "leaflet";
 import CheckPosts from "./CheckPosts";
+import BottomNav from "./components/BottomNav";
 
 const Tank = (tanksData: tanksDataProps) => {
   const navigateTo = useNavigate();
@@ -32,6 +33,7 @@ const Tank = (tanksData: tanksDataProps) => {
       // console.log("tank ))> ", tank);
     });
     console.log("tankData : ", tankData);
+    console.log("posts-length", tankData?.posts?.length);
     setSelectedTankData(tankData);
     // const tankRef = ref(db, "tanks/" + idTank.id);
     // return onValue(tankRef, (snapshot: DataSnapshot) => {
@@ -42,27 +44,9 @@ const Tank = (tanksData: tanksDataProps) => {
   }, [idTank, tanksData.data]);
   const posts = selectedTankData?.posts;
   console.log("posts --> ", posts);
+  console.log("posts-lenght", posts?.length);
   // Ma position ===> lat: 43.296482, lng: 5.36978
-  const handleCheckTank = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (success) => {
-          console.log("SUCCES");
-          let latLng = new LatLng(
-            success.coords.latitude,
-            success.coords.longitude
-          );
-          if (latLng.lat) console.log("LatLng : ", latLng);
-        },
-        (error) => {
-          console.log("ERROR => ", error);
-          alert("Unable to get your location");
-        }
-      );
-    } else {
-      console.log("Geolocation not supported");
-    }
-  };
+
   return (
     <div>
       <Header>
@@ -109,28 +93,7 @@ const Tank = (tanksData: tanksDataProps) => {
         //   return posts;
         // }}
       />
-      <BottomNav>
-        <FlowButton
-          id="null"
-          onClick={() => {
-            handleCheckTank();
-            // I verify if the user is near the tank (geoloc ?);
-            // We add an object to the object "checks" (date, heure, status, userType)
-            // display : u have to be near the tank to be able to give tank state
-          }}
-        >
-          <img src="/img/null_flow.svg" alt="" />
-          <span>منعدم</span>
-        </FlowButton>
-        <FlowButton id="low">
-          <img src="/img/low_flow.svg" alt="" />
-          <span>ضئيل</span>
-        </FlowButton>
-        <FlowButton id="high">
-          <img src="/img/high_flow.svg" alt="" />
-          <span>قوي</span>
-        </FlowButton>
-      </BottomNav>
+      <BottomNav />
     </div>
   );
 };
@@ -182,41 +145,4 @@ const ArrowBox = styled.div`
   }
 `;
 
-const BottomNav = styled.div`
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  width: 100vw;
-  display: flex;
-  justify-content: space-around;
-  /* height: 100px; */
-  max-height: 140px;
-  border-radius: 14px 14px 0 0;
-`;
-const FlowButton = styled(Button)`
-  display: flex;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  width: 100%;
-
-  img {
-    width: 54px;
-  }
-  span {
-    font-size: 20px;
-  }
-  #null {
-    background-color: #3876ac;
-  }
-
-  #low {
-    background-color: #8f8b69;
-  }
-
-  #high {
-    background-color: #72d0f2;
-  }
-`;
 export default Tank;

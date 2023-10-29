@@ -57,3 +57,57 @@ leaflet cluster :
 
 Router :
 `npm i -D react-router-dom`
+
+
+**27/10/23
+Done :
+    - Get tanks from database
+    - Get informations of each tank (lastCheck, latLng(0,1),  name, posts(date, status, time, userType))
+
+To do :
+
+    MAP PAGE
+    - Retrieve infos of tanks from databases (without without giving attention to their types);
+    - Display map with all tanks on it;
+    - When we click on a tank, we get some informations (name, status, lastCheck (how much time from the last post));
+    
+    TANK PAGE
+        TOP BAR
+        - Display tank informations (name, status, status image);
+        - Arrow (to got back to map page);
+
+        MAIN SECTION 
+ 
+        - 1:
+            - Display all posts wich each one with its infos ( date, time,  status, userType? )
+        - 2:
+            - Display bottom (Alert/creation post)
+                - If user click on it {
+                    Another box with some infos (specialy geoloc permission)
+                    if user click  on "continu" {
+            ///////HERE//////////////
+                Geoloc error : i think the navigator.geoloc is running in loop why i dont get neither succes or error console.
+                May be try on mobile.
+                        if (geoloc desactivated){
+                            Ask to activate
+                        }else {
+                            - get user geoloc;
+                            if user geoloc is > tank geoloc (to find the calcul) {
+                                - alert("Your are far from the tank, try to come closer to the tank");
+                            }else {
+                                - display tap waters;
+                                When user click on it {
+                                    - display a box of confirmation
+                                    if user click on "yes" {
+                                        - create a new post in db and send this info to server;
+                                        - update last check for tank / Refresh the MAIN SECTION;
+                                    }
+                                }
+                                
+                            }
+                        }
+                    }
+                }
+                - Refresh MAIN CONTENT !!!
+
+
