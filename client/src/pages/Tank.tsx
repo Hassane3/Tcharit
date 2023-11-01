@@ -13,23 +13,25 @@ import {
 } from "firebase/database";
 //DATA
 import { db } from "../firebase/firebase";
-import { tankDataProps, tanksDataProps } from "./MapPage";
+import { postsProps, tankDataProps, tanksDataProps } from "./MapPage";
 import { Button } from "@mui/material";
 import { LatLng } from "leaflet";
 import CheckPosts from "./CheckPosts";
 import BottomNav from "./components/BottomNav";
+import PopUp from "./components/PopUp";
+import { setANewPost } from "../firebase/operations";
+import { UserType } from "../models/utils/UsersType";
 
 const Tank = (tanksData: tanksDataProps) => {
   const navigateTo = useNavigate();
   const [selectedTankData, setSelectedTankData] = useState<tankDataProps>();
-
-  // const idTank: Readonly<Params<string>> = useParams();
-  const idTank: number = parseInt(useParams().id as string);
+  const tankId: number = parseInt(useParams().id as string);
   // console.log("tankRef : ", tankRef);
+
   useEffect(() => {
-    console.log("idTank : ", idTank);
+    console.log("idTank : ", tankId);
     const tankData = tanksData.data.find((tank: tankDataProps) => {
-      return tank.id === idTank ?? null;
+      return tank.id === tankId ?? null;
       // console.log("tank ))> ", tank);
     });
     console.log("tankData : ", tankData);
@@ -41,7 +43,47 @@ const Tank = (tanksData: tanksDataProps) => {
     //     setselectedTankData(snapshot.child(idTank.id).val());
     //   }
     // });
-  }, [idTank, tanksData.data]);
+  }, [tankId, tanksData.data]);
+
+  // VARIABLES (STATES)
+  const [tankStatus, setTankStatus] = useState<TankStatus>(TankStatus.UNKNOWN);
+  // const idTank: Readonly<Params<string>> = useParams();
+
+  const [isConfirmBoxVisible, setIsConfirmBoxVisible] =
+    useState<boolean>(false);
+  // const [newPostData, setNewPostData] = useState<postsProps>();
+
+  // METHODS
+  const handleIsConfirmBoxVisible = (isConfirmBoxVisible: boolean) => {
+    setIsConfirmBoxVisible(isConfirmBoxVisible);
+  };
+
+  const handleTankStatus = (tankStatus: TankStatus) => {
+    setTankStatus(tankStatus);
+  };
+
+  const handleAddPost = () => {
+    //create a post
+    // Add a new post on db :
+    let newPostData: postsProps = {
+      status: tankStatus,
+      userType: UserType.RANDOM,
+      date: 0,
+      time: 9,
+    };
+    // setNewPostData({
+
+    // });
+    // I hav to click a second time to get refreshed data !!!
+    console.log("selectedTankData => ", selectedTankData);
+    if (selectedTankData && newPostData) {
+      alert("tank id : " + selectedTankData.id);
+      setANewPost(selectedTankData?.id, newPostData);
+      // Close the popUp
+      setIsConfirmBoxVisible(false);
+    }
+  };
+
   const posts = selectedTankData?.posts;
   console.log("posts --> ", posts);
   console.log("posts-lenght", posts?.length);
@@ -84,7 +126,8 @@ const Tank = (tanksData: tanksDataProps) => {
         </PopUpMainElements>
       </Header>
       <CheckPosts
-        posts={selectedTankData && selectedTankData.posts}
+        tankId={tankId}
+        // posts={selectedTankData && selectedTankData.posts}
         // posts={() => {
         //   const posts = tanksData.data.flatMap((tank) => {
         //     return tank.posts;
@@ -95,8 +138,18 @@ const Tank = (tanksData: tanksDataProps) => {
       />
       {selectedTankData && (
         <BottomNav
-          lat={selectedTankData.latLng.lat}
-          lng={selectedTankData.latLng.lng}
+          // lat={selectedTankData.latLng.lat}
+          // lng={selectedTankData.latLng.lng}
+          setConfirmationBox={handleIsConfirmBoxVisible}
+          tankLatLng={selectedTankData.latLng}
+          setTankStatus={handleTankStatus}
+        />
+      )}
+      {isConfirmBoxVisible && (
+        <PopUp
+          tankStatus={tankStatus}
+          addPost={handleAddPost}
+          setIsConfirmBoxVisible={handleIsConfirmBoxVisible}
         />
       )}
     </div>

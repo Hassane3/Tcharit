@@ -1,0 +1,61 @@
+[
+  null,
+  {
+    "lastCheck": 15,
+    "latLng": {
+      "lat": 43.296482,
+      "lng": 5.3623
+    },
+    "name": "العين",
+    "posts": [
+      {
+        "date": 30,
+        "status": "FULL",
+        "time": "7",
+        "userType": "RANDOM"
+      },
+      {
+        "date": 30,
+        "status": "FULL",
+        "time": 8,
+        "userType": "RANDOM"
+      }
+    ],
+    "status": "FULL"
+  },
+  {
+    "lastCheck": 7,
+    "latLng": [
+      43.30085,
+      5.378
+    ],
+    "name": "زايدي",
+    "posts": [
+      {
+        "date": 27,
+        "status": "EMPTY",
+        "time": 7,
+        "userType": "RANDOM"
+      }
+    ],
+    "status": "EMPTY"
+  },
+  {
+    "lastCheck": 2,
+    "latLng": [
+      43.3015,
+      5.37699
+    ],
+    "name": "تلبكت",
+    "status": "HALFFULL"
+  },
+  {
+    "lastCheck": 80,
+    "latLng": [
+      32.4715,
+      3.646
+    ],
+    "name": "الخراجت",
+    "status": "FULL"
+  }
+]

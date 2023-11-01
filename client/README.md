@@ -92,8 +92,7 @@ To do :
                         if (geoloc desactivated){
                             Ask to activate
                         }else {
-                            - get user geoloc;
-    ***************HERE***************                        
+                            - get user geoloc;                      
                             if user geoloc is > tank geoloc (to find the calcul) {
                                 - alert("Your are far from the tank, try to come closer to the tank");
                             }else {
@@ -101,7 +100,8 @@ To do :
                                 When user click on it {
                                     - display a box of confirmation
                                     if user click on "yes" {
-                                        - create a new post in db and send this info to server;
+                                         ***************HERE***************  
+                                        - create a new post in db : status, current date, current time, userType, lastCheck;
                                         - update last check for tank / Refresh the MAIN SECTION;
                                     }
                                 }

@@ -3,8 +3,18 @@ import { LatLng } from "leaflet";
 import React, { useState } from "react";
 import styled from "styled-components";
 import { latLngProps } from "../MapPage";
+import PopUp from "./PopUp";
+import TankStatus from "../../models/utils/TankStatus";
 
-const BottomNav = (tankLatLng: latLngProps) => {
+interface BottomNavProps {
+  tankLatLng: latLngProps;
+  setConfirmationBox: (arg: boolean) => void;
+  setTankStatus: (tankStatus: TankStatus) => void;
+}
+
+const BottomNav = (props: BottomNavProps): JSX.Element => {
+  const { setConfirmationBox, setTankStatus, tankLatLng } = props;
+
   const [isAddPostInfosVisible, setIsAddPostInfosVisible] =
     useState<boolean>(false);
   const [isAddPostBtnsVisible, setIsAddPostBtnsVisible] =
@@ -95,7 +105,9 @@ const BottomNav = (tankLatLng: latLngProps) => {
               //   "EMPTY"
               id="null"
               onClick={() => {
-                //   handleCheckTank();
+                alert("clicked");
+                setConfirmationBox(true);
+                setTankStatus(TankStatus.EMPTY);
                 // I verify if the user is near the tank (geoloc ?);
                 // We add an object to the object "checks" (date, heure, status, userType)
                 // display : u have to be near the tank to be able to give tank state
@@ -115,6 +127,8 @@ const BottomNav = (tankLatLng: latLngProps) => {
           </FlowButtons>
         )
       }
+
+      {/* {isConfirmationBoxVisible && <PopUp />} */}
     </Container>
   );
 };

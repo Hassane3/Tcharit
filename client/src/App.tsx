@@ -19,12 +19,13 @@ function App() {
     return onValue(dbRef, (snapshot: DataSnapshot) => {
       snapshot.forEach((tank: any) => {
         console.log("tank : ", tank.val());
+        console.log("tank Key : ", tank.key);
         tanks.push({ id: parseInt(tank.key), ...tank.val() });
-        setTanksData(tanks);
       });
-      console.log("TANKS === ", tanksData);
+      setTanksData(tanks);
     });
   }, []);
+  console.log("TANKS === ", tanksData);
   // const [message, setMessage] = useState("");
 
   // useEffect(() => {

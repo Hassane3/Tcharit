@@ -46,9 +46,11 @@ export interface latLngProps {
 }
 export interface postsProps {
   // date: Date;
-  date: number;
+  // id: number;
   status: TankStatus;
   userType: UserType;
+  date: number;
+  time: number;
 }
 
 function MapPage(tanksData: tanksDataProps) {
