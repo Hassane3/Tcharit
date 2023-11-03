@@ -22,15 +22,32 @@ import PopUp from "./components/PopUp";
 import { setANewPost } from "../firebase/operations";
 import { UserType } from "../models/utils/UsersType";
 
-const Tank = (tanksData: tanksDataProps) => {
+interface TankProps {
+  tanksData: tankDataProps[];
+  setCookie: (userIdTitle: any, userIdValue: any, option: any) => void;
+  cookies: Object;
+}
+
+const Tank = (props: TankProps) => {
+  const { tanksData, setCookie, cookies } = props;
   const navigateTo = useNavigate();
+
+  // VARIABLES (STATES)
   const [selectedTankData, setSelectedTankData] = useState<tankDataProps>();
   const tankId: number = parseInt(useParams().id as string);
   // console.log("tankRef : ", tankRef);
+  const [tankStatus, setTankStatus] = useState<TankStatus>(TankStatus.UNKNOWN);
+  // const idTank: Readonly<Params<string>> = useParams();
+
+  const [isConfirmBoxVisible, setIsConfirmBoxVisible] =
+    useState<boolean>(false);
+  // const [newPostData, setNewPostData] = useState<postsProps>();
+  const [userUuid, setUserUuid] = useState<string>("");
+  const [isAddPostAllowed, setIsAddPostAllowed] = useState<boolean>(false);
 
   useEffect(() => {
     console.log("idTank : ", tankId);
-    const tankData = tanksData.data.find((tank: tankDataProps) => {
+    const tankData = tanksData.find((tank: tankDataProps) => {
       return tank.id === tankId ?? null;
       // console.log("tank ))> ", tank);
     });
@@ -43,15 +60,7 @@ const Tank = (tanksData: tanksDataProps) => {
     //     setselectedTankData(snapshot.child(idTank.id).val());
     //   }
     // });
-  }, [tankId, tanksData.data]);
-
-  // VARIABLES (STATES)
-  const [tankStatus, setTankStatus] = useState<TankStatus>(TankStatus.UNKNOWN);
-  // const idTank: Readonly<Params<string>> = useParams();
-
-  const [isConfirmBoxVisible, setIsConfirmBoxVisible] =
-    useState<boolean>(false);
-  // const [newPostData, setNewPostData] = useState<postsProps>();
+  }, [tankId, tanksData]);
 
   // METHODS
   const handleIsConfirmBoxVisible = (isConfirmBoxVisible: boolean) => {
@@ -62,6 +71,11 @@ const Tank = (tanksData: tanksDataProps) => {
     setTankStatus(tankStatus);
   };
 
+  const uuidFromCrypto = () => {
+    let newUuid: string = crypto.randomUUID();
+    setUserUuid(newUuid);
+    console.log("UUID : ", newUuid);
+  };
   const handleAddPost = () => {
     //create a post
     // Add a new post on db :
@@ -81,6 +95,14 @@ const Tank = (tanksData: tanksDataProps) => {
       setANewPost(selectedTankData?.id, newPostData);
       // Close the popUp
       setIsConfirmBoxVisible(false);
+      // Add a cookie that contains the identifier of the user and the time of his last post.
+      // set the cookie with
+      //Create a Uuid (unique id)
+      uuidFromCrypto();
+      setCookie("userId", "KoV", { path: "/", maxAge: 15 });
+      setIsAddPostAllowed(false);
+      // setCookie("access_token", "1", { path: "/" });
+      // createCookie(`${uuid}`, `${Date()}`)
     }
   };
 
@@ -143,6 +165,9 @@ const Tank = (tanksData: tanksDataProps) => {
           setConfirmationBox={handleIsConfirmBoxVisible}
           tankLatLng={selectedTankData.latLng}
           setTankStatus={handleTankStatus}
+          cookies={cookies}
+          isAddPostAllowed={isAddPostAllowed}
+          setIsAddPostAllowed={setIsAddPostAllowed}
         />
       )}
       {isConfirmBoxVisible && (

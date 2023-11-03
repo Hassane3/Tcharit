@@ -5,15 +5,26 @@ import styled from "styled-components";
 import { latLngProps } from "../MapPage";
 import PopUp from "./PopUp";
 import TankStatus from "../../models/utils/TankStatus";
+import { Cookies, CookiesProvider } from "react-cookie";
 
 interface BottomNavProps {
   tankLatLng: latLngProps;
   setConfirmationBox: (arg: boolean) => void;
   setTankStatus: (tankStatus: TankStatus) => void;
+  cookies: any;
+  isAddPostAllowed: boolean;
+  setIsAddPostAllowed: (arg: boolean) => void;
 }
 
 const BottomNav = (props: BottomNavProps): JSX.Element => {
-  const { setConfirmationBox, setTankStatus, tankLatLng } = props;
+  const {
+    setConfirmationBox,
+    setTankStatus,
+    tankLatLng,
+    cookies,
+    isAddPostAllowed,
+    setIsAddPostAllowed,
+  } = props;
 
   const [isAddPostInfosVisible, setIsAddPostInfosVisible] =
     useState<boolean>(false);
@@ -66,7 +77,26 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
 
   return (
     <Container>
-      <span onClick={() => setIsAddPostInfosVisible(true)}>Add post</span>
+      <span
+        onClick={() => {
+          //If the user hasn't posted a post in 5min :
+          // if (!lastPostDate || Date.now() - lastPostDate >= 300000) {}
+          //if user cookie exist, so he has posted in this last 5min
+          //We use cookies.userId cause the attribut "userId" has been created in App.js
+          //We test if the cookie has expired ? Maybe in a second time
+          if (cookies.userId) {
+            alert(
+              "Vous ne pouvez ajouter un post car venez de le faire. Pour pouvoir ajouter un post de nouveau, il faut attendre unpeu et puis rafraichir la page"
+            );
+            // setIsInfoAddPostNotAllowed(true);
+          } else {
+            setIsAddPostAllowed(true);
+            setIsAddPostInfosVisible(true);
+          }
+        }}
+      >
+        Add post
+      </span>
 
       {isAddPostInfosVisible && (
         <PostBoxInfos>
@@ -99,7 +129,7 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
 
       {
         // Display btns
-        isAddPostBtnsVisible && (
+        isAddPostAllowed && isAddPostBtnsVisible && (
           <FlowButtons>
             <FlowButton
               //   "EMPTY"

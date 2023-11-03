@@ -59,10 +59,28 @@ Router :
 `npm i -D react-router-dom`
 
 
+
+**01/11/2023
+Done : 
+- Focus view on map cursor when going back to MapView.
+
+To do :
+********HERE**********
+Le userId n'affiche pas sa valeur ? Est-ce fait expres ?
+    TANK PAGE :
+    - The user must not be able to make a new post until 5min from his last post ==> So we have to be able to recognise a user (by his devise ?, maybe when a user add a post, a cookie is created and when a user try to add a post, we retrieve his cookie (if he has) and compare the time posting of that cookie and compare it with the actual time) - Cookie ? LocalStorage ?: 
+    when he press on add post, he will get a box telling him that he posted few minutes ago, and he must wait a little bit.
+    
+
+
+
+
 **27/10/23
 Done :
-    - Get tanks from database
-    - Get informations of each tank (lastCheck, latLng(0,1),  name, posts(date, status, time, userType))
+    - Get tanks from database;
+    - Get informations of each tank (lastCheck, latLng(0,1),name, posts(date, status, time, userType));
+    - Check position of the user;
+    - Make a new post in tank page and display all the posts;
 
 To do :
 
@@ -100,7 +118,6 @@ To do :
                                 When user click on it {
                                     - display a box of confirmation
                                     if user click on "yes" {
-                                         ***************HERE***************  
                                         - create a new post in db : status, current date, current time, userType, lastCheck;
                                         - update last check for tank / Refresh the MAIN SECTION;
                                     }

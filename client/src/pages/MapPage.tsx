@@ -16,7 +16,7 @@ import { Icon, LatLng } from "leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import { Button, ButtonBase } from "@mui/material";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 // MODELS
 import TankStatus from "../models/utils/TankStatus";
@@ -53,7 +53,14 @@ export interface postsProps {
   time: number;
 }
 
-function MapPage(tanksData: tanksDataProps) {
+interface mapPageProps {
+  tanksData: Array<tankDataProps>;
+  visitedTank: tankDataProps | undefined;
+  setVisitedTank: (visitedTank: tankDataProps) => void | undefined;
+}
+function MapPage(props: mapPageProps) {
+  const { tanksData, visitedTank, setVisitedTank } = props;
+
   // const markers: markerDataProps[] = [
   //   {
   //     id: 1,
@@ -110,6 +117,8 @@ function MapPage(tanksData: tanksDataProps) {
 
   const navigateTo = useNavigate();
 
+  const tankId: number = parseInt(useParams().id as string);
+
   // useEffect(() => {
   //   const dbRef = ref(db, "tanks");
 
@@ -148,11 +157,17 @@ function MapPage(tanksData: tanksDataProps) {
       alert("Geolocation not supported");
     }
   };
+  console.log("MARKER Data", tanksData);
   // console.log("Tanks data :", tanksData);
   return (
     <div id="map">
       <MapContainer
-        center={[43.300787, 5.37724]}
+        center={
+          // If user return back to mapPage, the page will be focused on the tank that has been visited
+          visitedTank
+            ? (console.log("YEP"), visitedTank.latLng)
+            : (console.log("NOP"), [43.300787, 5.37724])
+        }
         zoom={18}
         scrollWheelZoom={false}
       >
@@ -161,8 +176,7 @@ function MapPage(tanksData: tanksDataProps) {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {/* <MarkerClusterGroup> */}
-        {tanksData.data.map((marker: tankDataProps) => (
-          // console.log("MARKER :::", marker, "Icon ===", customIcon),
+        {tanksData.map((marker: tankDataProps) => (
           <Marker
             key={marker.id}
             position={marker.latLng}
@@ -182,6 +196,7 @@ function MapPage(tanksData: tanksDataProps) {
                     "id :" + marker.id + " , " + marker.name + "clicked =>",
                     e
                   );
+                  setVisitedTank(marker);
                   navigateTo("/tank/" + marker.id);
                 }}
               >
