@@ -74,7 +74,11 @@ Global To do :
 
 - Test on Mobile
 
+
+**10/11/23
+********HERE**********
     - Handle changing the status of a tank when a post is added.
+
 **04/11/23
 To do :
     - Add post by two remaining buttons (Full, halfFull);
@@ -83,9 +87,7 @@ To do :
     - update the lastCheck property and display it under the last post (tank page) and in tank box (map page) :
         Each minute, we compare the lastCheck with the actual date time, and update it (in front)
         We do this in the useEffect of the map component and pass the variable to the checkPosts component
-********HERE**********
     - When adding a post, refresh directly the lastCheckTime.
-    Trying to retrieve setInterval from app.tsx and refresh only concerned components.
 
     
 

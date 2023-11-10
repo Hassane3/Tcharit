@@ -4,7 +4,7 @@ import TankStatus from "../../models/utils/TankStatus";
 
 interface PopUpProps {
   tankStatus: TankStatus;
-  addPost: () => void;
+  addPost: (status: TankStatus) => void;
   setIsConfirmBoxVisible: (arg: boolean) => void;
 }
 
@@ -18,7 +18,7 @@ const PopUp = (props: PopUpProps): JSX.Element => {
         <span>blablabla</span>
         <button
           onClick={() => {
-            addPost();
+            addPost(tankStatus);
           }}
         >
           Yes

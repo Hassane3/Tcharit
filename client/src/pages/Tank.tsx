@@ -14,6 +14,7 @@ import {
   setANewPost,
   updateLastCheck,
   updateLastPostTime,
+  updateTankStatus,
 } from "../firebase/operations";
 import { UserType } from "../models/utils/UsersType";
 
@@ -55,7 +56,7 @@ const Tank = (props: TankProps) => {
     setTankStatus(tankStatus);
   };
 
-  const handleAddPost = () => {
+  const handleAddPost = (status: TankStatus) => {
     //create a post
     // Add a new post on db :
     let date = new Date();
@@ -70,6 +71,7 @@ const Tank = (props: TankProps) => {
     if (selectedTankData && newPostData) {
       alert("tank id : " + selectedTankData.id);
       setANewPost(selectedTankData?.id, newPostData);
+      updateTankStatus(selectedTankData?.id, status);
 
       setIsConfirmBoxVisible(false);
       //Create a Uuid (unique id)
