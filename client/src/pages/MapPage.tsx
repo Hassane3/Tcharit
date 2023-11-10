@@ -13,16 +13,17 @@ import {
 // import { useMap } from 'react-leaflet/hooks'
 // import { Marker } from 'react-leaflet';
 import { Icon, LatLng } from "leaflet";
-import MarkerClusterGroup from "react-leaflet-cluster";
+// import MarkerClusterGroup from "react-leaflet-cluster";
 import { Button, ButtonBase } from "@mui/material";
 import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
 
 // MODELS
 import TankStatus from "../models/utils/TankStatus";
-import { DataSnapshot, onValue, ref } from "firebase/database";
-import { db } from "../firebase/firebase";
+// import { DataSnapshot, onValue, ref } from "firebase/database";
 import { UserType } from "../models/utils/UsersType";
+import { handleTimeFormat } from "../utils/methods/methods";
+import MapTankBox from "./components/MapTankBox";
 
 // Componenets
 
@@ -36,7 +37,8 @@ export interface tankDataProps {
   // latLng: [number, number]
   latLng: latLngProps;
   status: TankStatus;
-  lastCheck: number;
+  lastPostTime: number;
+  lastCheckTime: number;
   posts: [postsProps];
 }
 
@@ -49,14 +51,21 @@ export interface postsProps {
   // id: number;
   status: TankStatus;
   userType: UserType;
-  date: number;
-  time: number;
+  date: string;
+  time: string;
+  weekDay: string;
+  postTime: number;
 }
 
+export interface userCookiesProps {
+  userId: string;
+}
 interface mapPageProps {
   tanksData: Array<tankDataProps>;
   visitedTank: tankDataProps | undefined;
+  // lastCheckTime: number | undefined;
   setVisitedTank: (visitedTank: tankDataProps) => void | undefined;
+  // setLastCheckTime: (arg: number) => void;
 }
 function MapPage(props: mapPageProps) {
   const { tanksData, visitedTank, setVisitedTank } = props;
@@ -119,17 +128,6 @@ function MapPage(props: mapPageProps) {
 
   const tankId: number = parseInt(useParams().id as string);
 
-  // useEffect(() => {
-  //   const dbRef = ref(db, "tanks");
-
-  //   return onValue(dbRef, (snapshot: DataSnapshot) => {
-  //     snapshot.forEach((tank: any) => {
-  //       tanks.push({ id: tank.key, ...tank.val() });
-  //       setTanksData(tanks);
-  //     });
-  //     console.log("TANKS === ", tanksData);
-  //   });
-  // }, []);
   const options = {
     enableHighAccuracy: true,
     timeout: 5000,
@@ -139,13 +137,10 @@ function MapPage(props: mapPageProps) {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (success) => {
-          console.log("SUCCES");
           let latLng = new LatLng(
             success.coords.latitude,
             success.coords.longitude
           );
-          alert("LatLng : " + latLng);
-          if (latLng.lat) console.log("LatLng : ", latLng);
         },
         (error) => {
           console.log("ERROR => ", error);
@@ -157,16 +152,13 @@ function MapPage(props: mapPageProps) {
       alert("Geolocation not supported");
     }
   };
-  console.log("MARKER Data", tanksData);
-  // console.log("Tanks data :", tanksData);
+
   return (
     <div id="map">
       <MapContainer
         center={
           // If user return back to mapPage, the page will be focused on the tank that has been visited
-          visitedTank
-            ? (console.log("YEP"), visitedTank.latLng)
-            : (console.log("NOP"), [43.300787, 5.37724])
+          visitedTank ? visitedTank.latLng : [43.300787, 5.37724]
         }
         zoom={18}
         scrollWheelZoom={false}
@@ -189,46 +181,11 @@ function MapPage(props: mapPageProps) {
           >
             {marker.id}
             <Popup className="popUp_container">
-              <PopUpBox
-                onClick={(e) => {
-                  console.log(
-                    "marker ==> ",
-                    "id :" + marker.id + " , " + marker.name + "clicked =>",
-                    e
-                  );
-                  setVisitedTank(marker);
-                  navigateTo("/tank/" + marker.id);
-                }}
-              >
-                <PopUpMainElements>
-                  <img
-                    className="popUp_icon"
-                    src={
-                      marker.status === TankStatus.EMPTY
-                        ? "./img/empty_tank.svg"
-                        : marker.status === TankStatus.HALFFUll
-                        ? "./img/halffilled_tank.svg"
-                        : "./img/filled_tank.svg"
-                    }
-                    alt=""
-                  />
-                  <div className="popUp_text">
-                    <p className="popUp_name">{marker.name}</p>
-                    <p className="popUp_description">
-                      {marker.status === TankStatus.EMPTY
-                        ? "الخزان فارغ"
-                        : marker.status === TankStatus.HALFFUll
-                        ? "الخزان نصف ممتلئ"
-                        : marker.status === TankStatus.FULL
-                        ? "الخزان ممتلئ"
-                        : "لم يسجل اي حالة لهذا الخزان"}
-                    </p>
-                  </div>
-                </PopUpMainElements>
-                <span className="popUp_lastCheck">
-                  منذ {marker.lastCheck} دقيقة
-                </span>
-              </PopUpBox>
+              <MapTankBox
+                tank={marker}
+                setVisitedTank={setVisitedTank}
+                handleTimeFormat={handleTimeFormat}
+              />
             </Popup>
           </Marker>
         ))}
@@ -237,52 +194,4 @@ function MapPage(props: mapPageProps) {
     </div>
   );
 }
-
-const PopUpBox = styled(Button)`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-
-  .popUp_icon {
-    height: 70px;
-    /* width: 70px; */
-  }
-
-  .popUp_text {
-    margin-right: 10px;
-    width: 100%;
-  }
-
-  .popUp_text p {
-    margin: 2px;
-    text-align: right;
-  }
-  .popUp_name {
-    font-family: "lalezar";
-    color: teal;
-    font-size: 34px;
-  }
-  .popUp_description {
-    font-family: "changa";
-    font-weight: 600;
-    font-size: 18px;
-  }
-  .popUp_lastCheck {
-    font-family: rubik;
-    font-size: 16px;
-    font-weight: 400;
-    align-self: start;
-  }
-
-  .leaflet-popup-content {
-    margin: 0;
-  }
-`;
-
-const PopUpMainElements = styled.div`
-  display: flex;
-  flex-direction: row-reverse;
-  align-items: center;
-  margin-bottom: 10px;
-`;
 export default MapPage;

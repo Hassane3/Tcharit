@@ -16,10 +16,3 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const db = getDatabase(app);
-console.log("db ==> ",db)
-const tankRef = ref(db, "tanks/"+2);
-    console.log("dbRef ==> ", tankRef);
-    console.log(
-        onValue(tankRef, (snapshot) => {
-        console.log("Val : ",snapshot.val());
-        }))

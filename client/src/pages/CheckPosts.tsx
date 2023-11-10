@@ -1,38 +1,52 @@
-import React, { useEffect, useRef, useState } from "react";
-import { postsProps, tanksDataProps } from "./MapPage";
+import React, { useEffect, useState } from "react";
+import { postsProps } from "./MapPage";
 import styled from "styled-components";
 import { DataSnapshot, onValue, ref } from "firebase/database";
 import { db } from "../firebase/firebase";
+import { getDiffTime, handleTimeFormat } from "../utils/methods/methods";
 
-// const CheckPosts = (posts: () => [postsProps]) => {
-// const CheckPosts = (props: {tankId:number, posts: [postsProps] | undefined }):JSX.Element => {
 const CheckPosts = (props: { tankId: number }): JSX.Element => {
   const { tankId } = props;
-  const myDate = new Date();
-  // let posts: Array<postsProps> = [];
-  // let posts: Array<postsProps> = useRef([])
   const [postsData, setPostsData] = useState<Array<postsProps>>([]);
+  let date = "";
+  const [lastCheckTime, setLastCheckTime] = useState<number>();
 
-  console.log("myDate ", myDate);
-
-  // const postRef = useRef(posts)
   useEffect(() => {
     let posts: Array<postsProps> = [];
-    // if (postRef.current !== posts) {
-
-    // }
     const dbRef = ref(db, "tanks/" + tankId + "/posts");
-    console.log("dbRef : ", dbRef);
+
     return onValue(dbRef, (snapshot: DataSnapshot) => {
       posts = [];
       snapshot.forEach((post: any) => {
-        console.log("post : ", post.val());
         posts.push({ ...post.val() });
       });
       setPostsData(posts);
     });
-  }, []);
-  console.log("POSTS === ", postsData);
+  }, [tankId]);
+
+  useEffect(() => {
+    // Get the last post
+    let post: postsProps | undefined = postsData.find(
+      (post: postsProps, index: number) => {
+        return index === postsData.length - 1;
+      }
+    );
+    let lastPostTime = post?.postTime;
+
+    if (lastPostTime) {
+      setLastCheckTime(getDiffTime(lastPostTime));
+    }
+
+    const checkPointInterval = setInterval(() => {
+      lastPostTime && setLastCheckTime(getDiffTime(lastPostTime));
+      // timer : 2min in ms
+    }, 120000);
+
+    return () => {
+      clearInterval(checkPointInterval);
+    };
+  }, [postsData]);
+
   return (
     <MainContainer>
       <FirstSpan>
@@ -40,27 +54,41 @@ const CheckPosts = (props: { tankId: number }): JSX.Element => {
       </FirstSpan>
       <div>
         {
-          //OLD:
-          // props.posts &&
-          //   props.posts.map((post, index) => (
-          //     <div key={index}>
-          //       <span>{post?.userType} ****</span>
-          //       <span>{post?.status} ****</span>
-          //       <span>{post?.date} ****</span>
-          //       {/* <span>{myDate}</span> */}
-          //     </div>
-          //   ))
-
           //NEW:
           //We use reverse to display recent posts first.
-          [...postsData].reverse().map((post, index) => (
-            <div key={index}>
-              <span>{post.userType} ****</span>
-              <span>{post.status} ****</span>
-              <span>{post.date} ****</span>
-              <span>{post.time}</span>
-            </div>
-          ))
+          [...postsData].reverse().map((post, index) => {
+            return (
+              <div key={index}>
+                {
+                  // Display day separator if the actual day of post is different than the previus one
+                  post.date !== date &&
+                    ((date = post.date),
+                    post.date === new Date().toLocaleDateString() ? (
+                      <div>******* TODAY *******</div>
+                    ) : (
+                      <div>
+                        ******* {post.date} {post.weekDay} *******
+                      </div>
+                    ))
+                }
+
+                <div key={index}>
+                  <span>{post.userType} ****</span>
+                  <span>{post.status} ****</span>
+                  <span>{post.date} ****</span>
+                  <span>{post.time} ****</span>
+                  <span>{post.weekDay}</span>
+                </div>
+
+                {index === 0 && (
+                  <span>
+                    {lastCheckTime && handleTimeFormat(lastCheckTime)}
+                  </span>
+                )}
+                <span></span>
+              </div>
+            );
+          })
         }
       </div>
     </MainContainer>

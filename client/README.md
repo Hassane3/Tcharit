@@ -58,14 +58,49 @@ leaflet cluster :
 Router :
 `npm i -D react-router-dom`
 
+Global To do :
+    - Maybe add a functionality that remove tank posts of a user that has posted multiples posts in a short period of time. (spaming).
+    - Dislay only a given number of posts in CheckPost component (tank page).
+    - Delete also some posts from db when their post date is over 7 days. (too old)
+    
+    LANGAGE:
+    - Translate day to arabic. (tank post)
+    - Add an authentication for staff (tank responsible/filler) :
+    - It can be with a google account (firebase);
+    - (For simplicity) a simple id and password, given by us to staff. And allow them to change their password via their mail account.
+    --> Pas de possibilité de créer un compte, seulement Se connecter pour les staffs.
+
+    - Handle errors (like internet connection)
+
+- Test on Mobile
+
+    - Handle changing the status of a tank when a post is added.
+**04/11/23
+To do :
+    - Add post by two remaining buttons (Full, halfFull);
+    - Handle post date and time;
+    - If there is different posts with different days in checkPost, add a component (separator) which shows the day to separate posts in days;
+    - update the lastCheck property and display it under the last post (tank page) and in tank box (map page) :
+        Each minute, we compare the lastCheck with the actual date time, and update it (in front)
+        We do this in the useEffect of the map component and pass the variable to the checkPosts component
+********HERE**********
+    - When adding a post, refresh directly the lastCheckTime.
+    Trying to retrieve setInterval from app.tsx and refresh only concerned components.
+
+    
+
+
+
+
 
 
 **01/11/2023
 Done : 
 - Focus view on map cursor when going back to MapView.
+- Set user cookie, and allow posting a new post after the expiration of the cookie.
 
 To do :
-********HERE**********
+
 Le userId n'affiche pas sa valeur ? Est-ce fait expres ?
     TANK PAGE :
     - The user must not be able to make a new post until 5min from his last post ==> So we have to be able to recognise a user (by his devise ?, maybe when a user add a post, a cookie is created and when a user try to add a post, we retrieve his cookie (if he has) and compare the time posting of that cookie and compare it with the actual time) - Cookie ? LocalStorage ?: 

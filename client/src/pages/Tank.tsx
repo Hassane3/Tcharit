@@ -1,25 +1,20 @@
 import React, { useEffect, useState } from "react";
 //MODELS
 import TankStatus from "../models/utils/TankStatus";
-import { Navigate, Params, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
-import { initializeApp } from "firebase/app";
-import {
-  getDatabase,
-  ref,
-  set,
-  onValue,
-  DataSnapshot,
-} from "firebase/database";
+
 //DATA
-import { db } from "../firebase/firebase";
-import { postsProps, tankDataProps, tanksDataProps } from "./MapPage";
+import { postsProps, tankDataProps } from "./MapPage";
 import { Button } from "@mui/material";
-import { LatLng } from "leaflet";
 import CheckPosts from "./CheckPosts";
 import BottomNav from "./components/BottomNav";
 import PopUp from "./components/PopUp";
-import { setANewPost } from "../firebase/operations";
+import {
+  setANewPost,
+  updateLastCheck,
+  updateLastPostTime,
+} from "../firebase/operations";
 import { UserType } from "../models/utils/UsersType";
 
 interface TankProps {
@@ -35,31 +30,20 @@ const Tank = (props: TankProps) => {
   // VARIABLES (STATES)
   const [selectedTankData, setSelectedTankData] = useState<tankDataProps>();
   const tankId: number = parseInt(useParams().id as string);
-  // console.log("tankRef : ", tankRef);
   const [tankStatus, setTankStatus] = useState<TankStatus>(TankStatus.UNKNOWN);
   // const idTank: Readonly<Params<string>> = useParams();
 
   const [isConfirmBoxVisible, setIsConfirmBoxVisible] =
     useState<boolean>(false);
-  // const [newPostData, setNewPostData] = useState<postsProps>();
-  const [userUuid, setUserUuid] = useState<string>("");
+
   const [isAddPostAllowed, setIsAddPostAllowed] = useState<boolean>(false);
 
   useEffect(() => {
-    console.log("idTank : ", tankId);
     const tankData = tanksData.find((tank: tankDataProps) => {
       return tank.id === tankId ?? null;
-      // console.log("tank ))> ", tank);
     });
-    console.log("tankData : ", tankData);
-    console.log("posts-length", tankData?.posts?.length);
+
     setSelectedTankData(tankData);
-    // const tankRef = ref(db, "tanks/" + idTank.id);
-    // return onValue(tankRef, (snapshot: DataSnapshot) => {
-    //   if (idTank.id) {
-    //     setselectedTankData(snapshot.child(idTank.id).val());
-    //   }
-    // });
   }, [tankId, tanksData]);
 
   // METHODS
@@ -71,45 +55,34 @@ const Tank = (props: TankProps) => {
     setTankStatus(tankStatus);
   };
 
-  const uuidFromCrypto = () => {
-    let newUuid: string = crypto.randomUUID();
-    setUserUuid(newUuid);
-    console.log("UUID : ", newUuid);
-  };
   const handleAddPost = () => {
     //create a post
     // Add a new post on db :
+    let date = new Date();
     let newPostData: postsProps = {
       status: tankStatus,
       userType: UserType.RANDOM,
-      date: 0,
-      time: 9,
+      date: date.toLocaleDateString(),
+      time: date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      weekDay: date.toLocaleDateString([], { weekday: "long" }),
+      postTime: date.getTime(),
     };
-    // setNewPostData({
-
-    // });
-    // I hav to click a second time to get refreshed data !!!
-    console.log("selectedTankData => ", selectedTankData);
     if (selectedTankData && newPostData) {
       alert("tank id : " + selectedTankData.id);
       setANewPost(selectedTankData?.id, newPostData);
-      // Close the popUp
+
       setIsConfirmBoxVisible(false);
-      // Add a cookie that contains the identifier of the user and the time of his last post.
-      // set the cookie with
       //Create a Uuid (unique id)
-      uuidFromCrypto();
-      setCookie("userId", "KoV", { path: "/", maxAge: 15 });
+      let newUuid: string = crypto.randomUUID();
       setIsAddPostAllowed(false);
-      // setCookie("access_token", "1", { path: "/" });
-      // createCookie(`${uuid}`, `${Date()}`)
+      // Add a cookie that contains the identifier of the user and the maxAge of his cookie (300s => 5min)
+      setCookie("userId", newUuid, { path: "/", maxAge: 300 });
+      let now = new Date().getTime();
+      updateLastPostTime(tankId, now);
+      let diffTime = Math.floor((now - selectedTankData.lastPostTime) / 1000);
+      updateLastCheck(selectedTankData.id, diffTime);
     }
   };
-
-  const posts = selectedTankData?.posts;
-  console.log("posts --> ", posts);
-  console.log("posts-lenght", posts?.length);
-  // Ma position ===> lat: 43.296482, lng: 5.36978
 
   return (
     <div>
@@ -147,21 +120,9 @@ const Tank = (props: TankProps) => {
           </div>
         </PopUpMainElements>
       </Header>
-      <CheckPosts
-        tankId={tankId}
-        // posts={selectedTankData && selectedTankData.posts}
-        // posts={() => {
-        //   const posts = tanksData.data.flatMap((tank) => {
-        //     return tank.posts;
-        //   });
-
-        //   return posts;
-        // }}
-      />
+      {selectedTankData && <CheckPosts tankId={tankId} />}
       {selectedTankData && (
         <BottomNav
-          // lat={selectedTankData.latLng.lat}
-          // lng={selectedTankData.latLng.lng}
           setConfirmationBox={handleIsConfirmBoxVisible}
           tankLatLng={selectedTankData.latLng}
           setTankStatus={handleTankStatus}

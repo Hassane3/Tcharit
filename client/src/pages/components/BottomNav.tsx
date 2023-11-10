@@ -3,9 +3,7 @@ import { LatLng } from "leaflet";
 import React, { useState } from "react";
 import styled from "styled-components";
 import { latLngProps } from "../MapPage";
-import PopUp from "./PopUp";
 import TankStatus from "../../models/utils/TankStatus";
-import { Cookies, CookiesProvider } from "react-cookie";
 
 interface BottomNavProps {
   tankLatLng: latLngProps;
@@ -33,18 +31,13 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
   const [isPosInfosVisible, setIsPosInfosVisible] = useState<boolean>(false);
 
   const handleCheckTank = () => {
-    console.log("Merdo");
-    console.log("Navigator userAgent => ", navigator.userAgent);
     if (navigator.geolocation.getCurrentPosition) {
-      alert("SUCCES navGeoLoc");
       navigator.geolocation.getCurrentPosition(
         (success) => {
-          alert("SUCCES GetLoc");
           let latLng = new LatLng(
             success.coords.latitude,
             success.coords.longitude
           );
-          if (latLng.lat) console.log("LatLng : ", latLng);
           // We test if the actual position is near the tank position (the value 0.01 is for test) :
           if (
             latLng.lat > tankLatLng.lat - 0.01 &&
@@ -55,7 +48,6 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
             setIsAddPostInfosVisible(false);
             setIsPosInfosVisible(false);
             setIsAddPostBtnsVisible(true);
-            alert("Done");
           } else {
             setIsAddPostInfosVisible(false);
             setIsPosInfosVisible(true);
@@ -79,16 +71,10 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
     <Container>
       <span
         onClick={() => {
-          //If the user hasn't posted a post in 5min :
-          // if (!lastPostDate || Date.now() - lastPostDate >= 300000) {}
-          //if user cookie exist, so he has posted in this last 5min
-          //We use cookies.userId cause the attribut "userId" has been created in App.js
-          //We test if the cookie has expired ? Maybe in a second time
           if (cookies.userId) {
             alert(
               "Vous ne pouvez ajouter un post car venez de le faire. Pour pouvoir ajouter un post de nouveau, il faut attendre unpeu et puis rafraichir la page"
             );
-            // setIsInfoAddPostNotAllowed(true);
           } else {
             setIsAddPostAllowed(true);
             setIsAddPostInfosVisible(true);
@@ -104,20 +90,12 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
           <h3>Add post</h3>
           <p>To be sure that infos are trusted,...</p>
           <span>posts are checked...</span>
-          <button
-            onClick={
-              () => handleCheckTank()
-              //   setIsAddPostBtnVisible(true);
-              //   setIsAddPostInfosVisible(false);
-            }
-          >
-            Continu
-          </button>
+          <button onClick={() => handleCheckTank()}>Continu</button>
         </PostBoxInfos>
       )}
 
       {
-        // POSITION INFOS : To display when the user is steal far from the tank
+        // POSITION INFOS : To display when the user is still far from the tank
         isPosInfosVisible && (
           <PostBoxInfos>
             <h3>You are far from the tank</h3>
@@ -133,32 +111,40 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
           <FlowButtons>
             <FlowButton
               //   "EMPTY"
-              id="null"
+              id="dryFlow"
               onClick={() => {
-                alert("clicked");
                 setConfirmationBox(true);
                 setTankStatus(TankStatus.EMPTY);
-                // I verify if the user is near the tank (geoloc ?);
-                // We add an object to the object "checks" (date, heure, status, userType)
-                // display : u have to be near the tank to be able to give tank state
               }}
             >
               <img src="/img/null_flow.svg" alt="" />
               <span>منعدم</span>
             </FlowButton>
-            <FlowButton id="low">
+            <FlowButton
+              id="lowFlow"
+              onClick={() => {
+                alert("clicked");
+                setConfirmationBox(true);
+                setTankStatus(TankStatus.HALFFUll);
+              }}
+            >
               <img src="/img/low_flow.svg" alt="" />
               <span>ضئيل</span>
             </FlowButton>
-            <FlowButton id="high">
+            <FlowButton
+              id="highFlow"
+              onClick={() => {
+                alert("clicked");
+                setConfirmationBox(true);
+                setTankStatus(TankStatus.FULL);
+              }}
+            >
               <img src="/img/high_flow.svg" alt="" />
               <span>قوي</span>
             </FlowButton>
           </FlowButtons>
         )
       }
-
-      {/* {isConfirmationBoxVisible && <PopUp />} */}
     </Container>
   );
 };
