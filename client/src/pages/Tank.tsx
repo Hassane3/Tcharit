@@ -4,6 +4,8 @@ import TankStatus from "../models/utils/TankStatus";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
+import { GLOBAL_STYLE } from "../utils/constants/constants";
+
 //DATA
 import { postsProps, tankDataProps } from "./MapPage";
 import { Button } from "@mui/material";
@@ -17,6 +19,12 @@ import {
   updateTankStatus,
 } from "../firebase/operations";
 import { UserType } from "../models/utils/UsersType";
+import {
+  ArrowSvg,
+  EmptyTank,
+  FullTank,
+  HalfFullTank,
+} from "../utils/constants/Icons";
 
 interface TankProps {
   tanksData: tankDataProps[];
@@ -90,37 +98,48 @@ const Tank = (props: TankProps) => {
     <div>
       <Header>
         <ArrowBox>
-          <img
-            src="/img/arrow.svg"
-            alt=""
-            onClick={() => navigateTo("/mapPage")}
-          />
-        </ArrowBox>
-        <PopUpMainElements>
-          <img
-            id="tank_icon"
-            alt=""
-            src={
-              selectedTankData?.status === TankStatus.EMPTY
-                ? "/img/empty_tank.svg"
-                : selectedTankData?.status === TankStatus.HALFFUll
-                ? "/img/halffilled_tank.svg"
-                : "/img/filled_tank.svg"
-            }
-          />
-          <div id="tank_text">
-            <p id="tank_name">{selectedTankData?.name}</p>
-            <p id="tank_description">
-              {selectedTankData?.status === TankStatus.EMPTY
-                ? "الخزان فارغ"
-                : selectedTankData?.status === TankStatus.HALFFUll
-                ? "الخزان نصف ممتلئ"
-                : selectedTankData?.status === TankStatus.FULL
-                ? "الخزان ممتلئ"
-                : "لم يسجل اي حالة لهذا الخزان"}
-            </p>
+          <div onClick={() => navigateTo("/mapPage")}>
+            {ArrowSvg(GLOBAL_STYLE.colorBlueDarken)}
           </div>
-        </PopUpMainElements>
+          {/* <img
+              // src="/img/arrow.svg"
+              alt=""
+              onClick={() => navigateTo("/mapPage")}
+            /> */}
+        </ArrowBox>
+        <HeaderElements>
+          <PopUpMainElements>
+            {selectedTankData?.status === TankStatus.EMPTY
+              ? EmptyTank()
+              : selectedTankData?.status === TankStatus.HALFFUll
+              ? HalfFullTank()
+              : FullTank()}
+            {/* <img
+              id="tank_icon"
+              alt=""
+              src={
+                selectedTankData?.status === TankStatus.EMPTY
+                  ? "/img/empty_tank.svg"
+                  : selectedTankData?.status === TankStatus.HALFFUll
+                  ? "/img/halffilled_tank.svg"
+                  : "/img/filled_tank.svg"
+              }
+            /> */}
+            <div id="tank_text">
+              <p id="tank_name">{selectedTankData?.name}</p>
+              <p id="tank_description">
+                {selectedTankData?.status === TankStatus.EMPTY
+                  ? "الخزان فارغ"
+                  : selectedTankData?.status === TankStatus.HALFFUll
+                  ? "الخزان نصف ممتلئ"
+                  : selectedTankData?.status === TankStatus.FULL
+                  ? "الخزان ممتلئ"
+                  : "لم يسجل اي حالة لهذا الخزان"}
+              </p>
+            </div>
+          </PopUpMainElements>
+          <span id="checkPosts_title"> : حالة تدفق المياه حسب المستخدمين </span>
+        </HeaderElements>
       </Header>
       {selectedTankData && <CheckPosts tankId={tankId} />}
       {selectedTankData && (
@@ -148,11 +167,17 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 10px;
+  background-color: ${GLOBAL_STYLE.colorBlueSweet};
+
+  #checkPosts_title {
+    color: ${GLOBAL_STYLE.colorBlueLight};
+  }
 `;
 const PopUpMainElements = styled.div`
   display: flex;
   flex-direction: row-reverse;
   align-items: center;
+  justify-content: center;
   margin-right: 20px;
 
   #tank_icon {
@@ -171,23 +196,28 @@ const PopUpMainElements = styled.div`
   }
   #tank_name {
     font-family: "lalezar";
-    color: teal;
-    font-size: 34px;
+    color: ${GLOBAL_STYLE.colorBlueLight};
+    font-size: 40px;
   }
   #tank_description {
     font-family: "changa";
     font-weight: 600;
     font-size: 18px;
+    color: ${GLOBAL_STYLE.colorBlueLight};
   }
 `;
-
+const HeaderElements = styled.div`
+  flex-direction: column;
+`;
 const ArrowBox = styled.div`
   display: flex;
   flex-direction: column;
   align-items: start;
-
-  :hover {
+  div :hover {
     cursor: pointer;
+  }
+  img {
+    color: ${GLOBAL_STYLE.colorBlueDarken};
   }
 `;
 

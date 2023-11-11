@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { latLngProps } from "../MapPage";
 import TankStatus from "../../models/utils/TankStatus";
+import { GLOBAL_STYLE } from "../../utils/constants/constants";
 
 interface BottomNavProps {
   tankLatLng: latLngProps;
@@ -69,7 +70,7 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
 
   return (
     <Container>
-      <span
+      <PostBox
         onClick={() => {
           if (cookies.userId) {
             alert(
@@ -81,8 +82,8 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
           }
         }}
       >
-        Add post
-      </span>
+        <span>Add post</span>
+      </PostBox>
 
       {isAddPostInfosVisible && (
         <PostBoxInfos>
@@ -161,6 +162,15 @@ const Container = styled.div`
   /* height: 100px; */
   max-height: 140px;
   border-radius: 14px 14px 0 0;
+`;
+
+const PostBox = styled.div`
+  width: 100%;
+  text-align: center;
+  padding: 20px;
+  color: ${GLOBAL_STYLE.colorBlueDarken};
+  background: ${GLOBAL_STYLE.colorBlueSweet};
+  box-shadow: rgba(0, 0, 0, 0.2) 0 -2px 16px 0px;
 `;
 const FlowButtons = styled.div`
   display: flex;

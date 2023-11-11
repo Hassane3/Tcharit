@@ -74,9 +74,12 @@ Global To do :
 
 - Test on Mobile
 
+**11/11/23
+    - front design
+********HERE**********
+    - Test on Mobile
 
 **10/11/23
-********HERE**********
     - Handle changing the status of a tank when a post is added.
 
 **04/11/23
