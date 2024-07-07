@@ -121,7 +121,8 @@ function MapPage(props: mapPageProps) {
 
   const customIcon = new Icon({
     iconUrl: "./img/epingle.png",
-    iconSize: [38, 38],
+    // iconSize: [38, 38],
+    iconSize: [60, 60],
   });
 
   const navigateTo = useNavigate();
