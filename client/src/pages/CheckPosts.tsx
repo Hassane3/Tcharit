@@ -50,13 +50,13 @@ const CheckPosts = (props: { tankId: number }): JSX.Element => {
   }, [postsData]);
 
   return (
-    <div>
+    <Container>
       {
         //NEW:
         //We use reverse to display recent posts first.
         [...postsData].reverse().map((post, index) => {
           return (
-            <MainContainer key={index}>
+            <MainContent key={index}>
               {post.date !== date &&
                 ((date = post.date),
                 (
@@ -101,7 +101,7 @@ const CheckPosts = (props: { tankId: number }): JSX.Element => {
                   )}
                 </div>
               }
-            </MainContainer>
+            </MainContent>
 
             // // Display day separator if the actual day of post is different than the previus one
             // post.date !== date &&
@@ -147,11 +147,15 @@ const CheckPosts = (props: { tankId: number }): JSX.Element => {
           );
         })
       }
-    </div>
+    </Container>
   );
 };
 
-const MainContainer = styled.div`
+const Container = styled.div`
+  padding-bottom: 100px;
+`;
+
+const MainContent = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -172,7 +176,7 @@ const MainContainer = styled.div`
 `;
 
 const DaySeparator = styled.span`
-  font-size: 18px;
+  font-size: 14px;
   color: ${GLOBAL_STYLE.colorGreyLight};
 `;
 

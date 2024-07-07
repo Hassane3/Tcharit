@@ -168,7 +168,7 @@ const Header = styled.div`
   justify-content: space-between;
   padding: 10px;
   background-color: ${GLOBAL_STYLE.colorBlueSweet};
-
+  box-shadow: rgba(0, 0, 0, 0.2) 0 1px 16px 0px;
   #checkPosts_title {
     color: ${GLOBAL_STYLE.colorBlueLight};
   }

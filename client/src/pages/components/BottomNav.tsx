@@ -88,7 +88,6 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
       {isAddPostInfosVisible && (
         <PostBoxInfos>
           <button onClick={() => setIsAddPostInfosVisible(false)}>close</button>
-          <h3>Add post</h3>
           <p>To be sure that infos are trusted,...</p>
           <span>posts are checked...</span>
           <button onClick={() => handleCheckTank()}>Continu</button>
@@ -160,7 +159,7 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   /* height: 100px; */
-  max-height: 140px;
+  /* max-height: 140px; */
   border-radius: 14px 14px 0 0;
 `;
 
@@ -170,7 +169,14 @@ const PostBox = styled.div`
   padding: 20px;
   color: ${GLOBAL_STYLE.colorBlueDarken};
   background: ${GLOBAL_STYLE.colorBlueSweet};
-  box-shadow: rgba(0, 0, 0, 0.2) 0 -2px 16px 0px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 16px 0px;
+
+  span {
+    font-weight: 600;
+  }
+  :hover {
+    cursor: pointer;
+  }
 `;
 const FlowButtons = styled.div`
   display: flex;
@@ -204,9 +210,16 @@ const FlowButton = styled(Button)`
 `;
 
 const PostBoxInfos = styled.div`
-  background-color: teal;
+  background-color: ${GLOBAL_STYLE.colorBlueSweet};
   height: 20%;
   width: 100%;
+  padding: 20px;
+
+  p,
+  span {
+    text-align: center;
+    /* color: ${GLOBAL_STYLE} */
+  }
 `;
 
 export default BottomNav;
