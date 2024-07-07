@@ -40,11 +40,18 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
             success.coords.longitude
           );
           // We test if the actual position is near the tank position (the value 0.01 is for test) :
+          console.log("lat : ", latLng.lat, " lng:", latLng.lng);
+          console.log(
+            "Tank lat : ",
+            tankLatLng.lat,
+            "tank lng:",
+            tankLatLng.lng
+          );
           if (
-            latLng.lat > tankLatLng.lat - 0.01 &&
-            latLng.lat < tankLatLng.lat + 0.01 &&
-            latLng.lng > tankLatLng.lng - 0.01 &&
-            latLng.lng < tankLatLng.lng + 0.01
+            latLng.lat > tankLatLng.lat - 0.001 &&
+            latLng.lat < tankLatLng.lat + 0.001 &&
+            latLng.lng > tankLatLng.lng - 0.001 &&
+            latLng.lng < tankLatLng.lng + 0.001
           ) {
             setIsAddPostInfosVisible(false);
             setIsPosInfosVisible(false);
@@ -52,7 +59,7 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
           } else {
             setIsAddPostInfosVisible(false);
             setIsPosInfosVisible(true);
-            alert("U are far from tank");
+            alert("U are far from tank ! `\t` Try to come closer");
             // Display : u have to be near the tank. Try to come closer
           }
         },
