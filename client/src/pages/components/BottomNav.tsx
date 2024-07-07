@@ -40,13 +40,18 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
             success.coords.longitude
           );
           // We test if the actual position is near the tank position (the value 0.01 is for test) :
-          console.log("lat : ", latLng.lat, " lng:", latLng.lng);
-          console.log(
-            "Tank lat : ",
-            tankLatLng.lat,
-            "tank lng:",
-            tankLatLng.lng
+          alert(
+            "lat : " +
+              latLng.lat +
+              "lng :" +
+              latLng.lng +
+              "\n" +
+              "tank lat : " +
+              tankLatLng.lat +
+              "tank lng :" +
+              tankLatLng.lng
           );
+
           if (
             latLng.lat > tankLatLng.lat - 0.001 &&
             latLng.lat < tankLatLng.lat + 0.001 &&
