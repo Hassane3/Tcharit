@@ -6,12 +6,6 @@ import { MapContainer, TileLayer } from "react-leaflet";
 // import { useMap } from 'react-leaflet/hooks'
 // import { Marker } from 'react-leaflet';
 import { Icon, LatLng } from "leaflet";
-import L from "leaflet";
-// import MarkerClusterGroup from "react-leaflet-cluster";
-import { Autocomplete, Button, ButtonBase, TextField } from "@mui/material";
-import styled from "styled-components";
-import { useNavigate, useParams } from "react-router-dom";
-import { ReactSearchAutocomplete } from "react-search-autocomplete";
 
 // MODELS
 import TankStatus from "../models/utils/TankStatus";
