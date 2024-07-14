@@ -74,12 +74,18 @@ Global To do :
 
 - Test on Mobile
 
-**11/11/23
-    - front design
-********HERE**********
-    - Test on Mobile
+*******HERE**********
+
+**08/07/24
+    - Add search option to search tanks in map page.
+        ***DONE***
+        - When a tank is selected -> focus on it.
+        - When a tank is searched -> focus on it.
+
+
 
 **10/11/23
+    - Test on Mobile
     - Handle changing the status of a tank when a post is added.
 
 **04/11/23

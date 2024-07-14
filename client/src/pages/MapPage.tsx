@@ -1,29 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 // LIBS
 // import { MapContainer } from 'react-leaflet/MapContainer'
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  useMap,
-  Popup,
-  MarkerProps,
-} from "react-leaflet";
+import { MapContainer, TileLayer } from "react-leaflet";
 // import { TileLayer } from 'react-leaflet/TileLayer'
 // import { useMap } from 'react-leaflet/hooks'
 // import { Marker } from 'react-leaflet';
 import { Icon, LatLng } from "leaflet";
+import L from "leaflet";
 // import MarkerClusterGroup from "react-leaflet-cluster";
-import { Button, ButtonBase } from "@mui/material";
+import { Autocomplete, Button, ButtonBase, TextField } from "@mui/material";
 import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
+import { ReactSearchAutocomplete } from "react-search-autocomplete";
 
 // MODELS
 import TankStatus from "../models/utils/TankStatus";
 // import { DataSnapshot, onValue, ref } from "firebase/database";
 import { UserType } from "../models/utils/UsersType";
 import { handleTimeFormat } from "../utils/methods/methods";
-import MapTankBox from "./components/MapTankBox";
+import { MyMarker } from "./components/MyMarker";
+import AutoComplete from "./components/AutoComplete";
 
 // Componenets
 
@@ -69,6 +65,11 @@ interface mapPageProps {
 }
 function MapPage(props: mapPageProps) {
   const { tanksData, visitedTank, setVisitedTank } = props;
+
+  const [searchValue, setSearchValue] = useState<string | null>(
+    tanksData.at(0)?.name || ""
+  );
+  const [inputValue, setInputValue] = useState<string>("");
 
   // const markers: markerDataProps[] = [
   //   {
@@ -125,9 +126,9 @@ function MapPage(props: mapPageProps) {
     iconSize: [38, 38],
   });
 
-  const navigateTo = useNavigate();
+  // const navigateTo = useNavigate();
 
-  const tankId: number = parseInt(useParams().id as string);
+  // const tankId: number = parseInt(useParams().id as string);
 
   const options = {
     enableHighAccuracy: true,
@@ -154,6 +155,13 @@ function MapPage(props: mapPageProps) {
     }
   };
 
+  const handleSetSearchValue = (newValue: string | null) => {
+    setSearchValue(newValue);
+  };
+  const handleSetInputValue = (newValue: string) => {
+    setInputValue(newValue);
+  };
+
   return (
     <div id="map">
       <MapContainer
@@ -164,35 +172,32 @@ function MapPage(props: mapPageProps) {
         zoom={18}
         scrollWheelZoom={false}
       >
+        <AutoComplete
+          tanksData={tanksData}
+          searchValue={searchValue}
+          inputValue={inputValue}
+          handleSetSearchValue={handleSetSearchValue}
+          handleSetInputValue={handleSetInputValue}
+        />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+
         {/* <MarkerClusterGroup> */}
         {tanksData.map((marker: tankDataProps) => (
-          <Marker
+          <MyMarker
             key={marker.id}
-            position={marker.latLng}
-            icon={customIcon}
-            // eventHandlers={{
-            //   click: (e) => {
-            //     console.log("marker" + marker.tank_name + "clicked", e)
-            //   }
-            // }}
-          >
-            {marker.id}
-            <Popup className="popUp_container">
-              <MapTankBox
-                tank={marker}
-                setVisitedTank={setVisitedTank}
-                handleTimeFormat={handleTimeFormat}
-              />
-            </Popup>
-          </Marker>
+            marker={marker}
+            customIcon={customIcon}
+            setVisitedTank={setVisitedTank}
+            handleTimeFormat={handleTimeFormat}
+          />
         ))}
         {/* </MarkerClusterGroup> */}
       </MapContainer>
     </div>
   );
 }
+
 export default MapPage;
