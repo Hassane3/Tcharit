@@ -76,9 +76,11 @@ Global To do :
 
 *******HERE**********
 
+**15/07/24
+    - Ui improvement 
+
 **08/07/24
     - Add search option to search tanks in map page.
-        ***DONE***
         - When a tank is selected -> focus on it.
         - When a tank is searched -> focus on it.
 

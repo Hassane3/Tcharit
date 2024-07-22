@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { postsProps, tankDataProps } from "../MapPage";
+import { tankDataProps } from "../MapPage";
 import TankStatus from "../../models/utils/TankStatus";
 import styled from "styled-components";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { getDiffTime } from "../../utils/methods/methods";
+import { EmptyTank, FullTank, HalfFullTank } from "../../utils/constants/Icons";
+import { GLOBAL_STYLE } from "../../utils/constants/constants";
 
 interface mapTankBoxProps {
   tank: tankDataProps;
@@ -41,17 +43,11 @@ const MapTankBox = (props: mapTankBoxProps) => {
       }}
     >
       <PopUpMainElements>
-        <img
-          className="popUp_icon"
-          src={
-            tank.status === TankStatus.EMPTY
-              ? "./img/empty_tank.svg"
-              : tank.status === TankStatus.HALFFUll
-              ? "./img/halffilled_tank.svg"
-              : "./img/filled_tank.svg"
-          }
-          alt=""
-        />
+        {tank.status === TankStatus.EMPTY
+          ? EmptyTank()
+          : tank.status === TankStatus.HALFFUll
+          ? HalfFullTank()
+          : FullTank()}
         <div className="popUp_text">
           <p className="popUp_name">{tank.name}</p>
           <p className="popUp_description">
@@ -94,7 +90,7 @@ const PopUpBox = styled(Button)`
   }
   .popUp_name {
     font-family: "lalezar";
-    color: teal;
+    color: ${GLOBAL_STYLE.colorBrown};
     font-size: 34px;
   }
   .popUp_description {

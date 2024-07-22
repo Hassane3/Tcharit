@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 //MODELS
 import TankStatus from "../models/utils/TankStatus";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useNavigation, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 import { GLOBAL_STYLE } from "../utils/constants/constants";
 
 //DATA
 import { postsProps, tankDataProps } from "./MapPage";
-import { Button } from "@mui/material";
 import CheckPosts from "./CheckPosts";
 import BottomNav from "./components/BottomNav";
 import PopUp from "./components/PopUp";
@@ -94,6 +93,9 @@ const Tank = (props: TankProps) => {
     }
   };
 
+  // const pageState = useNavigation();
+  // console.log("pageState :", pageState.state);
+
   return (
     <div>
       <Header>
@@ -114,17 +116,6 @@ const Tank = (props: TankProps) => {
               : selectedTankData?.status === TankStatus.HALFFUll
               ? HalfFullTank()
               : FullTank()}
-            {/* <img
-              id="tank_icon"
-              alt=""
-              src={
-                selectedTankData?.status === TankStatus.EMPTY
-                  ? "/img/empty_tank.svg"
-                  : selectedTankData?.status === TankStatus.HALFFUll
-                  ? "/img/halffilled_tank.svg"
-                  : "/img/filled_tank.svg"
-              }
-            /> */}
             <div id="tank_text">
               <p id="tank_name">{selectedTankData?.name}</p>
               <p id="tank_description">

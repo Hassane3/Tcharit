@@ -71,7 +71,7 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
         },
         (error) => {
           console.log("ERROR => ", error);
-          alert("Unable to get your location");
+          alert("Unable to get your location, please activate to geolocation");
           // TREAT ERROR TYPES
         }
       );

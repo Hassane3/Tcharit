@@ -41,6 +41,18 @@ function App(): JSX.Element {
     );
   }, [cookies]);
 
+  // const [isPageLoaded, setIsPageLoaded]  = useState(false);
+  // useEffect(() => {
+  //   if(document.readyState === "complete")
+  //   {
+  //     setIsPageLoaded(true);
+  //   }
+
+  //   // return () => {
+  //   //   second
+  //   // }
+  // }, [])
+
   // useEffect(() => {
   //   const checkPointInterval = setInterval(() => {
   //     let now = new Date().getTime();
@@ -74,52 +86,8 @@ function App(): JSX.Element {
   //     .then((res) => res.json())
   //     .then((data) => setMessage(data.message));
   // }, []);
+  console.log("page state : ", document.readyState);
 
-  // For testing
-  function onChange() {
-    let today = new Date().getTime();
-    let difInSnds = 0;
-    // difInSnds = Math.floor((today - 1699104429404) / 1000);
-    difInSnds = Math.floor((today - 1699381926067) / 1000);
-    console.log(
-      // "Actual time : ",
-      // new Date(today - 1699116513509)
-
-      "Difference Time : ",
-      difInSnds + "s"
-    );
-    // if less then a minute
-    if (difInSnds < 60) {
-      alert("Dif Time ==> " + difInSnds + "seconds");
-      // if less then an hour
-    } else if (difInSnds < 60 * 60) {
-      alert("Dif Time ==> " + Math.floor(difInSnds / 60) + "minutes");
-      // if less then a day
-    } else if (difInSnds < 1440) {
-      alert("Dif Time ==> " + Math.floor(difInSnds / 60 / 60) + "heurs");
-    } else {
-      alert("Dif Time ==> " + Math.round(difInSnds / 60 / 60 / 24) + "jours");
-    }
-    // alert(
-    //   "LashCheck : " +
-    //     new Date().getTime() +
-    //     `\n` +
-    //     "Date and time : " +
-    //     new Date().toLocaleString() +
-    //     `\n` +
-    //     "Date : " +
-    //     new Date().toLocaleDateString() +
-    //     `\n` +
-    //     "Date : " +
-    //     new Date().toLocaleTimeString([], {
-    //       hour: "2-digit",
-    //       minute: "2-digit",
-    //     }) +
-    //     `\n` +
-    //     "Day : " +
-    //     new Date().toLocaleDateString([], { weekday: "long" })
-    // );
-  }
   return (
     <BrowserRouter>
       {/* <button onClick={onChange}>HERE</button> */}
