@@ -75,6 +75,8 @@ Global To do :
 - Test on Mobile
 
 *******HERE**********
+** 22/07/24
+    - Scan qr code to get to a specific tank.
 
 **15/07/24
     - Ui improvement 

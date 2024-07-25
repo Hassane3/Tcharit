@@ -14,6 +14,7 @@ import { UserType } from "../models/utils/UsersType";
 import { handleTimeFormat } from "../utils/methods/methods";
 import { MyMarker } from "./components/MyMarker";
 import AutoComplete from "./components/AutoComplete";
+import QrScanner from "./components/QrScanner";
 
 // Componenets
 
@@ -156,6 +157,8 @@ function MapPage(props: mapPageProps) {
     setInputValue(newValue);
   };
 
+  const [isQrCodeSelected, setIsQrCodeSelected] = useState<boolean>(false);
+
   return (
     <div id="map">
       <MapContainer
@@ -177,7 +180,21 @@ function MapPage(props: mapPageProps) {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-
+        {isQrCodeSelected && <QrScanner />}
+        <button
+          onClick={() => {
+            alert("btn clicked");
+            setIsQrCodeSelected(true);
+          }}
+          style={{
+            position: "absolute",
+            top: 60,
+            zIndex: 100000000,
+            width: "90px",
+          }}
+        >
+          QR CODE
+        </button>
         {/* <MarkerClusterGroup> */}
         {tanksData.map((marker: tankDataProps) => (
           <MyMarker
