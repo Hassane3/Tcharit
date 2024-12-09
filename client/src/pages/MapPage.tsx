@@ -15,6 +15,7 @@ import { handleTimeFormat } from "../utils/methods/methods";
 import { MyMarker } from "./components/MyMarker";
 import AutoComplete from "./components/AutoComplete";
 import QrScanner from "./components/QrScanner";
+import zIndex from "@mui/material/styles/zIndex";
 
 // Componenets
 
@@ -66,6 +67,7 @@ function MapPage(props: mapPageProps) {
   );
   const [inputValue, setInputValue] = useState<string>("");
 
+  const [qrLink, setQrLink] = useState<string>("");
   // const markers: markerDataProps[] = [
   //   {
   //     id: 1,
@@ -157,7 +159,7 @@ function MapPage(props: mapPageProps) {
     setInputValue(newValue);
   };
 
-  const [isQrCodeSelected, setIsQrCodeSelected] = useState<boolean>(false);
+  const [isStartScan, setIsStartScan] = useState<boolean>(false);
 
   return (
     <div id="map">
@@ -169,32 +171,37 @@ function MapPage(props: mapPageProps) {
         zoom={18}
         scrollWheelZoom={false}
       >
-        <AutoComplete
-          tanksData={tanksData}
-          searchValue={searchValue}
-          inputValue={inputValue}
-          handleSetSearchValue={handleSetSearchValue}
-          handleSetInputValue={handleSetInputValue}
-        />
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        {isQrCodeSelected && <QrScanner />}
-        <button
-          onClick={() => {
-            alert("btn clicked");
-            setIsQrCodeSelected(true);
-          }}
-          style={{
-            position: "absolute",
-            top: 60,
-            zIndex: 100000000,
-            width: "90px",
-          }}
-        >
-          QR CODE
-        </button>
+        <div style={{ zIndex: 1000, position: "relative" }}>
+          <AutoComplete
+            tanksData={tanksData}
+            searchValue={searchValue}
+            inputValue={inputValue}
+            handleSetSearchValue={handleSetSearchValue}
+            handleSetInputValue={handleSetInputValue}
+          />
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+
+          <button
+            onClick={() => {
+              alert("btn clicked");
+              setIsStartScan(!isStartScan);
+            }}
+            style={{
+              position: "relative",
+              top: 60,
+              width: "90px",
+              margin: 6,
+            }}
+          >
+            {isStartScan ? "Scanner un qr code" : "start scan"}
+          </button>
+          {isStartScan && (
+            <QrScanner setIsStartScan={setIsStartScan} setQrLink={setQrLink} />
+          )}
+        </div>
         {/* <MarkerClusterGroup> */}
         {tanksData.map((marker: tankDataProps) => (
           <MyMarker

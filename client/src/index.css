@@ -35,4 +35,8 @@ span, p, a, button {
   margin: 0;
 }
 /* Align leaflet control container (zoom box) to the bottom right */
-.leaflet-control-container > div:nth-child(1){bottom: 20px; right: 10px; left: unset; top: unset} 
+.leaflet-control-container > div:nth-child(1){bottom: 20px; right: 10px; left: unset; top: unset}
+
+.scanReader {
+  position: absolute;
+}
