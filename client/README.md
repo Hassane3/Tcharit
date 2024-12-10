@@ -76,7 +76,10 @@ Global To do :
 
 *******HERE**********
 ** 22/07/24
-    - Scan qr code to get to a specific tank.
+    - Scan qr code to get to a specific tank : 
+        generate a unique qr code for each tank
+        Scan a qr code and take to the specific tank
+
 
 **15/07/24
     - Ui improvement 
@@ -85,6 +88,7 @@ Global To do :
     - Add search option to search tanks in map page.
         - When a tank is selected -> focus on it.
         - When a tank is searched -> focus on it.
+        !!Disable Strict mode to inable camera turn-off
 
 
 

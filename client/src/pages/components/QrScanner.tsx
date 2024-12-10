@@ -1,14 +1,13 @@
 import zIndex from "@mui/material/styles/zIndex";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { QrReader } from "react-qr-reader";
 
 export interface QrScannerProps {
-  setQrLink: (qrLink: string) => void;
   setIsStartScan: (i: boolean) => void;
+  handleQrRedirection: (qrLink: string) => void;
 }
 const QrScanner = (props: QrScannerProps) => {
-  const { setQrLink, setIsStartScan } = props;
-  const [result, setResult] = useState("No result");
+  const { setIsStartScan, handleQrRedirection } = props;
 
   const previewStyle = {
     height: "auto",
@@ -17,6 +16,7 @@ const QrScanner = (props: QrScannerProps) => {
     position: "relative",
     margin: 6,
   };
+
   return (
     <div>
       <QrReader
@@ -25,20 +25,16 @@ const QrScanner = (props: QrScannerProps) => {
         containerStyle={previewStyle}
         videoId="scanVideo"
         onResult={(result, error) => {
-          console.log("result >", result);
-          if (result) {
-            alert("result");
-            setResult(result.toString());
-            setQrLink(result.toString());
+          if (!!result) {
+            handleQrRedirection(result.toString());
             setIsStartScan(false);
           }
-          if (error) {
+          if (!!error) {
             // gerer l'erreur
             console.log("error => ", error);
           }
         }}
       />
-      <p style={{ position: "relative", top: 30 }}>{result}</p>
     </div>
   );
 };

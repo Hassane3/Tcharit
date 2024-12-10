@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // LIBS
 // import { MapContainer } from 'react-leaflet/MapContainer'
 import { MapContainer, TileLayer } from "react-leaflet";
@@ -16,6 +16,7 @@ import { MyMarker } from "./components/MyMarker";
 import AutoComplete from "./components/AutoComplete";
 import QrScanner from "./components/QrScanner";
 import zIndex from "@mui/material/styles/zIndex";
+import { useNavigate } from "react-router-dom";
 
 // Componenets
 
@@ -67,7 +68,6 @@ function MapPage(props: mapPageProps) {
   );
   const [inputValue, setInputValue] = useState<string>("");
 
-  const [qrLink, setQrLink] = useState<string>("");
   // const markers: markerDataProps[] = [
   //   {
   //     id: 1,
@@ -161,6 +161,14 @@ function MapPage(props: mapPageProps) {
 
   const [isStartScan, setIsStartScan] = useState<boolean>(false);
 
+  const navigateTo = useNavigate();
+  const qrRedirection = (link: string) => {
+    // setVisitedTank(tank);
+    console.log("MapPage>qr link " + link);
+    //Retrieve the last url character to get the number of the tank
+    navigateTo("/tank/" + link.at(-1));
+  };
+
   return (
     <div id="map">
       <MapContainer
@@ -196,11 +204,16 @@ function MapPage(props: mapPageProps) {
               margin: 6,
             }}
           >
-            {isStartScan ? "Scanner un qr code" : "start scan"}
+            {isStartScan ? "Stop scan" : "start scan"}
           </button>
-          {isStartScan && (
-            <QrScanner setIsStartScan={setIsStartScan} setQrLink={setQrLink} />
-          )}
+          {isStartScan &&
+            (console.log("isStarScan =>", isStartScan),
+            (
+              <QrScanner
+                setIsStartScan={setIsStartScan}
+                handleQrRedirection={qrRedirection}
+              />
+            ))}
         </div>
         {/* <MarkerClusterGroup> */}
         {tanksData.map((marker: tankDataProps) => (
