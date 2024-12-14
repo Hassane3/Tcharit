@@ -6,7 +6,6 @@ import { MapContainer, TileLayer } from "react-leaflet";
 // import { useMap } from 'react-leaflet/hooks'
 // import { Marker } from 'react-leaflet';
 import { Icon, LatLng } from "leaflet";
-
 // MODELS
 import TankStatus from "../models/utils/TankStatus";
 // import { DataSnapshot, onValue, ref } from "firebase/database";
@@ -14,9 +13,30 @@ import { UserType } from "../models/utils/UsersType";
 import { handleTimeFormat } from "../utils/methods/methods";
 import { MyMarker } from "./components/MyMarker";
 import AutoComplete from "./components/AutoComplete";
-import QrScanner from "./components/QrScanner";
-import zIndex from "@mui/material/styles/zIndex";
+import {
+  Box,
+  Button,
+  Chip,
+  Divider,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import MenuIcon from "@mui/icons-material/Menu";
+import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
+import styled from "styled-components";
+import ModalPopUp from "./components/ModalPopUp";
 import { useNavigate } from "react-router-dom";
+import { doc, getDoc } from "firebase/firestore";
+import { auth, firestoreDb } from "../firebase/firebase";
+import { logoutUser } from "../firebase/operations";
+import { UserData } from "../App";
+import { Settings } from "@mui/icons-material";
+import { blue } from "@mui/material/colors";
 
 // Componenets
 
@@ -56,76 +76,22 @@ export interface userCookiesProps {
 interface mapPageProps {
   tanksData: Array<tankDataProps>;
   visitedTank: tankDataProps | undefined;
-  // lastCheckTime: number | undefined;
+  user: {} | null;
+  userData: UserData;
   setVisitedTank: (visitedTank: tankDataProps) => void | undefined;
-  // setLastCheckTime: (arg: number) => void;
 }
 function MapPage(props: mapPageProps) {
-  const { tanksData, visitedTank, setVisitedTank } = props;
+  const { tanksData, visitedTank, user, userData, setVisitedTank } = props;
 
   const [searchValue, setSearchValue] = useState<string | null>(
     tanksData.at(0)?.name || ""
   );
   const [inputValue, setInputValue] = useState<string>("");
 
-  // const markers: markerDataProps[] = [
-  //   {
-  //     id: 1,
-  //     // latLng: [32.48, 3.688],
-  //     latLng: [32.48, 3.688],
-  //     name: "HERE",
-  //     // description: "الخزان ممتلئ",
-  //     status: TankStatus.FULL,
-  //     // tank_icon: "./img/filled_tank.svg",
-  //     lastCheck: 7,
-  //   },
-  //   {
-  //     id: 6,
-  //     latLng: [43.296482, 5.36978],
-  //     name: "Actual loc",
-  //     status: TankStatus.HALFFUll,
-  //     lastCheck: 300,
-  //     // tank_description: "الخزان نصف ممتلئ",
-  //     // tank_icon: "./img/halffilled_tank.svg",
-  //   },
-  //   {
-  //     id: 5,
-  //     latLng: [43.300787, 5.37724],
-  //     name: "A",
-  //     status: TankStatus.HALFFUll,
-  //     lastCheck: 300,
-  //     // tank_description: "الخزان نصف ممتلئ",
-  //     // tank_icon: "./img/halffilled_tank.svg",
-  //   },
-  //   {
-  //     id: 2,
-  //     latLng: [43.30085, 5.378],
-  //     name: "B",
-  //     status: TankStatus.HALFFUll,
-  //     lastCheck: 300,
-  //     // tank_description: "الخزان نصف ممتلئ",
-  //     // tank_icon: "./img/halffilled_tank.svg",
-  //   },
-  //   {
-  //     id: 3,
-  //     latLng: [43.3015, 5.37699],
-  //     name: "C",
-  //     status: TankStatus.EMPTY,
-  //     lastCheck: 5000,
-  //     // tank_description: "الخزان فارغ",
-  //     // tank_icon: "./img/empty_tank.svg",
-  //   }
-  // ];
-
   const customIcon = new Icon({
     iconUrl: "./img/epingle.png",
-    // iconSize: [38, 38],
     iconSize: [38, 38],
   });
-
-  // const navigateTo = useNavigate();
-
-  // const tankId: number = parseInt(useParams().id as string);
 
   const options = {
     enableHighAccuracy: true,
@@ -159,16 +125,145 @@ function MapPage(props: mapPageProps) {
     setInputValue(newValue);
   };
 
-  const [isStartScan, setIsStartScan] = useState<boolean>(false);
+  type Anchor = "left";
+  const [anchorState, setAnchorState] = useState<boolean>(false);
+  const anchor = "left";
 
+  const toggleDrawer =
+    (anchor: Anchor, open: boolean) =>
+    (event: React.KeyboardEvent | React.MouseEvent) => {
+      if (
+        event.type === "keydown" &&
+        ((event as React.KeyboardEvent).key === "Tab" ||
+          (event as React.KeyboardEvent).key === "Shift")
+      ) {
+        return;
+      }
+      setAnchorState(open);
+    };
+
+  //Menu list
   const navigateTo = useNavigate();
-  const qrRedirection = (link: string) => {
-    // setVisitedTank(tank);
-    console.log("MapPage>qr link " + link);
-    //Retrieve the last url character to get the number of the tank
-    navigateTo("/tank/" + link.at(-1));
+  const list = (anchor: Anchor) => (
+    <Box
+      sx={{ width: 250 }}
+      role="presentation"
+      onClick={toggleDrawer(anchor, false)}
+      onKeyDown={toggleDrawer(anchor, false)}
+    >
+      <List>
+        {["Connect"].map((text, index) => (
+          <ListItem key={text} disablePadding>
+            <ListItemButton
+              sx={{ flexDirection: "column", alignItems: "start" }}
+              onClick={() => navigateTo("/Login")}
+            >
+              <Box sx={{ display: "flex" }}>
+                <ListItemIcon>
+                  {text === "Connect" && <AccountBoxIcon />}
+                </ListItemIcon>
+                <ListItemText primary={text} sx={{ margin: 0 }} />
+              </Box>
+              {text === "Connect" && (
+                <p
+                  style={{
+                    fontSize: "10px",
+                    textDecoration: "underline",
+                  }}
+                >
+                  reserved for tank fillers
+                </p>
+              )}
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+      <Divider />
+    </Box>
+  );
+
+  const listUserLoggedIn = () => {
+    return (
+      <Box
+        sx={{ width: 250 }}
+        role="presentation"
+        onClick={toggleDrawer(anchor, false)}
+        onKeyDown={toggleDrawer(anchor, false)}
+      >
+        <List>
+          <ListItem sx={{ flexDirection: "column", alignItems: "stretch" }}>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <ListItemIcon>
+                <AccountBoxIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary={userData.name}
+                sx={{ margin: 0, textTransform: "capitalize" }}
+              />
+              <ListItemButton
+                sx={{ display: "contents", alignSelf: "flex-end" }}
+                // onClick={}
+              >
+                <Settings />
+              </ListItemButton>
+            </Box>
+            <ListItemText
+              secondary={userData.email}
+              sx={{
+                margin: 0,
+                textTransform: "capitalize",
+                fontSize: "2rem",
+              }}
+            />
+          </ListItem>
+          <Divider />
+          <ListItem sx={{ justifyContent: "end" }}>
+            <Button variant="contained" onClick={handleLogout}>
+              logout
+            </Button>
+          </ListItem>
+        </List>
+      </Box>
+    );
   };
 
+  const handleLogout = () => {
+    try {
+      logoutUser();
+    } catch (error) {
+      console.error("Error when login out : ", error);
+    }
+  };
+
+  const [isQrModalOpen, setIsQrModalOpen] = useState(false);
+
+  const handleQrModalState =
+    (state: boolean) => (event: React.KeyboardEvent | React.MouseEvent) =>
+      setIsQrModalOpen(state);
+
+  // // When tankAgent is logged
+  // const [user, setUser] = useState<{} | null>(null);
+  // const [tankAgentData, setTankAgentData] = useState<{} | null>(null);
+  // // We track user connection state; and get user datas from firestore
+  // const fetchTankAgentData = async () => {
+  //   auth.onAuthStateChanged(async (user) => {
+  //     setUser(user);
+  //     if (user) {
+  //       const docRef = doc(firestoreDb, "users", user.uid);
+  //       const docSnap = await getDoc(docRef);
+  //       if (docSnap.exists()) {
+  //         setTankAgentData(docSnap.data());
+  //         console.log("User is not logged in");
+  //       } else {
+  //         console.log("User is not logged in");
+  //       }
+  //     }
+  //   });
+  // };
+
+  // useEffect(() => {
+  //   fetchTankAgentData();
+  // }, []);
   return (
     <div id="map">
       <MapContainer
@@ -179,42 +274,72 @@ function MapPage(props: mapPageProps) {
         zoom={18}
         scrollWheelZoom={false}
       >
-        <div style={{ zIndex: 1000, position: "relative" }}>
-          <AutoComplete
-            tanksData={tanksData}
-            searchValue={searchValue}
-            inputValue={inputValue}
-            handleSetSearchValue={handleSetSearchValue}
-            handleSetInputValue={handleSetInputValue}
-          />
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
+        <Header>
+          <FirstSection>
+            <AutoComplete
+              tanksData={tanksData}
+              searchValue={searchValue}
+              inputValue={inputValue}
+              handleSetSearchValue={handleSetSearchValue}
+              handleSetInputValue={handleSetInputValue}
+            />
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
 
-          <button
-            onClick={() => {
-              alert("btn clicked");
-              setIsStartScan(!isStartScan);
-            }}
-            style={{
-              position: "relative",
-              top: 60,
-              width: "90px",
-              margin: 6,
+            {/* MENU BUTTON */}
+            <React.Fragment>
+              <Button
+                onClick={toggleDrawer(anchor, true)}
+                variant="contained"
+                sx={{
+                  width: "fit-content",
+                  height: "fit-content",
+                  margin: "6px",
+                }}
+              >
+                <MenuIcon />
+              </Button>
+              <Drawer
+                anchor={anchor}
+                open={anchorState}
+                onClose={toggleDrawer(anchor, false)}
+              >
+                {user ? listUserLoggedIn() : list(anchor)}
+              </Drawer>
+            </React.Fragment>
+          </FirstSection>
+          <Divider
+            textAlign="left"
+            variant="middle"
+            sx={{
+              "&::before, &::after": {
+                borderColor: "primary.dark",
+                borderWidth: "1px",
+                opacity: 0.6,
+                alignSelf: "left",
+              },
+              "&::after": {
+                width: "20%",
+              },
             }}
           >
-            {isStartScan ? "Stop scan" : "start scan"}
-          </button>
-          {isStartScan &&
-            (console.log("isStarScan =>", isStartScan),
-            (
-              <QrScanner
-                setIsStartScan={setIsStartScan}
-                handleQrRedirection={qrRedirection}
-              />
-            ))}
-        </div>
+            <Chip label="Or" size="small" color={"secondary"} />
+          </Divider>
+          <Button
+            onClick={handleQrModalState(true)}
+            variant="contained"
+            sx={{ width: "fit-content", margin: "6px" }}
+          >
+            <QrCodeScannerIcon sx={{ marginRight: "2px" }} />
+            <p>Scan the qr code</p>
+          </Button>
+          <ModalPopUp
+            isQrModalOpen={isQrModalOpen}
+            qrModalStateHandler={handleQrModalState}
+          />
+        </Header>
         {/* <MarkerClusterGroup> */}
         {tanksData.map((marker: tankDataProps) => (
           <MyMarker
@@ -225,10 +350,23 @@ function MapPage(props: mapPageProps) {
             handleTimeFormat={handleTimeFormat}
           />
         ))}
+
         {/* </MarkerClusterGroup> */}
       </MapContainer>
     </div>
   );
 }
+const Header = styled.div`
+  display: flex;
+  flex-direction: column;
+  > * {
+    z-index: 1000;
+  }
+`;
+const FirstSection = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
 
 export default MapPage;

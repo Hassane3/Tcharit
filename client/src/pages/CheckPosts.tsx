@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { JSX, useEffect, useState } from "react";
 import { postsProps } from "./MapPage";
 import styled from "styled-components";
 import { DataSnapshot, onValue, ref } from "firebase/database";

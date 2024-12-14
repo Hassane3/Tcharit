@@ -48,7 +48,7 @@ const Tank = (props: TankProps) => {
 
   useEffect(() => {
     const tankData = tanksData.find((tank: tankDataProps) => {
-      return tank.id === tankId ?? null;
+      return tank.id === tankId;
     });
 
     setSelectedTankData(tankData);

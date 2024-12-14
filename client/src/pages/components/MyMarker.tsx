@@ -1,4 +1,4 @@
-import React from "react";
+import React, { JSX } from "react";
 import { Marker, Popup, useMap } from "react-leaflet";
 import { tankDataProps } from "../MapPage";
 import { Icon } from "leaflet";
@@ -15,32 +15,29 @@ export const MyMarker = (props: MarkerProps): JSX.Element => {
   const { marker, customIcon, setVisitedTank, handleTimeFormat } = props;
   const map = useMap();
   return (
-    <div>
-      <Marker
-        key={marker.id}
-        position={marker.latLng}
-        icon={customIcon}
-        eventHandlers={{
-          click: (e) => {
-            console.log("marker clicked", e);
-            // setClickedMarker(marker);
-            // setViewOnClick(e);
+    <Marker
+      key={marker.id}
+      position={marker.latLng}
+      icon={customIcon}
+      eventHandlers={{
+        click: (e) => {
+          console.log("marker clicked", e);
+          // setClickedMarker(marker);
+          // setViewOnClick(e);
 
-            map.setView(marker.latLng, map.getZoom(), {
-              animate: true,
-            });
-          },
-        }}
-      >
-        {marker.id}
-        <Popup className="popUp_container" autoPan={false}>
-          <MapTankBox
-            tank={marker}
-            setVisitedTank={setVisitedTank}
-            handleTimeFormat={handleTimeFormat}
-          />
-        </Popup>
-      </Marker>
-    </div>
+          map.setView(marker.latLng, map.getZoom(), {
+            animate: true,
+          });
+        },
+      }}
+    >
+      <Popup className="popUp_container" autoPan={false}>
+        <MapTankBox
+          tank={marker}
+          setVisitedTank={setVisitedTank}
+          handleTimeFormat={handleTimeFormat}
+        />
+      </Popup>
+    </Marker>
   );
 };

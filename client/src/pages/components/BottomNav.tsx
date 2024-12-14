@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 import { LatLng } from "leaflet";
-import React, { useState } from "react";
+import React, { JSX, useState } from "react";
 import styled from "styled-components";
 import { latLngProps } from "../MapPage";
 import TankStatus from "../../models/utils/TankStatus";

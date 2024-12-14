@@ -58,6 +58,8 @@ leaflet cluster :
 Router :
 `npm i -D react-router-dom`
 
+!!!!!!! React.strictmode is desabled !!!!!!!!!
+
 Global To do :
     - Maybe add a functionality that remove tank posts of a user that has posted multiples posts in a short period of time. (spaming).
     - Dislay only a given number of posts in CheckPost component (tank page).
@@ -72,9 +74,23 @@ Global To do :
 
     - Handle errors (like internet connection)
 
+    *** TankAgentUser connection
+    - Handle password and email modification (pages...)
 - Test on Mobile
 
+Fix Todo : 
+    - Show the tank panel when selected in the search bar.
+
 *******HERE**********
+**10/12/24
+    - Add a menu to the app with a login section (reserved for tank fillers) :
+        - Use mui material to create the menu
+        - Connection with email and password (given previously)
+            Once the tank filler user is connected, he has the possibility to change his password or email adress :
+            - Create ui page connection
+            - Deconnexion function
+       
+        
 ** 22/07/24
     - Scan qr code to get to a specific tank : 
         generate a unique qr code for each tank

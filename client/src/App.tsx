@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { JSX, useEffect, useState } from "react";
 // LIBS
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
@@ -9,8 +9,16 @@ import MapPage, { tankDataProps } from "./pages/MapPage";
 import Tank from "./pages/Tank";
 import NoPage from "./pages/NoPage";
 import { DataSnapshot, onValue, ref } from "firebase/database";
-import { db } from "./firebase/firebase";
+import { auth, db, firestoreDb } from "./firebase/firebase";
 
+import { AppProvider } from "@toolpad/core/react-router-dom";
+import Login from "./pages/Login";
+import { createTheme } from "@mui/material";
+import { doc, getDoc } from "firebase/firestore";
+export interface UserData {
+  name: string | null;
+  email: string | null;
+}
 function App(): JSX.Element {
   // const [tanksData, setTanksData] = useState<Array<tankDataProps>>([]);
   const [tanksData, setTanksData] = useState<Array<tankDataProps>>([]);
@@ -20,6 +28,39 @@ function App(): JSX.Element {
   // const [cookies, setCookie] = useCookies(["access_token", "refresh_token"]);
   const [visitedTank, setVisitedTank] = useState<tankDataProps>();
   // const [lastCheckTime, setLastCheckTime] = useState<number>();
+
+  // When tankAgent is logged
+
+  const [user, setUser] = useState<{} | null>(null);
+  const [userData, setUserData] = useState<UserData>({
+    name: null,
+    email: null,
+  });
+  const [tankAgentData, setTankAgentData] = useState<{} | null>(null);
+  // We track user connection state; and get user datas from firestore
+  const fetchTankAgentData = async () => {
+    auth.onAuthStateChanged(async (user) => {
+      setUser(user);
+      if (user) {
+        const docRef = doc(firestoreDb, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setUserData({
+            name: docSnap.get("name"),
+            email: docSnap.get("email"),
+          });
+          setTankAgentData(docSnap.data());
+          console.log("User is not logged in");
+        } else {
+          console.log("User is not logged in");
+        }
+      }
+    });
+  };
+
+  useEffect(() => {
+    fetchTankAgentData();
+  }, []);
 
   useEffect(() => {
     // let tanks: tankDataProps[];
@@ -41,93 +82,101 @@ function App(): JSX.Element {
     );
   }, [cookies]);
 
-  // const [isPageLoaded, setIsPageLoaded]  = useState(false);
-  // useEffect(() => {
-  //   if(document.readyState === "complete")
-  //   {
-  //     setIsPageLoaded(true);
-  //   }
+  const customTheme = createTheme({
+    cssVariables: {
+      colorSchemeSelector: "data-toolpad-color-scheme",
+    },
+    colorSchemes: {
+      light: {
+        palette: {
+          background: {
+            default: "#F9F9FE",
+            paper: "#EEEEF9",
+          },
+        },
+      },
+      dark: {
+        palette: {
+          background: {
+            default: "#2A4364",
+            paper: "#112E4D",
+          },
+        },
+      },
+    },
 
-  //   // return () => {
-  //   //   second
-  //   // }
-  // }, [])
-
-  // useEffect(() => {
-  //   const checkPointInterval = setInterval(() => {
-  //     let now = new Date().getTime();
-  //     console.log("****SET INTERVAL*******");
-  //     console.log("tankData : ", tanksData);
-  //     tanksData.forEach((tank: tankDataProps) => {
-  //       console.log("tank ", tank.id, " lastCheckTime : ", tank.lastCheckTime);
-  //       // diffrenceTime in seconds
-  //       let diffTime = Math.floor((now - tank.lastPostTime) / 1000);
-  //       // console.log("differenceTime --> ", diffTime);
-  //       updateLastCheck(tank.id, diffTime);
-  //       // onValue(
-  //       //   ref(db, "/tanks/" + tank.id + "/lastCheckTime"),
-  //       //   (snapshot: DataSnapshot) => {
-  //       //     console.log("db ref : ", snapshot.val());
-  //       //   }
-  //       // );
-  //     });
-  //   }, 10000);
-
-  //   return () => {
-  //     clearInterval(checkPointInterval);
-  //   };
-  // }, [tanksData]);
-
-  // alert("User cookie : " + cookies.userId);
-  // const [message, setMessage] = useState("");
-
-  // useEffect(() => {
-  //   fetch("http://localhost:8000/message")
-  //     .then((res) => res.json())
-  //     .then((data) => setMessage(data.message));
-  // }, []);
+    breakpoints: {
+      values: {
+        xs: 0,
+        sm: 600,
+        md: 600,
+        lg: 1200,
+        xl: 1536,
+      },
+    },
+  });
   console.log("page state : ", document.readyState);
-
   return (
     <BrowserRouter>
-      {/* <button onClick={onChange}>HERE</button> */}
-      <Routes>
-        {/* <Route path="/" element={<MapPage />}> */}
-        <Route
-          path="/"
-          element={
-            <MapPage
-              tanksData={tanksData}
-              visitedTank={visitedTank}
-              setVisitedTank={setVisitedTank}
-            />
-          }
-        />
-        <Route
-          path="/mapPage"
-          element={
-            <MapPage
-              tanksData={tanksData}
-              visitedTank={visitedTank}
-              setVisitedTank={setVisitedTank}
-            />
-          }
-        />
-        {/* <Route path="/tank:id" element={<Tank />} /> */}
-        <Route
-          path="/tank/:id"
-          element={
-            <Tank
-              tanksData={tanksData}
-              // HERE
-              setCookie={setCookie}
-              cookies={cookies}
-            />
-          }
-        />
-        <Route path="*" element={<NoPage />} />
-        {/* </Route> */}
-      </Routes>
+      <AppProvider
+        theme={customTheme}
+        // navigation={[
+        //   {
+        //     segment: "home",
+        //     title: "Home",
+        //   },
+        //   {
+        //     segment: "login",
+        //     title: "Login",
+        //   },
+        // ]}
+        // session={useSession()}
+      >
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <MapPage
+                tanksData={tanksData}
+                visitedTank={visitedTank}
+                setVisitedTank={setVisitedTank}
+                user={user}
+                userData={userData}
+              />
+            }
+          />
+          <Route
+            path="/mapPage"
+            element={
+              <MapPage
+                tanksData={tanksData}
+                visitedTank={visitedTank}
+                setVisitedTank={setVisitedTank}
+                user={user}
+                userData={userData}
+              />
+            }
+          />
+          {/* <Route path="/tank:id" element={<Tank />} /> */}
+          <Route
+            path="/tank/:id"
+            element={
+              <Tank
+                tanksData={tanksData}
+                // HERE
+                setCookie={setCookie}
+                cookies={cookies}
+              />
+            }
+          />
+          <Route
+            path="/login"
+            element={<Login handleSetTankAgentData={setTankAgentData} />}
+          />
+          <Route path="*" element={<NoPage />} />
+          {/* </Route> */}
+        </Routes>
+      </AppProvider>
     </BrowserRouter>
   );
 }
