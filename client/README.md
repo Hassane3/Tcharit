@@ -64,7 +64,7 @@ Global To do :
     - Maybe add a functionality that remove tank posts of a user that has posted multiples posts in a short period of time. (spaming).
     - Dislay only a given number of posts in CheckPost component (tank page).
     - Delete also some posts from db when their post date is over 7 days. (too old)
-    
+    - When a user add a post, the user hasn't to refresh the page to be able to add a new post.
     LANGAGE:
     - Translate day to arabic. (tank post)
     - Add an authentication for staff (tank responsible/filler) :
@@ -82,6 +82,15 @@ Fix Todo :
     - Show the tank panel when selected in the search bar.
 
 *******HERE**********
+**29/01/25
+    Delete posts that are old.
+
+**14/12/24
+    --> In tank page, header must be fixed when scrolling attempt a certain value.
+    - Handle when tankAgent set tank state :
+        - Use material ui to re-design tank page
+        - when tank agent set tank state(full/empty), the box is designed differently (important) to show that its a reliable information
+
 **10/12/24
     - Add a menu to the app with a login section (reserved for tank fillers) :
         - Use mui material to create the menu

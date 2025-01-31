@@ -1,12 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { tankDataProps } from "../MapPage";
+import { postsProps, tankDataProps } from "../MapPage";
 import TankStatus from "../../models/utils/TankStatus";
 import styled from "styled-components";
 import { Button } from "@mui/material";
+import CheckIcon from "@mui/icons-material/Check";
 import { useNavigate } from "react-router-dom";
 import { getDiffTime } from "../../utils/methods/methods";
-import { EmptyTank, FullTank, HalfFullTank } from "../../utils/constants/Icons";
+import {
+  EmptyTank,
+  FullTank,
+  HalfFullTank,
+  UnsetTank,
+} from "../../utils/constants/Icons";
 import { GLOBAL_STYLE } from "../../utils/constants/constants";
+import { PostBottomBox } from "../CheckPosts";
+import { UserType } from "../../models/utils/UsersType";
+import { customTheme } from "../../App";
+import { getTankStatusColor } from "../Tank";
 
 interface mapTankBoxProps {
   tank: tankDataProps;
@@ -17,16 +27,30 @@ interface mapTankBoxProps {
 const MapTankBox = (props: mapTankBoxProps) => {
   const { tank, setVisitedTank, handleTimeFormat } = props;
   const navigateTo = useNavigate();
-  const [lastCheckTime, setLastCheckTime] = useState<number>();
+  const [lastCheckTime, setLastCheckTime] = useState<number | null>();
+  const [lastPost, setLastPost] = useState<postsProps | null>();
 
   useEffect(() => {
-    let lastPostTime: number = tank.lastPostTime;
-    if (lastPostTime) {
-      setLastCheckTime(getDiffTime(lastPostTime));
+    if (tank.posts) {
+      console.log("last post >", Object.values(tank.posts).at(-1));
+      // We get the last post of the tank and retrieve its postTime
+      let lastPost: any = Object.values(tank.posts).at(-1);
+      setLastPost(lastPost);
+      setLastCheckTime(getDiffTime(lastPost.postTime));
+    } else {
+      setLastPost(null);
+      setLastCheckTime(null);
     }
-
+    // We repeat the same thing in the setInterval
     const checkPointInterval = setInterval(() => {
-      setLastCheckTime(getDiffTime(lastPostTime));
+      if (tank.posts) {
+        let lastPost: any = Object.values(tank.posts).at(-1);
+        setLastPost(lastPost);
+        setLastCheckTime(getDiffTime(lastPost.postTime));
+      } else {
+        setLastPost(null);
+        setLastCheckTime(null);
+      }
       // Timer 2min in ms
     }, 120000);
 
@@ -41,38 +65,56 @@ const MapTankBox = (props: mapTankBoxProps) => {
         setVisitedTank(tank);
         navigateTo("/tank/" + tank.id);
       }}
+      fontColor={customTheme.palette.background.defaultBrown}
     >
       <PopUpMainElements>
-        {tank.status === TankStatus.EMPTY
-          ? EmptyTank()
-          : tank.status === TankStatus.HALFFUll
-          ? HalfFullTank()
-          : FullTank()}
+        {lastPost
+          ? lastPost.status === TankStatus.EMPTY
+            ? EmptyTank()
+            : lastPost.status === TankStatus.HALFFUll
+              ? HalfFullTank()
+              : FullTank()
+          : UnsetTank()}
+
         <div className="popUp_text">
           <p className="popUp_name">{tank.name}</p>
-          <p className="popUp_description">
-            {tank.status === TankStatus.EMPTY
-              ? "الخزان فارغ"
-              : tank.status === TankStatus.HALFFUll
-              ? "الخزان نصف ممتلئ"
-              : tank.status === TankStatus.FULL
-              ? "الخزان ممتلئ"
-              : "لم يسجل اي حالة لهذا الخزان"}
+          <p
+            className="popUp_description"
+            // style={{ color: getTankStatusColor(tank.posts[tank.posts.at(-1)], "dark") }}
+          >
+            {lastPost
+              ? lastPost.status === TankStatus.EMPTY
+                ? "الخزان فارغ"
+                : lastPost.status === TankStatus.HALFFUll
+                  ? "الخزان نصف ممتلئ"
+                  : "الخزان ممتلئ"
+              : "لم يسجل اية حالة لهذا الخزان"}
           </p>
         </div>
       </PopUpMainElements>
-      <span className="popUp_lastCheck">
-        {/* منذ {handleTimeFormat(marker.lastCheckTime)} دقيقة */}
-        {lastCheckTime && handleTimeFormat(lastCheckTime)}
-      </span>
+
+      <PostBottomBox textColor={customTheme.palette.background.blueDark}>
+        <span>
+          {/* {lastCheckTime && handleTimeFormat(lastCheckTime)} */}
+          {lastCheckTime && handleTimeFormat(lastCheckTime)}
+        </span>
+        {/* A changer ! */}
+        {lastPost && lastPost.userType === UserType.TANKAGENT && (
+          <span>
+            trusted
+            <CheckIcon />
+          </span>
+        )}
+      </PostBottomBox>
     </PopUpBox>
   );
 };
 
-const PopUpBox = styled(Button)`
+const PopUpBox = styled(Button)<{ fontColor: string }>`
   display: flex;
   flex-direction: column;
   width: 100%;
+  /* max-width: 100%; */
 
   .popUp_icon {
     height: 70px;
@@ -90,7 +132,7 @@ const PopUpBox = styled(Button)`
   }
   .popUp_name {
     font-family: "lalezar";
-    color: ${GLOBAL_STYLE.colorBrown};
+    color: ${(props) => props.fontColor};
     font-size: 34px;
   }
   .popUp_description {
@@ -98,13 +140,6 @@ const PopUpBox = styled(Button)`
     font-weight: 600;
     font-size: 18px;
   }
-  .popUp_lastCheck {
-    font-family: rubik;
-    font-size: 16px;
-    font-weight: 400;
-    align-self: start;
-  }
-
   .leaflet-popup-content {
     margin: 0;
   }

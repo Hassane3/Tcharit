@@ -32,3 +32,24 @@ export const getDiffTime = (postTime: number) => {
   return diffTime;
   // handleTimeFormat(diffTime);
 };
+
+export const calculateDateDifference = (dateStr: string) => {
+  const today: any = new Date(); // Get today's date
+
+  // Split the French date (DD/MM/YYYY) into day, month, and year
+  const [day, month, year] = dateStr.split("/");
+
+  // Create a valid date string in the format YYYY-MM-DD
+  const formattedDate = `${year}-${month}-${day}`;
+
+  // Convert the formatted date string to a Date object
+  const givenDate: any = new Date(formattedDate);
+
+  // Calculate the time difference in milliseconds
+  const timeDifference = today - givenDate;
+
+  // Convert time difference to days
+  const diffInDays = Math.floor(timeDifference / (1000 * 3600 * 24));
+
+  return diffInDays;
+};

@@ -93,7 +93,8 @@ export const logoutUser = ( ) => {
     const auth = getAuth(db.app)
     signOut(auth).then(()=>{
         console.log("User logged out")
-    }).catch((error)=>{
-        console.log("Error logging out user > ", error)
-    })
+        }).catch((error)=>{
+            console.log("Error logging out user > ", error)
+        })
+        
 }

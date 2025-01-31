@@ -1,21 +1,28 @@
 import React, { JSX, useEffect, useState } from "react";
-import { postsProps } from "./MapPage";
+import { postsProps, tankDataProps } from "./MapPage";
 import styled from "styled-components";
 import { DataSnapshot, onValue, ref } from "firebase/database";
 import { db } from "../firebase/firebase";
 import { getDiffTime, handleTimeFormat } from "../utils/methods/methods";
 import { GLOBAL_STYLE } from "../utils/constants/constants";
 import TankStatus from "../models/utils/TankStatus";
+import { getPostsStatusColor } from "./Tank";
+import { customTheme } from "../App";
+import FaceIcon from "@mui/icons-material/Face";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import CheckIcon from "@mui/icons-material/Check";
+import { Button, Chip, Divider } from "@mui/material";
+import { UserType } from "../models/utils/UsersType";
 
-const CheckPosts = (props: { tankId: number }): JSX.Element => {
-  const { tankId } = props;
+const CheckPosts = (props: { tankData: tankDataProps }): JSX.Element => {
+  const { tankData } = props;
   const [postsData, setPostsData] = useState<Array<postsProps>>([]);
   let date = "";
   const [lastCheckTime, setLastCheckTime] = useState<number>();
 
   useEffect(() => {
     let posts: Array<postsProps> = [];
-    const dbRef = ref(db, "tanks/" + tankId + "/posts");
+    const dbRef = ref(db, "tanks/" + tankData.id + "/posts");
 
     return onValue(dbRef, (snapshot: DataSnapshot) => {
       posts = [];
@@ -24,7 +31,7 @@ const CheckPosts = (props: { tankId: number }): JSX.Element => {
       });
       setPostsData(posts);
     });
-  }, [tankId]);
+  }, [tankData]);
 
   useEffect(() => {
     // Get the last post
@@ -49,6 +56,7 @@ const CheckPosts = (props: { tankId: number }): JSX.Element => {
     };
   }, [postsData]);
 
+  let today = new Date().toLocaleDateString();
   return (
     <Container>
       {
@@ -60,45 +68,123 @@ const CheckPosts = (props: { tankId: number }): JSX.Element => {
               {post.date !== date &&
                 ((date = post.date),
                 (
-                  <DaySeparator>
-                    {post.date === new Date().toLocaleDateString()
-                      ? "TODAY"
-                      : post.date + " " + post.weekDay}
-                  </DaySeparator>
+                  <Divider
+                    variant="middle"
+                    sx={{
+                      flexDirection: "row !important",
+                      "&::before, &::after": {
+                        borderColor: customTheme.palette.text.grey,
+                        borderWidth: "1px",
+                      },
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: "1.1em",
+                        fontFamily: "Inter",
+                        fontWeight: 600,
+                        color: customTheme.palette.text.grey,
+                      }}
+                    >
+                      {post.date === today
+                        ? "TODAY"
+                        : post.date + " " + post.weekDay}
+                    </span>
+                  </Divider>
                 ))}
               {
                 <div>
                   <PostBox
                     key={index}
-                    $backgroundColor={
-                      post.status === TankStatus.EMPTY
-                        ? GLOBAL_STYLE.colorRedLight
-                        : post.status === TankStatus.HALFFUll
-                        ? GLOBAL_STYLE.colorYellowLight
-                        : GLOBAL_STYLE.colorBlueLight
-                    }
-                    $fontColor={
-                      post.status === TankStatus.EMPTY
-                        ? GLOBAL_STYLE.colorRed
-                        : post.status === TankStatus.HALFFUll
-                        ? GLOBAL_STYLE.colorYellow
-                        : GLOBAL_STYLE.colorBlue
-                    }
+                    style={{
+                      // backgroundColor:{getPostsStatusColor(
+                      //   post,
+                      //   post.date !== new Date().toLocaleDateString()
+                      //     ? "light"
+                      //     : "basic"
+                      // )},
+                      backgroundColor: getPostsStatusColor(
+                        post,
+                        post.date !== new Date().toLocaleDateString()
+                          ? "light"
+                          : "basic"
+                      ),
+                      opacity:
+                        post.date !== new Date().toLocaleDateString() ? 0.8 : 1,
+                    }}
                   >
-                    <span>{post.userType}</span>
-                    <span>{post.time}</span>
-                    <span id="postStatus">{post.status}</span>
+                    <div style={{ justifyContent: "flex-start" }}>
+                      {post.userType === UserType.TANKAGENT ? (
+                        <FaceIcon
+                          color="secondary"
+                          fontSize="large"
+                          style={{
+                            color: customTheme.palette.background.defaultBlue,
+                          }}
+                        />
+                      ) : (
+                        <AccountCircleIcon
+                          fontSize="large"
+                          style={{
+                            color: customTheme.palette.background.defaultWhite,
+                          }}
+                        />
+                      )}
+                    </div>
+                    <div style={{ justifyContent: "center" }}>
+                      <span
+                        style={{
+                          color: customTheme.palette.background.blueDark,
+                          fontSize: "1.4em",
+                          fontFamily: "inter",
+                        }}
+                      >
+                        {post.time}
+                      </span>
+                    </div>
+                    <div style={{ justifyContent: "flex-end" }}>
+                      {/* <Button
+                        variant="contained"
+                        disableElevation
+                        disableRipple
+                        sx={{
+                          background: getPostsStatusColor(post, "basic"),
+                          position: "initial",
+                        }}
+                      > */}
+                      <span
+                        id="postStatus"
+                        style={{
+                          color: customTheme.palette.background.defaultWhite,
+                          fontWeight: 800,
+                        }}
+                      >
+                        {post.status}
+                      </span>
+                      {/* </Button> */}
+                    </div>
                     {/* <div>
                       <span>{post.date}</span> <span>{post.weekDay}</span>
                     </div> */}
                   </PostBox>
-                  {index === 0 && (
-                    <PostBottomBox>
-                      <span>
-                        {lastCheckTime && handleTimeFormat(lastCheckTime)}
-                      </span>
-                    </PostBottomBox>
-                  )}
+                  {post.date === today &&
+                    (index === 0 || post.userType === UserType.TANKAGENT) && (
+                      <PostBottomBox
+                        textColor={customTheme.palette.background.blueDark}
+                      >
+                        <span>
+                          {/* {lastCheckTime && handleTimeFormat(lastCheckTime)} */}
+                          {handleTimeFormat(getDiffTime(post.postTime))}
+                        </span>
+                        {/* A changer ! */}
+                        {post.userType === UserType.TANKAGENT && (
+                          <span>
+                            trusted
+                            <CheckIcon />
+                          </span>
+                        )}
+                      </PostBottomBox>
+                    )}
                 </div>
               }
             </MainContent>
@@ -153,6 +239,7 @@ const CheckPosts = (props: { tankId: number }): JSX.Element => {
 
 const Container = styled.div`
   padding-bottom: 100px;
+  padding-top: 25vh;
 `;
 
 const MainContent = styled.div`
@@ -160,54 +247,54 @@ const MainContent = styled.div`
   flex-direction: column;
   align-items: center;
   /* justify-content: center; */
-  margin: 0 6px;
+  margin: 0 10px;
 
   > span {
     margin: 20px 0;
   }
   > div {
-    margin: 20px 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     width: 100%;
+    min-height: 11vh;
   }
 `;
 
-const DaySeparator = styled.span`
-  font-size: 14px;
-  color: ${GLOBAL_STYLE.colorGreyLight};
-`;
-
-const PostBox = styled.div<{ $backgroundColor?: string; $fontColor?: string }>`
+const PostBox = styled.div`
   width: inherit;
-  padding: 16px;
-  background-color: ${(props) => props.$backgroundColor};
+  padding: 8px;
   border-radius: 10px;
 
   display: flex;
   justify-content: space-between;
 
-  #postStatus {
-    color: ${(props) => props.$fontColor};
-    font-weight: 600;
+  > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30%;
+    /* justify-content: center; */
+    /* flex: 0.5; */
   }
-  > span {
+  span {
     color: ${GLOBAL_STYLE.colorBlackLight};
-    width: 20%;
+    /* width: 20%; */
     display: flex;
     justify-content: center;
   }
 `;
 
-const PostBottomBox = styled.div`
+export const PostBottomBox = styled.div<{ textColor: string }>`
   display: flex;
-  justify-content: flex-end;
+  flex-direction: row-reverse;
+  justify-content: space-between;
   width: inherit;
   span {
     font-size: 16px;
-    color: ${GLOBAL_STYLE.colorGreyLight};
+    color: ${(props) => props.textColor};
+    display: flex;
   }
 `;
 export default CheckPosts;

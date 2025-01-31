@@ -5,20 +5,158 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 //MODELS
 import { useCookies } from "react-cookie";
 //COMPONENTS
-import MapPage, { tankDataProps } from "./pages/MapPage";
+import MapPage, { postsProps, tankDataProps } from "./pages/MapPage";
 import Tank from "./pages/Tank";
 import NoPage from "./pages/NoPage";
-import { DataSnapshot, onValue, ref } from "firebase/database";
+import { DataSnapshot, onValue, ref, remove } from "firebase/database";
 import { auth, db, firestoreDb } from "./firebase/firebase";
 
 import { AppProvider } from "@toolpad/core/react-router-dom";
 import Login from "./pages/Login";
 import { createTheme } from "@mui/material";
 import { doc, getDoc } from "firebase/firestore";
+import { calculateDateDifference } from "./utils/methods/methods";
+
 export interface UserData {
   name: string | null;
   email: string | null;
 }
+declare module "@mui/material/styles" {
+  interface TypeText {
+    grey: string;
+  }
+  interface TypeBackground {
+    defaultWhite: string;
+    defaultBlue: string;
+    defaultBrown: string;
+    blueDark: string;
+    blue: string;
+    blueLight: string;
+    blueExtraLight: string;
+    yellowDark: string;
+    yellow: string;
+    yellowLight: string;
+    yellowExtraLight: string;
+    redDark: string;
+    red: string;
+    redLight: string;
+    redExtraLight: string;
+    greyLight: string;
+  }
+}
+export const customTheme = createTheme({
+  cssVariables: {
+    colorSchemeSelector: "data-toolpad-color-scheme",
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          minWidth: 0,
+
+          padding: "6px 20px",
+        },
+        containedSizeLarge: {
+          fontSize: "1.4em",
+          fontWeight: "600",
+          borderRadius: "10px",
+          toUpperCase: "none",
+          boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+        },
+      },
+    },
+  },
+  typography: {
+    fontFamily: "Changa",
+    h1: {
+      fontFamily: "Lalezar",
+      fontWeight: "400",
+    },
+    h2: {
+      fontFamily: "Lalezar",
+      fontWeight: "400",
+    },
+    h3: {
+      fontFamily: "Changa",
+      fontSize: "1.4em",
+      fontWeight: "600",
+    },
+    button: {
+      fontSize: "1.4em",
+      fontWeight: "600",
+    },
+  },
+  colorSchemes: {
+    light: {
+      palette: {
+        primary: {
+          main: "#3D5F61",
+        },
+        secondary: {
+          main: "#567F8A",
+        },
+        text: {
+          primary: "##61523D",
+          secondary: "#3D5F61",
+          grey: " #c1c1c1",
+        },
+        background: {
+          default: "#BEF1F7",
+          defaultBlue: "#3D5F61",
+          defaultBrown: "#61523D",
+          defaultWhite: "#EAFBFF",
+          paper: "#3D5F61",
+          blueDark: "#567F8A",
+          blue: "#95DCE0",
+          blueLight: "#BEF1F7",
+          blueExtraLight: "#DFF6FF",
+          yellowDark: "#8A7256",
+          yellow: "#E1C095",
+          yellowLight: "#E9CFAF",
+          yellowExtraLight: "#F0DFCA",
+          redDark: "#8A5656",
+          red: "#E0A595",
+          redLight: "#E8C2AF",
+          redExtraLight: "#EFD2CA",
+          greyLight: "#adadad",
+        },
+      },
+    },
+    dark: {
+      palette: {
+        primary: {
+          main: "#3D5F61",
+        },
+        secondary: {
+          main: "#567F8A",
+        },
+        text: {
+          primary: "#EAFBFF",
+          secondary: "#3D5F61",
+          grey: "#b8b8b8",
+        },
+        background: {
+          default: "#EAFBFF",
+          paper: "#3D5F61",
+          blueDark: "#567F8A",
+          yellowDark: "#8A7256",
+          redDark: "#8A5656",
+          greyLight: "#adadad",
+        },
+      },
+    },
+  },
+
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 600,
+      lg: 1200,
+      xl: 1536,
+    },
+  },
+});
 function App(): JSX.Element {
   // const [tanksData, setTanksData] = useState<Array<tankDataProps>>([]);
   const [tanksData, setTanksData] = useState<Array<tankDataProps>>([]);
@@ -50,8 +188,13 @@ function App(): JSX.Element {
             email: docSnap.get("email"),
           });
           setTankAgentData(docSnap.data());
-          console.log("User is not logged in");
+
+          console.log("User is logged in");
         } else {
+          setUserData({
+            name: null,
+            email: null,
+          });
           console.log("User is not logged in");
         }
       }
@@ -73,8 +216,47 @@ function App(): JSX.Element {
         tanks = [];
         snapshot.forEach((tank: any) => {
           tanks.push({ id: parseInt(tank.key), ...tank.val() });
+
+          // if(Math.floor((today - parseInt(post.date)) / _MS_PER_DAY ) > 7){
+
+          // }
+
+          const dbPostRef = ref(db, "tanks/" + tank.key + "/posts");
+          // Look at this :
+          // database.ref("users").once("value").then((snapshot)
+          const posts = onValue(
+            dbPostRef,
+            (snapshot: DataSnapshot) => {
+              snapshot.forEach((post: any) => {
+                let date = "20/01/2025";
+                // We delete posts that are elder than a week :
+                console.log(
+                  "calDateDiff >",
+                  post.val().date,
+                  " : ",
+                  calculateDateDifference(post.val().date)
+                );
+                if (calculateDateDifference(post.val().date) > 7) {
+                  remove(ref(db, "tanks/" + tank.key + "/posts/" + post.key))
+                    .then(() => {
+                      console.log("Data deleted successfully");
+                    })
+                    .catch((error) => {
+                      console.log("Error deleting data:");
+                    });
+                }
+                // We update home last time
+              });
+            },
+            (error: Error) => {
+              alert("Error while fetching datas from db : " + error.message);
+            }
+          );
+          console.log("tanks > ", tanks);
+          //We verify if there is not old posts that must be deleted in the bd, else we delete them
+
+          setTanksData(tanks);
         });
-        setTanksData(tanks);
       },
       (error: Error) => {
         alert("Error while fetching datas from db : " + error.message);
@@ -82,39 +264,8 @@ function App(): JSX.Element {
     );
   }, [cookies]);
 
-  const customTheme = createTheme({
-    cssVariables: {
-      colorSchemeSelector: "data-toolpad-color-scheme",
-    },
-    colorSchemes: {
-      light: {
-        palette: {
-          background: {
-            default: "#F9F9FE",
-            paper: "#EEEEF9",
-          },
-        },
-      },
-      dark: {
-        palette: {
-          background: {
-            default: "#2A4364",
-            paper: "#112E4D",
-          },
-        },
-      },
-    },
+  const { palette } = createTheme();
 
-    breakpoints: {
-      values: {
-        xs: 0,
-        sm: 600,
-        md: 600,
-        lg: 1200,
-        xl: 1536,
-      },
-    },
-  });
   console.log("page state : ", document.readyState);
   return (
     <BrowserRouter>
@@ -142,6 +293,7 @@ function App(): JSX.Element {
                 setVisitedTank={setVisitedTank}
                 user={user}
                 userData={userData}
+                setUserData={setUserData}
               />
             }
           />
@@ -154,6 +306,7 @@ function App(): JSX.Element {
                 setVisitedTank={setVisitedTank}
                 user={user}
                 userData={userData}
+                setUserData={setUserData}
               />
             }
           />
@@ -166,6 +319,7 @@ function App(): JSX.Element {
                 // HERE
                 setCookie={setCookie}
                 cookies={cookies}
+                userData={userData}
               />
             }
           />

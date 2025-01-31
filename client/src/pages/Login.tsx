@@ -20,6 +20,7 @@ import { AccountCircle, Visibility, VisibilityOff } from "@mui/icons-material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 import { useNavigate } from "react-router-dom";
+import { customTheme } from "../App";
 
 interface loginProps {
   handleSetTankAgentData: ({}) => void;
@@ -83,6 +84,11 @@ const Login = (props: loginProps) => {
           },
         }}
         variant="outlined"
+        sx={{
+          "& .MuiFormLabel-root": {
+            color: customTheme.palette.text.grey,
+          },
+        }}
       />
     );
   }
@@ -98,7 +104,11 @@ const Login = (props: loginProps) => {
 
     return (
       <FormControl sx={{ my: 2 }} fullWidth variant="outlined">
-        <InputLabel size="small" htmlFor="outlined-adornment-password">
+        <InputLabel
+          size="small"
+          htmlFor="outlined-adornment-password"
+          sx={{ color: customTheme.palette.text.grey }}
+        >
           Password
         </InputLabel>
         <OutlinedInput
@@ -134,12 +144,15 @@ const Login = (props: loginProps) => {
     return (
       <Button
         type="submit"
-        variant="outlined"
-        color="info"
+        variant="contained"
         size="small"
-        disableElevation
+        // disableElevation
         fullWidth
-        sx={{ my: 2 }}
+        sx={{
+          my: 2,
+          backgroundColor: customTheme.palette.background.blue,
+          color: customTheme.palette.text.secondary,
+        }}
       >
         Log In
       </Button>
@@ -159,7 +172,11 @@ const Login = (props: loginProps) => {
   }
 
   return (
-    <div>
+    <div
+      style={{
+        backgroundColor: customTheme.palette.background.blueLight,
+      }}
+    >
       <Box>
         <Button onClick={() => navigateTo("/mapPage")}>
           <ArrowBackIosIcon />
@@ -174,6 +191,14 @@ const Login = (props: loginProps) => {
           passwordField: CustomPasswordField,
           submitButton: CustomButton,
           forgotPasswordLink: ForgotPasswordLink,
+        }}
+        sx={{
+          "& .MuiTypography-root": {
+            color: customTheme.palette.background.defaultWhite,
+          },
+          "& .MuiSvgIcon-root": {
+            color: customTheme.palette.background.defaultWhite,
+          },
         }}
       />
     </div>

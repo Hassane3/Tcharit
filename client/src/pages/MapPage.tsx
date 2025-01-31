@@ -26,7 +26,6 @@ import {
   ListItemText,
 } from "@mui/material";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
-import MenuIcon from "@mui/icons-material/Menu";
 import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
 import styled from "styled-components";
 import ModalPopUp from "./components/ModalPopUp";
@@ -34,10 +33,11 @@ import { useNavigate } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, firestoreDb } from "../firebase/firebase";
 import { logoutUser } from "../firebase/operations";
-import { UserData } from "../App";
+import { customTheme, UserData } from "../App";
 import { Settings } from "@mui/icons-material";
 import { blue } from "@mui/material/colors";
-
+import WaterDropIcon from "@mui/icons-material/WaterDrop";
+import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 // Componenets
 
 export interface tanksDataProps {
@@ -62,12 +62,13 @@ export interface latLngProps {
 export interface postsProps {
   // date: Date;
   // id: number;
-  status: TankStatus;
-  userType: UserType;
   date: string;
-  time: string;
-  weekDay: string;
   postTime: number;
+  status: TankStatus;
+  time: string;
+  userType: UserType;
+  userName: string | null;
+  weekDay: string;
 }
 
 export interface userCookiesProps {
@@ -79,9 +80,20 @@ interface mapPageProps {
   user: {} | null;
   userData: UserData;
   setVisitedTank: (visitedTank: tankDataProps) => void | undefined;
+  setUserData: (userData: UserData) => void;
 }
+export const WaterIcon = () => {
+  return <WaterDropIcon />;
+};
 function MapPage(props: mapPageProps) {
-  const { tanksData, visitedTank, user, userData, setVisitedTank } = props;
+  const {
+    tanksData,
+    visitedTank,
+    user,
+    userData,
+    setVisitedTank,
+    setUserData,
+  } = props;
 
   const [searchValue, setSearchValue] = useState<string | null>(
     tanksData.at(0)?.name || ""
@@ -169,9 +181,10 @@ function MapPage(props: mapPageProps) {
                   style={{
                     fontSize: "10px",
                     textDecoration: "underline",
+                    color: customTheme.palette.text.grey,
                   }}
                 >
-                  reserved for tank fillers
+                  reserved for cistern fillers
                 </p>
               )}
             </ListItemButton>
@@ -230,6 +243,17 @@ function MapPage(props: mapPageProps) {
   const handleLogout = () => {
     try {
       logoutUser();
+      // logoutUser
+      //   .then((value) => {
+      //     console.log(value);
+      //     setUserData({
+      //       name: null,
+      //       email: null,
+      //     });
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
     } catch (error) {
       console.error("Error when login out : ", error);
     }
@@ -273,6 +297,7 @@ function MapPage(props: mapPageProps) {
         }
         zoom={18}
         scrollWheelZoom={false}
+        style={{ color: "blue" }}
       >
         <Header>
           <FirstSection>
@@ -292,19 +317,28 @@ function MapPage(props: mapPageProps) {
             <React.Fragment>
               <Button
                 onClick={toggleDrawer(anchor, true)}
-                variant="contained"
+                // variant=""
+
                 sx={{
                   width: "fit-content",
                   height: "fit-content",
                   margin: "6px",
+                  zIndex: "1000",
+                  color: customTheme.palette.background.defaultBlue,
                 }}
               >
-                <MenuIcon />
+                <MenuRoundedIcon fontSize="large" sx={{ fontSize: "50px" }} />
               </Button>
               <Drawer
                 anchor={anchor}
                 open={anchorState}
                 onClose={toggleDrawer(anchor, false)}
+                sx={{
+                  backgroundImage: "none",
+                }}
+                PaperProps={{
+                  sx: { backgroundImage: "none" },
+                }}
               >
                 {user ? listUserLoggedIn() : list(anchor)}
               </Drawer>
@@ -314,6 +348,7 @@ function MapPage(props: mapPageProps) {
             textAlign="left"
             variant="middle"
             sx={{
+              zIndex: "1000",
               "&::before, &::after": {
                 borderColor: "primary.dark",
                 borderWidth: "1px",
@@ -325,15 +360,15 @@ function MapPage(props: mapPageProps) {
               },
             }}
           >
-            <Chip label="Or" size="small" color={"secondary"} />
+            {/* <Chip label="Or" size="small" color={"secondary"} /> */}
           </Divider>
           <Button
             onClick={handleQrModalState(true)}
-            variant="contained"
-            sx={{ width: "fit-content", margin: "6px" }}
+            variant="text"
+            size="large"
+            sx={{ width: "fit-content", zIndex: "1000", p: 1 }}
           >
-            <QrCodeScannerIcon sx={{ marginRight: "2px" }} />
-            <p>Scan the qr code</p>
+            <QrCodeScannerIcon sx={{ mr: 1, fontSize: 50 }} />
           </Button>
           <ModalPopUp
             isQrModalOpen={isQrModalOpen}
@@ -345,7 +380,6 @@ function MapPage(props: mapPageProps) {
           <MyMarker
             key={marker.id}
             marker={marker}
-            customIcon={customIcon}
             setVisitedTank={setVisitedTank}
             handleTimeFormat={handleTimeFormat}
           />
@@ -359,9 +393,6 @@ function MapPage(props: mapPageProps) {
 const Header = styled.div`
   display: flex;
   flex-direction: column;
-  > * {
-    z-index: 1000;
-  }
 `;
 const FirstSection = styled.div`
   display: flex;

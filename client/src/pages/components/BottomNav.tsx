@@ -1,44 +1,105 @@
-import { Button } from "@mui/material";
+import { Box, Button, Modal, SwipeableDrawer, Typography } from "@mui/material";
 import { LatLng } from "leaflet";
-import React, { JSX, useState } from "react";
+import React, { JSX, MouseEventHandler, useEffect, useState } from "react";
 import styled from "styled-components";
-import { latLngProps } from "../MapPage";
+import { latLngProps, tankDataProps } from "../MapPage";
 import TankStatus from "../../models/utils/TankStatus";
 import { GLOBAL_STYLE } from "../../utils/constants/constants";
+import { customTheme, UserData } from "../../App";
+import { Close } from "@mui/icons-material";
+import PersonPinCircleIcon from "@mui/icons-material/PersonPinCircle";
+import { HighFlow, LowFlow, NullFlow } from "../../utils/constants/Icons";
+import { auth } from "../../firebase/firebase";
 
 interface BottomNavProps {
   tankLatLng: latLngProps;
-  setConfirmationBox: (arg: boolean) => void;
+  selectedTankData: tankDataProps;
+  setConfirmationBox: (
+    arg: boolean,
+    tankStatus: TankStatus
+  ) => (event: React.KeyboardEvent | React.MouseEvent) => void;
   setTankStatus: (tankStatus: TankStatus) => void;
+  openBottomNav: boolean;
+  setOpenBottomNav: (state: boolean) => void;
   cookies: any;
   isAddPostAllowed: boolean;
   setIsAddPostAllowed: (arg: boolean) => void;
+  userData: UserData;
+  // user: {} | null;
 }
 
 const BottomNav = (props: BottomNavProps): JSX.Element => {
   const {
+    selectedTankData,
     setConfirmationBox,
     setTankStatus,
     tankLatLng,
+    openBottomNav,
+    setOpenBottomNav,
     cookies,
     isAddPostAllowed,
     setIsAddPostAllowed,
+    // user,
+    userData,
   } = props;
 
   const [isAddPostInfosVisible, setIsAddPostInfosVisible] =
     useState<boolean>(false);
   const [isAddPostBtnsVisible, setIsAddPostBtnsVisible] =
     useState<boolean>(false);
-  const [isPosInfosVisible, setIsPosInfosVisible] = useState<boolean>(false);
+  // const [isPosInfosVisible, setIsPosInfosVisible] = useState<boolean>(true);
+  const [isUserNextCistern, setIsUserNextCistern] = useState<boolean>(false);
+  const [isPostBtnsVisible, setIsPostBtnsVisible] = useState<boolean>(false);
+  const [isUserFarFromTank, setIsUserFarFromTank] = useState<boolean>(false);
+  const [isLocModalVisible, setIsLocModalVisible] = useState<boolean>(false);
+
+  // const [open, setOpen] = useState<boolean>(false);
+
+  const toggleDrawer =
+    (newOpen: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+      setOpenBottomNav(newOpen);
+    };
+  const drawerBleeding = 56;
+
+  // useEffect(() => {
+  //   console.log("isAddPostAllowed > ", isAddPostAllowed);
+  //   // console.log("UE > ", open);
+  //   // if (!isAddPostAllowed) {
+  //   //   setTimeout(() => {
+  //   //     setOpen(false);
+  //   //   }, 3000);
+  //   // }
+  // }, []);
 
   const handleCheckTank = () => {
-    if (navigator.geolocation.getCurrentPosition) {
+    // If user is a random person we check his position else if its cistern agent, we do not:
+    // if(userIsLogged){
+    //   we do not check Geolocation neither cookie
+
+    // }
+    // if (userData !== null) {
+    //   console.log("uderData >", userData);
+    //   setIsAddPostAllowed(true);
+    let user = auth.currentUser;
+    console.log("user >", user);
+    if (user) {
+      console.log("user >", user);
+      setIsAddPostAllowed(true);
+    } else if (navigator.geolocation.getCurrentPosition) {
+      console.log(
+        "getCurrentPosition > ",
+        navigator.geolocation.getCurrentPosition
+      );
       navigator.geolocation.getCurrentPosition(
         (success) => {
+          console.log("getCurrentPosition succes");
+          console.log("location : ", success.coords.latitude);
+          console.log("location : ", success.coords.longitude);
           let latLng = new LatLng(
             success.coords.latitude,
             success.coords.longitude
           );
+          console.log("handleCheck");
           // We test if the actual position is near the tank position (the value 0.01 is for test, 0.0001 for high precision) :
           // alert(
           //   "lat : " +
@@ -51,21 +112,43 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
           //     "tank lng :" +
           //     tankLatLng.lng
           // );
+          console.log("getCurrentPos");
 
           if (
             //
-            latLng.lat > tankLatLng.lat - 0.001 &&
-            latLng.lat < tankLatLng.lat + 0.001 &&
-            latLng.lng > tankLatLng.lng - 0.001 &&
-            latLng.lng < tankLatLng.lng + 0.001
+            // latLng.lat > tankLatLng.lat - 0.001 &&
+            // latLng.lat < tankLatLng.lat + 0.001 &&
+            // latLng.lng > tankLatLng.lng - 0.001 &&
+            // latLng.lng < tankLatLng.lng + 0.001
+            1 == 1
           ) {
-            setIsAddPostInfosVisible(false);
-            setIsPosInfosVisible(false);
-            setIsAddPostBtnsVisible(true);
+            console.log("87");
+            // setIsUserFarFromTank(true);
+            // setIsAddPostInfosVisible(false);
+            // setIsPosInfosVisible(false);
+            // setIsAddPostBtnsVisible(true);
+            // ******
+            // We display status buttons
+            // When user click we test if tank agent is connected
+            // If true : We add an new post and it gets the value "TANKAGENT" in userType
+            // if (cookies.userId) {
+            if (false) {
+              alert(
+                "Vous ne pouvez ajouter un post car venez de le faire. Pour pouvoir ajouter un post de nouveau, il faut attendre unpeu et puis rafraichir la page"
+              );
+            } else {
+              console.log("101");
+              // setIsPosInfosVisible(false);
+              // setIsUserNextCistern(true);
+              setIsAddPostAllowed(true);
+              // setIsPostBtnsVisible(true);
+            }
           } else {
-            setIsAddPostInfosVisible(false);
-            setIsPosInfosVisible(true);
-            alert("U are far from tank ! `\t` Try to come closer");
+            setIsLocModalVisible(true);
+            console.log("LocModalVisible");
+            // setIsAddPostInfosVisible(false);
+            // setIsPosInfosVisible(true);
+            // alert("U are far from tank ! `\t` Try to come closer");
             // Display : u have to be near the tank. Try to come closer
           }
         },
@@ -82,157 +165,200 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
   };
 
   return (
-    <Container>
-      <PostBox
-        onClick={() => {
-          if (cookies.userId) {
-            alert(
-              "Vous ne pouvez ajouter un post car venez de le faire. Pour pouvoir ajouter un post de nouveau, il faut attendre unpeu et puis rafraichir la page"
-            );
-          } else {
-            setIsAddPostAllowed(true);
-            setIsAddPostInfosVisible(true);
-          }
+    <SwipeableDrawer
+      anchor="bottom"
+      open={openBottomNav}
+      onClose={toggleDrawer(false)}
+      onOpen={toggleDrawer(true)}
+      swipeAreaWidth={drawerBleeding}
+      disableSwipeToOpen={false}
+      ModalProps={{
+        keepMounted: true,
+      }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          top: -drawerBleeding,
+          visibility: "visible",
+          right: 0,
+          left: 0,
+          backgroundColor: customTheme.palette.background.defaultBlue,
+          boxShadow: "0px -10px 10px -10px rgba(0, 0, 0, 0.2)",
+          borderRadius: "10px 10px 0px 0px",
+
+          display: "flex column",
+          justifyContent: "center",
+          alignItems: "center",
+          height: drawerBleeding,
         }}
       >
-        <span>Add post</span>
-      </PostBox>
-
-      {isAddPostInfosVisible && (
-        <PostBoxInfos>
-          <button onClick={() => setIsAddPostInfosVisible(false)}>close</button>
-          <p>To be sure that infos are trusted,...</p>
-          <span>posts are checked...</span>
-          <button onClick={() => handleCheckTank()}>Continu</button>
-        </PostBoxInfos>
-      )}
-
-      {
-        // POSITION INFOS : To display when the user is still far from the tank
-        isPosInfosVisible && (
+        {/* <Puller backgroundColor={customTheme.palette.background.yellowDark}/> */}
+        {/* Puller */}
+        <div
+          style={{
+            width: 30,
+            height: 6,
+            backgroundColor: customTheme.palette.background.defaultWhite,
+            borderRadius: 3,
+            position: "absolute",
+            top: 8,
+            left: "calc(50% - 15px)",
+          }}
+        />
+        <Typography
+          variant="h3"
+          sx={{
+            p: 2,
+            fontSize: "1.2em",
+            fontWeight: "500",
+            lineHeight: "unset",
+            color: customTheme.palette.background.defaultWhite,
+            textAlign: "center",
+          }}
+        >
+          Report water flow
+          {/* Signaler le débit d'eau */}
+          {/* تنبيه عن حالة تدفق المياه */}
+        </Typography>
+      </div>
+      {/* <Box style={{ px: 2, pb: 2, height: "100%", overflow: "auto" }}> */}
+      <Box
+        style={{
+          height: "100%",
+          overflow: "auto",
+          backgroundColor: customTheme.palette.background.defaultBlue,
+          // padding: "20px 0",
+        }}
+      >
+        {/* <Skeleton variant="rectangular" height="100%" /> */}
+        {!isAddPostAllowed && (
           <PostBoxInfos>
-            <h3>You are far from the tank</h3>
-            <p>Come closer to the tank and try again</p>
-            <button onClick={() => handleCheckTank()}>Try again</button>
+            <PersonPinCircleIcon
+              sx={{
+                color: customTheme.palette.background.defaultWhite,
+                fontSize: "50px",
+              }}
+            />
+            <Typography
+              variant="h3"
+              // fontSize={"1.4rem"}
+              // fontWeight={"500"}
+              sx={{ padding: "20px 0" }}
+              color={customTheme.palette.background.blue}
+            >
+              To be sure that cistern reports are truthful, you must be beside
+              of the concerned cistern
+            </Typography>
+            <Button
+              variant="contained"
+              onClick={handleCheckTank}
+              size="large"
+              sx={{
+                background: customTheme.palette.background.blueDark,
+                color: customTheme.palette.background.defaultWhite,
+              }}
+            >
+              <span>Continu</span>
+            </Button>
           </PostBoxInfos>
-        )
-      }
-
-      {
-        // Display btns
-        isAddPostAllowed && isAddPostBtnsVisible && (
+        )}
+        {isAddPostAllowed && (
           <FlowButtons>
             <FlowButton
-              //   "EMPTY"
-              id="dryFlow"
-              onClick={() => {
-                setConfirmationBox(true);
-                setTankStatus(TankStatus.EMPTY);
-              }}
+              id="empty"
+              backgroundColor={customTheme.palette.background.red}
+              textColor={customTheme.palette.background.defaultBlue}
+              onClick={setConfirmationBox(true, TankStatus.EMPTY)}
             >
-              <img src="/img/null_flow.svg" alt="" />
-              <span>منعدم</span>
+              <NullFlow />
+              <Typography variant="button" sx={{ fontSize: "1.2em" }}>
+                منعدم
+              </Typography>
             </FlowButton>
             <FlowButton
-              id="lowFlow"
-              onClick={() => {
-                alert("clicked");
-                setConfirmationBox(true);
-                setTankStatus(TankStatus.HALFFUll);
-              }}
+              backgroundColor={customTheme.palette.background.yellow}
+              textColor={customTheme.palette.background.defaultBlue}
+              onClick={setConfirmationBox(true, TankStatus.HALFFUll)}
             >
-              <img src="/img/low_flow.svg" alt="" />
-              <span>ضئيل</span>
+              <LowFlow />
+              {/* <img src="/img/low_flow.svg" alt="" /> */}
+              <Typography variant="button" sx={{ fontSize: "1.2em" }}>
+                ضئيل
+              </Typography>
             </FlowButton>
             <FlowButton
-              id="highFlow"
-              onClick={() => {
-                alert("clicked");
-                setConfirmationBox(true);
-                setTankStatus(TankStatus.FULL);
-              }}
+              id="full"
+              backgroundColor={customTheme.palette.background.blue}
+              textColor={customTheme.palette.background.defaultBlue}
+              onClick={setConfirmationBox(true, TankStatus.FULL)}
             >
-              <img src="/img/high_flow.svg" alt="" />
-              <span>قوي</span>
+              <HighFlow />
+              {/* <img src="/img/high_flow.svg" alt="" /> */}
+              <Typography variant="button" sx={{ fontSize: "1.2em" }}>
+                قوي
+              </Typography>
             </FlowButton>
           </FlowButtons>
-        )
-      }
-    </Container>
+        )}
+      </Box>
+
+      <Modal
+        open={isLocModalVisible}
+        onClose={() => setIsLocModalVisible(false)}
+      >
+        <Box sx={{ textAlign: "center" }}>
+          <Button onClick={() => setIsLocModalVisible(false)}>
+            <Close />
+          </Button>
+          <Typography variant="h3">
+            Apparently, your position is far from the cistern, please try to
+            come closer
+          </Typography>
+        </Box>
+      </Modal>
+    </SwipeableDrawer>
   );
 };
 
-const Container = styled.div`
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  width: 100vw;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  /* height: 100px; */
-  /* max-height: 140px; */
-  border-radius: 14px 14px 0 0;
-`;
-
-const PostBox = styled.div`
-  width: 100%;
-  text-align: center;
-  padding: 20px;
-  color: ${GLOBAL_STYLE.colorBlueDarken};
-  background: ${GLOBAL_STYLE.colorBlueSweet};
-  box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 16px 0px;
-
-  span {
-    font-weight: 600;
-  }
-  :hover {
-    cursor: pointer;
-  }
-`;
 const FlowButtons = styled.div`
   display: flex;
   justify-content: space-around;
-  width: 100vw;
+
+  > button {
+    border-radius: 0;
+  }
+  #full {
+    border-top-right-radius: 10px;
+  }
+  #empty {
+    border-top-left-radius: 10px;
+  }
 `;
-const FlowButton = styled(Button)`
+const FlowButton = styled(Button)<{
+  backgroundColor: string;
+  textColor: string;
+}>`
   display: flex;
   flex-direction: column !important;
   align-items: center !important;
   justify-content: space-between !important;
   width: 100%;
+  background-color: ${(props) => props.backgroundColor} !important;
+  color: ${(props) => props.textColor};
 
-  img {
-    width: 54px;
+  svg {
+    width: 60px;
   }
   span {
-    font-size: 20px;
-  }
-  #null {
-    background-color: #3876ac;
-  }
-
-  #low {
-    background-color: #8f8b69;
-  }
-
-  #high {
-    background-color: #72d0f2;
+    font-weight: 500;
+    color: ${(props) => props.textColor};
   }
 `;
 
 const PostBoxInfos = styled.div`
-  background-color: ${GLOBAL_STYLE.colorBlueSweet};
-  height: 20%;
-  width: 100%;
-  padding: 20px;
-
-  p,
-  span {
-    text-align: center;
-    /* color: ${GLOBAL_STYLE} */
-  }
+  text-align: center;
+  padding: 30px 30px;
 `;
 
 export default BottomNav;

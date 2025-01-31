@@ -1,4 +1,4 @@
 export enum UserType {
-    TANKCHEF = "TANKCHEF",
+    TANKAGENT = "TANKAGENT",
     RANDOM  = "RANDOM",
 }

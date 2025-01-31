@@ -3,6 +3,7 @@ import React from "react";
 import { tankDataProps } from "../MapPage";
 import { useMap } from "react-leaflet";
 import SearchIcon from "@mui/icons-material/Search";
+import { customTheme } from "../../App";
 
 interface AutoCompleteProps {
   tanksData: Array<tankDataProps>;
@@ -39,28 +40,48 @@ const AutoComplete = (props: AutoCompleteProps) => {
       }}
       id="controllable-states-demo"
       options={tanksData.map((tank: any) => tank.name)}
-      sx={{ width: 300 }}
+      sx={{
+        width: 300,
+        zIndex: "1000",
+        margin: "6px",
+        overflow: "hidden",
+        borderRadius: "6px",
+        boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+      }}
       renderInput={(params) => (
         <Box
           sx={{
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
+            backgroundColor: customTheme.palette.background.defaultWhite,
           }}
         >
-          <SearchIcon sx={{ color: "action.active", mr: 1, my: 0.5 }} />
+          <SearchIcon
+            sx={{
+              color: customTheme.palette.background.defaultBlue,
+              m: "0 6px",
+            }}
+          />
           <TextField
             {...params}
-            label="Tanks"
+            label="Select cistern"
             id="input-with-sx"
-            variant="standard"
+            variant="filled"
+            sx={{
+              "& .MuiFormLabel-root": {
+                color: customTheme.palette.text.grey,
+              },
+              "& .MuiSvgIcon-root": {
+                color: customTheme.palette.background.defaultBlue,
+              },
+              "& .MuiInputBase-input": {
+                color: customTheme.palette.text.secondary,
+              },
+            }}
           />
         </Box>
       )}
-      style={{
-        backgroundColor: "#fff",
-        margin: "6px",
-      }}
     />
   );
 };
