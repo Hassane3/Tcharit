@@ -73,28 +73,12 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
 
   const handleCheckTank = () => {
     // If user is a random person we check his position else if its cistern agent, we do not:
-    // if(userIsLogged){
-    //   we do not check Geolocation neither cookie
-
-    // }
-    // if (userData !== null) {
-    //   console.log("uderData >", userData);
-    //   setIsAddPostAllowed(true);
     let user = auth.currentUser;
-    console.log("user >", user);
     if (user) {
-      console.log("user >", user);
       setIsAddPostAllowed(true);
     } else if (navigator.geolocation.getCurrentPosition) {
-      console.log(
-        "getCurrentPosition > ",
-        navigator.geolocation.getCurrentPosition
-      );
       navigator.geolocation.getCurrentPosition(
         (success) => {
-          console.log("getCurrentPosition succes");
-          console.log("location : ", success.coords.latitude);
-          console.log("location : ", success.coords.longitude);
           let latLng = new LatLng(
             success.coords.latitude,
             success.coords.longitude
@@ -113,7 +97,6 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
           //     tankLatLng.lng
           // );
           console.log("getCurrentPos");
-
           if (
             //
             // latLng.lat > tankLatLng.lat - 0.001 &&
@@ -122,34 +105,17 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
             // latLng.lng < tankLatLng.lng + 0.001
             1 == 1
           ) {
-            console.log("87");
-            // setIsUserFarFromTank(true);
-            // setIsAddPostInfosVisible(false);
-            // setIsPosInfosVisible(false);
-            // setIsAddPostBtnsVisible(true);
-            // ******
-            // We display status buttons
-            // When user click we test if tank agent is connected
-            // If true : We add an new post and it gets the value "TANKAGENT" in userType
-            // if (cookies.userId) {
-            if (false) {
+            // If user cookie exist, that means he has posted recently
+            if (cookies.userId) {
               alert(
                 "Vous ne pouvez ajouter un post car venez de le faire. Pour pouvoir ajouter un post de nouveau, il faut attendre unpeu et puis rafraichir la page"
               );
             } else {
-              console.log("101");
-              // setIsPosInfosVisible(false);
-              // setIsUserNextCistern(true);
               setIsAddPostAllowed(true);
-              // setIsPostBtnsVisible(true);
             }
           } else {
             setIsLocModalVisible(true);
-            console.log("LocModalVisible");
-            // setIsAddPostInfosVisible(false);
-            // setIsPosInfosVisible(true);
             // alert("U are far from tank ! `\t` Try to come closer");
-            // Display : u have to be near the tank. Try to come closer
           }
         },
         (error) => {
@@ -159,7 +125,6 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
         }
       );
     } else {
-      console.log("Geolocation not supported");
       alert("Geolocation not supported");
     }
   };

@@ -24,6 +24,7 @@ import {
   FullTank,
   HalfFullTank,
   UnsetTank,
+  Wave,
 } from "../utils/constants/Icons";
 import {
   Box,
@@ -34,7 +35,7 @@ import {
   Typography,
 } from "@mui/material";
 import { AppProvider } from "@toolpad/core";
-import { ArrowBackIos } from "@mui/icons-material";
+import { ArrowBackIos, Height } from "@mui/icons-material";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import CommentsDisabledRoundedIcon from "@mui/icons-material/CommentsDisabledRounded";
 import { customTheme, UserData } from "../App";
@@ -124,6 +125,12 @@ const Tank = (props: TankProps) => {
   const headerLarge = 170;
   const headerTight = 70;
   const [headerHeight, setHeaderHeight] = useState<number>(headerLarge);
+  const waveHeight =
+    lastPost?.status === "EMPTY"
+      ? -100
+      : lastPost?.status === "HALFFULL"
+        ? -headerHeight * 0.5
+        : -headerHeight * 0.1;
   useEffect(() => {
     const handleScroll = () => {
       let newHeight; // Minimum height: 100px
@@ -139,7 +146,7 @@ const Tank = (props: TankProps) => {
     return () => window.removeEventListener("scroll", handleScroll); // Cleanup
   }, []);
 
-  return selectedTankData ? (
+  return (
     <Page
       style={
         // We take the lastPost
@@ -178,7 +185,11 @@ const Tank = (props: TankProps) => {
               alignItems: "flex-start",
             }}
           >
-            <Button size="large" onClick={() => navigateTo("/mapPage")}>
+            <Button
+              size="large"
+              onClick={() => navigateTo("/mapPage")}
+              sx={{ padding: 0 }}
+            >
               <ChevronLeftRoundedIcon
                 sx={{
                   color: customTheme.palette.background.defaultWhite,
@@ -195,18 +206,12 @@ const Tank = (props: TankProps) => {
               },
             }}
           >
-            {selectedTankData && selectedTankData.posts
-              ? lastPost?.status === TankStatus.EMPTY
-                ? EmptyTank()
-                : lastPost?.status === TankStatus.HALFFUll
-                  ? HalfFullTank()
-                  : FullTank()
-              : UnsetTank()}
             <div id="tank_texts">
               <Typography
                 variant="h2"
                 id="tank_name"
                 color={customTheme.palette.background.defaultWhite}
+                style={{ lineHeight: "1.8" }}
               >
                 {selectedTankData?.name}
               </Typography>
@@ -231,17 +236,76 @@ const Tank = (props: TankProps) => {
                     : "No infos has been set for this tank")}
               </Typography>
             </div>
+            {selectedTankData && selectedTankData.posts
+              ? lastPost?.status === TankStatus.EMPTY
+                ? EmptyTank()
+                : lastPost?.status === TankStatus.HALFFUll
+                  ? HalfFullTank()
+                  : FullTank()
+              : UnsetTank()}
           </PopUpMainElements>
+
           {/* <span id="checkPosts_title"> : حالة تدفق المياه حسب المستخدمين </span> */}
         </HeaderElements>
-        {headerHeight > headerTight && (
+        {/* {headerHeight > headerTight && (
           <span id="checkPosts_title">
             {"Water flow state according to users reports :"}
           </span>
-        )}
+        )} */}
+        <div
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            width: "100%",
+            lineHeight: 0,
+            transition: "2s cubic-bezier(0.42, 0.53, 0.6, 0.61)",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+            }}
+          >
+            <div
+              style={{
+                position: "absolute",
+                left: 0,
+                width: "100%",
+                animation:
+                  "waveAnim 4s infinite cubic-bezier(0.42, 0.53, 0.6, 0.61)",
+                transition: "2s cubic-bezier(0.42, 0.53, 0.6, 0.61)",
+                opacity: 0.1,
+                bottom: waveHeight,
+                zIndex: -1,
+              }}
+            >
+              <Wave backgroundColor={getTankStatusColor(lastPost, "basic")} />
+            </div>
+
+            <div
+              style={{
+                position: "absolute",
+                left: "100%",
+                width: "100%",
+                animation:
+                  "waveAnim 4s infinite cubic-bezier(0.42, 0.53, 0.6, 0.61)",
+                transition: "2s cubic-bezier(0.42, 0.53, 0.6, 0.61)",
+                bottom: waveHeight,
+                opacity: 0.1,
+                zIndex: -1,
+              }}
+            >
+              <Wave backgroundColor={getTankStatusColor(lastPost, "basic")} />
+            </div>
+          </div>
+        </div>
       </Header>
+
       {selectedTankData && selectedTankData.posts ? (
-        <CheckPosts tankData={selectedTankData} />
+        <div>
+          <CheckPosts tankData={selectedTankData} />
+        </div>
       ) : (
         <div
           style={{
@@ -291,8 +355,6 @@ const Tank = (props: TankProps) => {
           />
         ))}
     </Page>
-  ) : (
-    <h1>LOADING</h1>
   );
 };
 
@@ -353,27 +415,27 @@ const Page = styled.div`
 const Header = styled(Box)<{ headerHeight: number; backgroundColor: string }>`
   display: flex column;
   justify-content: space-between;
-  padding: 10px 10px 0px 10px;
-  /* background-color: ${GLOBAL_STYLE.colorBlueSweet}; */
-  /* We set color depending on tank state */
-  background-color: ${(props) =>
-    // props.tankStatus === TankStatus.EMPTY
-    //   ? customTheme.palette.background.redDark
-    //   : props.tankStatus === TankStatus.HALFFUll
-    //     ? customTheme.palette.background.yellowDark
-    //     : customTheme.palette.background.blueDark};
-    // getTankStatusColor(props.tank, "dark")};
-    props.backgroundColor};
-
-  /* box-shadow: rgba(0, 0, 0, 0.2) 0 1px 16px 0px; */
+  padding: 10px;
+  background-color: ${(props) => props.backgroundColor};
   box-shadow: rgba(0, 0, 0, 0.2) 0 1px 10px 0px;
-  #checkPosts_title {
-    color: ${() => customTheme.palette.background.defaultWhite};
-  }
   position: fixed;
   z-index: 10;
   width: 100%;
   height: ${(props) => props.headerHeight + "px"};
+  overflow: hidden;
+
+  #checkPosts_title {
+    color: ${() => customTheme.palette.background.defaultWhite};
+  }
+
+  @keyframes waveAnim {
+    0% {
+      transform: translateX(0%);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
 `;
 const HeaderElements = styled.div<{ headerHeight: number }>`
   display: flex;
@@ -383,13 +445,16 @@ const HeaderElements = styled.div<{ headerHeight: number }>`
 `;
 const PopUpMainElements = styled(Box)`
   display: flex;
-  /* If lang arab : */
-  /* flex-direction: row-reverse; */
+  flex-direction: row;
+  justify-content: flex-end;
   align-items: center;
   margin: 0 20px;
 
   #tank_texts {
     margin: 0 20px;
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
   }
 
   #tank_text p {
