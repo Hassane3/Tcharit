@@ -139,7 +139,7 @@ const Tank = (props: TankProps) => {
     return () => window.removeEventListener("scroll", handleScroll); // Cleanup
   }, []);
 
-  return (
+  return selectedTankData ? (
     <Page
       style={
         // We take the lastPost
@@ -291,6 +291,8 @@ const Tank = (props: TankProps) => {
           />
         ))}
     </Page>
+  ) : (
+    <h1>LOADING</h1>
   );
 };
 
