@@ -82,6 +82,12 @@ Fix Todo :
     - Show the tank panel when selected in the search bar.
 
 *******HERE**********
+**04/02/25
+    Scanner : 
+    - Handling wrong qr code
+    - Improve ui
+**31/01/25
+    tank ui improvment
 **29/01/25
     Delete posts that are old.
 

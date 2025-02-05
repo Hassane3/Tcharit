@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import QrScanner from "./QrScanner";
 import { StyledEngineProvider } from "@mui/styled-engine-sc";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import { customTheme } from "../../App";
 
 interface ModalPopUpProps {
   isQrModalOpen: boolean;
@@ -20,7 +22,18 @@ const ModalPopUp = (props: ModalPopUpProps) => {
     // setVisitedTank(tank);
     console.log("MapPage>qr link " + link);
     //Retrieve the last url character to get the number of the tank
-    navigateTo("/tank/" + link.at(-1));
+    try {
+      console.log(link);
+      if (link.startsWith("http://q-r.to/tank")) {
+        navigateTo("/tank/" + link.at(-1));
+      } else {
+        throw new Error("Not valide qr-code link");
+      }
+    } catch (error) {
+      alert(
+        "it seems that the qr-code isn't related to the cistern \n" + error
+      );
+    }
   };
   return (
     <Modal
@@ -29,14 +42,27 @@ const ModalPopUp = (props: ModalPopUpProps) => {
       aria-labelledby="parent-modal-title"
       aria-describedby="parent-modal-description"
     >
-      <QrModalStyle>
+      <QrModalStyle
+        backgroundColor={customTheme.palette.background.defaultWhite}
+      >
         <Button
           onClick={qrModalStateHandler(false)}
-          sx={{ display: "flex", alignSelf: "end", marginBottom: "2px" }}
+          sx={{
+            display: "flex",
+            alignSelf: "end",
+            minWidth: "unset",
+            color: customTheme.palette.background.blueDark,
+          }}
         >
-          <Close />
+          <CloseRoundedIcon fontSize="large" />
         </Button>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
+        <Typography
+          id="modal-modal-title"
+          variant="h6"
+          component="h2"
+          color={customTheme.palette.text.secondary}
+          style={{ textAlign: "center", margin: "4px" }}
+        >
           Scannez le qr code collé quelque part sur la citerne
         </Typography>
         <QrScanner
@@ -48,20 +74,15 @@ const ModalPopUp = (props: ModalPopUpProps) => {
   );
 };
 
-const QrModalStyle = styled(Box)`
+const QrModalStyle = styled(Box)<{ backgroundColor: string }>`
   display: flex;
   flex-direction: column;
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 400px;
-  border: "2px solid #000";
-  background-color: antiquewhite;
-  background-position: top;
-  border: solid;
+  background-color: ${(props) => props.backgroundColor};
+  border-radius: 10px;
   box-shadow: 24;
-  padding: 4px;
+  margin: 10px;
+  overflow: hidden;
   > * {
     /* margin-bottom: 2px; */
   }

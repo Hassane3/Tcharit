@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 //MODELS
 import TankStatus from "../models/utils/TankStatus";
 import { useNavigate, useNavigation, useParams } from "react-router-dom";
@@ -120,6 +120,25 @@ const Tank = (props: TankProps) => {
     selectedTankData &&
     selectedTankData.posts &&
     Object.values(selectedTankData.posts).at(-1);
+
+  const headerLarge = 170;
+  const headerTight = 70;
+  const [headerHeight, setHeaderHeight] = useState<number>(headerLarge);
+  useEffect(() => {
+    const handleScroll = () => {
+      let newHeight; // Minimum height: 100px
+      if (window.scrollY > 100) {
+        newHeight = headerTight;
+      } else {
+        newHeight = headerLarge;
+      }
+      setHeaderHeight(newHeight);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll); // Cleanup
+  }, []);
+
   return (
     <Page
       style={
@@ -143,8 +162,14 @@ const Tank = (props: TankProps) => {
           },
         }}
       />
-      <Header backgroundColor={customTheme.palette.background.defaultBlue}>
-        <HeaderElements>
+      <Header
+        headerHeight={headerHeight}
+        backgroundColor={customTheme.palette.background.defaultBlue}
+        style={{
+          transition: "height 0.2s ease-in-out",
+        }}
+      >
+        <HeaderElements headerHeight={headerHeight}>
           <div
             style={{
               // If lang === arabic flex : 1 else 0
@@ -162,7 +187,14 @@ const Tank = (props: TankProps) => {
               />
             </Button>
           </div>
-          <PopUpMainElements>
+          <PopUpMainElements
+            sx={{
+              "& svg": {
+                height: headerHeight > headerTight ? "70px" : "50px",
+                transition: "ease 0.2s",
+              },
+            }}
+          >
             {selectedTankData && selectedTankData.posts
               ? lastPost?.status === TankStatus.EMPTY
                 ? EmptyTank()
@@ -170,11 +202,16 @@ const Tank = (props: TankProps) => {
                   ? HalfFullTank()
                   : FullTank()
               : UnsetTank()}
-            <div id="tank_text">
-              <Typography variant="h2" id="tank_name">
+            <div id="tank_texts">
+              <Typography
+                variant="h2"
+                id="tank_name"
+                color={customTheme.palette.background.defaultWhite}
+              >
                 {selectedTankData?.name}
               </Typography>
-              <p
+              <Typography
+                variant="h3"
                 id="tank_description"
                 style={
                   selectedTankData && {
@@ -184,21 +221,24 @@ const Tank = (props: TankProps) => {
                   }
                 }
               >
-                {selectedTankData && selectedTankData.posts
-                  ? lastPost?.status === TankStatus.EMPTY
-                    ? "water tank is empty"
-                    : lastPost?.status === TankStatus.HALFFUll
-                      ? "water tank is half full"
-                      : "water tank is full "
-                  : "No infos has been set for this tank"}
-              </p>
+                {headerHeight > headerTight &&
+                  (selectedTankData && selectedTankData.posts
+                    ? lastPost?.status === TankStatus.EMPTY
+                      ? "water tank is empty"
+                      : lastPost?.status === TankStatus.HALFFUll
+                        ? "water tank is half full"
+                        : "water tank is full "
+                    : "No infos has been set for this tank")}
+              </Typography>
             </div>
           </PopUpMainElements>
           {/* <span id="checkPosts_title"> : حالة تدفق المياه حسب المستخدمين </span> */}
         </HeaderElements>
-        <span id="checkPosts_title">
-          {"Water flow state according to users reports :"}
-        </span>
+        {headerHeight > headerTight && (
+          <span id="checkPosts_title">
+            {"Water flow state according to users reports :"}
+          </span>
+        )}
       </Header>
       {selectedTankData && selectedTankData.posts ? (
         <CheckPosts tankData={selectedTankData} />
@@ -212,7 +252,7 @@ const Tank = (props: TankProps) => {
         >
           <CommentsDisabledRoundedIcon
             style={{
-              fontSize: "60px",
+              fontSize: "50px",
               color: customTheme.palette.background.blueDark,
             }}
           />
@@ -308,7 +348,7 @@ export const getPostsStatusColor = (
 const Page = styled.div`
   min-height: 100vh;
 `;
-const Header = styled(Box)<{ backgroundColor: string }>`
+const Header = styled(Box)<{ headerHeight: number; backgroundColor: string }>`
   display: flex column;
   justify-content: space-between;
   padding: 10px 10px 0px 10px;
@@ -331,24 +371,22 @@ const Header = styled(Box)<{ backgroundColor: string }>`
   position: fixed;
   z-index: 10;
   width: 100%;
+  height: ${(props) => props.headerHeight + "px"};
 `;
-const HeaderElements = styled.div`
-  display: flex column;
+const HeaderElements = styled.div<{ headerHeight: number }>`
+  display: flex;
+  justify-content: space-between;
+  flex-direction: ${(props) => (props.headerHeight < 170 ? "row" : "column")};
   /* margin: 20px 0; */
 `;
-const PopUpMainElements = styled.div`
+const PopUpMainElements = styled(Box)`
   display: flex;
   /* If lang arab : */
   /* flex-direction: row-reverse; */
   align-items: center;
-  margin: 10px 20px;
+  margin: 0 20px;
 
-  #tank_icon {
-    height: 70px;
-    /* width: 70px; */
-  }
-
-  #tank_text {
+  #tank_texts {
     margin: 0 20px;
   }
 
@@ -356,15 +394,9 @@ const PopUpMainElements = styled.div`
     margin: 2px;
     /* text-align: right; */
   }
-  #tank_name {
-    font-family: "lalezar";
-    color: ${() => customTheme.palette.background.defaultWhite};
-    font-size: 40px;
-  }
   #tank_description {
     font-family: "changa";
     font-weight: 600;
-    font-size: 18px;
   }
 `;
 

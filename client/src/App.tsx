@@ -73,13 +73,15 @@ export const customTheme = createTheme({
       fontWeight: "400",
     },
     h2: {
-      fontFamily: "Lalezar",
+      fontFamily: "Changa",
+      fontSize: "2em",
       fontWeight: "400",
     },
     h3: {
       fontFamily: "Changa",
-      fontSize: "1.4em",
+      fontSize: "1.1em",
       fontWeight: "600",
+      lineHeight: "1em",
     },
     button: {
       fontSize: "1.4em",

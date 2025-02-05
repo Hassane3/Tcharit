@@ -1,6 +1,7 @@
 import zIndex from "@mui/material/styles/zIndex";
-import React, { useEffect, useRef, useState } from "react";
-import { QrReader } from "react-qr-reader";
+import { width } from "@mui/system";
+import React, { ReactElement, useEffect, useRef, useState } from "react";
+import { OnResultFunction, QrReader } from "react-qr-reader";
 import styled from "styled-components";
 
 export interface QrScannerProps {
@@ -10,29 +11,93 @@ export interface QrScannerProps {
 const QrScanner = (props: QrScannerProps) => {
   const { handleQrRedirection } = props;
 
-  const previewStyle = {
-    height: "auto",
-    width: 320,
-    top: 50,
-    position: "relative",
-    margin: 6,
-    borderRadius: "",
+  const animateQrBorder = () => {
+    let qrBorder = document.getElementById("qrBorder");
+    qrBorder && qrBorder.style.setProperty("animation", "scaleInOut ease 2s");
   };
 
   return (
     <div>
       <StyledQrReader
         constraints={{ facingMode: "environment" }}
-        scanDelay={1000}
-        // containerStyle={previewStyle}
+        scanDelay={4000}
         videoId="scanVideo"
+        ViewFinder={() => (
+          <div
+            id="qrBorder"
+            style={{
+              position: "absolute",
+              zIndex: 1,
+              width: "200px",
+              height: "200px",
+            }}
+          >
+            <span
+              style={{
+                position: "absolute",
+                zIndex: 1,
+                height: 40,
+                width: 40,
+                top: 0,
+                left: 0,
+                borderTop: "solid 10px",
+                borderLeft: "solid 10px",
+                borderColor: "white",
+                borderTopLeftRadius: 5,
+              }}
+            ></span>
+            <span
+              style={{
+                position: "absolute",
+                zIndex: 1,
+                height: 40,
+                width: 40,
+                top: 0,
+                right: 0,
+                borderTop: "solid 10px",
+                borderRight: "solid 10px",
+                borderColor: "white",
+                borderTopRightRadius: 5,
+              }}
+            ></span>
+            <span
+              style={{
+                position: "absolute",
+                zIndex: 1,
+                height: 40,
+                width: 40,
+                bottom: 0,
+                left: 0,
+                borderBottom: "solid 10px",
+                borderLeft: "solid 10px",
+                borderColor: "white",
+                borderBottomLeftRadius: 5,
+              }}
+            ></span>
+            <span
+              style={{
+                position: "absolute",
+                zIndex: 1,
+                height: 40,
+                width: 40,
+                bottom: 0,
+                right: 0,
+                borderBottom: "solid 10px",
+                borderRight: "solid 10px",
+                borderColor: "white",
+                borderBottomRightRadius: 5,
+              }}
+            ></span>
+          </div>
+        )}
         onResult={(result, error) => {
           if (!!result) {
-            handleQrRedirection(result.toString());
-            // setIsStartScan(false);
+            animateQrBorder();
+            setTimeout(() => {
+              handleQrRedirection(result.toString());
+            }, 2000);
           }
           if (!!error) {
-            // gerer l'erreur
             console.log("error => ", error);
           }
         }}
@@ -41,17 +106,34 @@ const QrScanner = (props: QrScannerProps) => {
   );
 };
 const StyledQrReader = styled(QrReader)`
-  height: "auto";
-  width: 320;
-  top: 50;
+  height: 100%;
+  width: 100%;
   position: "relative";
-  margin: 6;
+  overflow: hidden;
   > div {
     padding-top: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   > div > video {
+    height: 100%;
+    width: 100%;
     position: relative !important;
-    border-radius: 5px;
+  }
+  @keyframes scaleInOut {
+    0% {
+      transform: scale(1);
+    }
+    10% {
+      transform: scale(0.9);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(1);
+    }
   }
 `;
 
