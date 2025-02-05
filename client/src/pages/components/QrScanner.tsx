@@ -11,9 +11,13 @@ export interface QrScannerProps {
 const QrScanner = (props: QrScannerProps) => {
   const { handleQrRedirection } = props;
 
-  const animateQrBorder = () => {
+  const animateQrBorder = (result: any) => {
     let qrBorder = document.getElementById("qrBorder");
     qrBorder && qrBorder.style.setProperty("animation", "scaleInOut ease 2s");
+    setTimeout(() => {
+      handleQrRedirection(result.toString());
+      qrBorder?.style.removeProperty("animation");
+    }, 2000);
   };
 
   return (
@@ -92,10 +96,10 @@ const QrScanner = (props: QrScannerProps) => {
         )}
         onResult={(result, error) => {
           if (!!result) {
-            animateQrBorder();
-            setTimeout(() => {
-              handleQrRedirection(result.toString());
-            }, 2000);
+            animateQrBorder(result);
+            // setTimeout(() => {
+            //   handleQrRedirection(result.toString());
+            // }, 2000);
           }
           if (!!error) {
             console.log("error => ", error);
