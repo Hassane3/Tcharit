@@ -2,6 +2,8 @@
 An app allowing to locate water tanks and get or set the current state of a given tank (filled or empty)
 This app is a first try of a project that will, in a primary time, be used in a specific city (Beni isguen) where drinking water is retrieved from water tanks scattered in many points in the city.
 
+# https://tcharit.netlify.app (use mobile mode, its more intuitive)
+
 ![MENU#2_thumb](https://github.com/user-attachments/assets/b98c238a-0933-43cc-9eb9-b658776f48d3)
 ![MAP#2_thumb](https://github.com/user-attachments/assets/993bf28b-8194-4fe3-be56-57cf219350cc)
 ![TANK#2_thumb](https://github.com/user-attachments/assets/120141ad-6724-42a6-b70c-f697d773cd3d)
@@ -10,5 +12,5 @@ The aim of this app is to allow to inhabitants to get state informations about w
 This app prevent them for wasting time outside seeking water, in a region where the summer is very hot and nights of winter are colds.
 
 
-#Conception
+# Conception
 This app will be a pwa app to allow access from any device, but the main goal is to allow users to install it easily in their phones.
