@@ -243,15 +243,16 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
               sx={{
                 width: "60%",
                 margin: "40px 0",
-                ".css-j9vys8-MuiSlider-thumb": {
+                // ".css-j9vys8-MuiSlider-thumb": {
+                ".MuiSlider-thumb": {
                   backgroundColor:
                     tankStatus === 0
                       ? customTheme.palette.background.red
                       : tankStatus === 1
                         ? customTheme.palette.background.yellow
                         : customTheme.palette.background.blue,
-                  height: "40px",
-                  width: "40px",
+                  height: "34px",
+                  width: "34px",
                 },
                 ".MuiSlider-markLabelActive": {
                   color:
