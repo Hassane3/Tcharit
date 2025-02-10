@@ -12,5 +12,5 @@ The aim of this app is to allow to inhabitants to get state informations about w
 This app prevent them for wasting time outside seeking water, in a region where the summer is very hot and nights of winter are colds.
 
 
-# Conception
+## Conception
 This app will be a pwa app to allow access from any device, but the main goal is to allow users to install it easily in their phones.
