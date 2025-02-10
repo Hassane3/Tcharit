@@ -85,6 +85,7 @@ export const customTheme = createTheme({
           height: "10px",
           width: "10px",
           borderRadius: "50%",
+          backgroundColor: "#adadad !important",
         },
         rail: {
           opacity: 1,
