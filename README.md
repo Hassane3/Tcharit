@@ -8,3 +8,7 @@ This app is a first try of a project that will, in a primary time, be used in a 
 
 The aim of this app is to allow to inhabitants to get state informations about water tanks in real time.
 This app prevent them for wasting time outside seeking water, in a region where the summer is very hot and nights of winter are colds.
+
+
+#Conception
+This app will be a pwa app to allow access from any device, but the main goal is to allow users to install it easily in their phones.
