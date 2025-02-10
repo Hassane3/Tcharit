@@ -40,6 +40,7 @@ import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import CommentsDisabledRoundedIcon from "@mui/icons-material/CommentsDisabledRounded";
 import { customTheme, UserData } from "../App";
 import { Global } from "@emotion/react";
+import SwipeableBox from "./components/SwipeableBox";
 
 interface TankProps {
   tanksData: tankDataProps[];
@@ -171,7 +172,7 @@ const Tank = (props: TankProps) => {
       />
       <Header
         headerHeight={headerHeight}
-        backgroundColor={customTheme.palette.background.defaultBlue}
+        backgroundColor={customTheme.palette.background.defaultWhite}
         style={{
           transition: "height 0.2s ease-in-out",
         }}
@@ -192,7 +193,7 @@ const Tank = (props: TankProps) => {
             >
               <ChevronLeftRoundedIcon
                 sx={{
-                  color: customTheme.palette.background.defaultWhite,
+                  color: customTheme.palette.background.defaultBlue,
                   fontSize: "50px",
                 }}
               />
@@ -210,8 +211,7 @@ const Tank = (props: TankProps) => {
               <Typography
                 variant="h2"
                 id="tank_name"
-                color={customTheme.palette.background.defaultWhite}
-                style={{ lineHeight: "1.8" }}
+                color={customTheme.palette.background.defaultBlue}
               >
                 {selectedTankData?.name}
               </Typography>
@@ -221,7 +221,7 @@ const Tank = (props: TankProps) => {
                 style={
                   selectedTankData && {
                     color: selectedTankData.posts
-                      ? getTankStatusColor(lastPost, "extraLight")
+                      ? getTankStatusColor(lastPost, "basic")
                       : customTheme.palette.background.blueExtraLight,
                   }
                 }
@@ -267,7 +267,7 @@ const Tank = (props: TankProps) => {
               display: "flex",
             }}
           >
-            <div
+            {/* <div
               style={{
                 position: "absolute",
                 left: 0,
@@ -297,7 +297,7 @@ const Tank = (props: TankProps) => {
               }}
             >
               <Wave backgroundColor={getTankStatusColor(lastPost, "basic")} />
-            </div>
+            </div> */}
           </div>
         </div>
       </Header>
@@ -331,18 +331,32 @@ const Tank = (props: TankProps) => {
       {selectedTankData &&
         (console.log("selectedTankData >", selectedTankData),
         (
-          <BottomNav
-            selectedTankData={selectedTankData}
-            setConfirmationBox={handleConfirmationBox}
-            tankLatLng={selectedTankData.latLng}
-            openBottomNav={openBottomNav}
-            setOpenBottomNav={setOpenBottomNav}
-            setTankStatus={handleTankStatus}
-            cookies={cookies}
-            isAddPostAllowed={isAddPostAllowed}
-            setIsAddPostAllowed={setIsAddPostAllowed}
-            userData={userData}
-          />
+          // <BottomNav
+          //   selectedTankData={selectedTankData}
+          //   setConfirmationBox={handleConfirmationBox}
+          //   tankLatLng={selectedTankData.latLng}
+          //   openBottomNav={openBottomNav}
+          //   setOpenBottomNav={setOpenBottomNav}
+          //   setTankStatus={handleTankStatus}
+          //   cookies={cookies}
+          //   isAddPostAllowed={isAddPostAllowed}
+          //   setIsAddPostAllowed={setIsAddPostAllowed}
+          //   userData={userData}
+          // />
+          <SwipeableBox navLabel="Report water flow">
+            <BottomNav
+              selectedTankData={selectedTankData}
+              setConfirmationBox={handleConfirmationBox}
+              tankLatLng={selectedTankData.latLng}
+              openBottomNav={openBottomNav}
+              setOpenBottomNav={setOpenBottomNav}
+              setTankStatus={handleTankStatus}
+              cookies={cookies}
+              isAddPostAllowed={isAddPostAllowed}
+              setIsAddPostAllowed={setIsAddPostAllowed}
+              userData={userData}
+            />
+          </SwipeableBox>
         ))}
       {isConfirmBoxOpen &&
         (console.log("isConfirmBox >", isConfirmBoxOpen),
@@ -423,6 +437,7 @@ const Header = styled(Box)<{ headerHeight: number; backgroundColor: string }>`
   width: 100%;
   height: ${(props) => props.headerHeight + "px"};
   overflow: hidden;
+  border-radius: 0 0 40px 40px;
 
   #checkPosts_title {
     color: ${() => customTheme.palette.background.defaultWhite};

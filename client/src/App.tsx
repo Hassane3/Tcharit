@@ -53,15 +53,47 @@ export const customTheme = createTheme({
       styleOverrides: {
         root: {
           minWidth: 0,
-
-          padding: "6px 20px",
+          padding: "10px 50px",
         },
         containedSizeLarge: {
+          textTransform: "none",
           fontSize: "1.4em",
           fontWeight: "600",
-          borderRadius: "10px",
+          borderRadius: "40px",
           toUpperCase: "none",
           boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+        },
+      },
+    },
+    MuiSlider: {
+      styleOverrides: {
+        root: {
+          borderRadius: "12px",
+          boxSizing: "content-box",
+          display: "inline-block",
+          position: "relative",
+          cursor: "pointer",
+          touchAction: "none",
+          // -webkit-tap-highlight-color: transparent;
+          color: "#adadad",
+          height: "4px",
+          width: "100%",
+          padding: "13px 0",
+          marginBottom: "20px",
+        },
+        mark: {
+          height: "10px",
+          width: "10px",
+          borderRadius: "50%",
+        },
+        rail: {
+          opacity: 1,
+        },
+        markLabel: {
+          color: "#adadad",
+          top: "-40px !important",
+          left: "50% !important",
+          display: "none",
         },
       },
     },
@@ -73,15 +105,15 @@ export const customTheme = createTheme({
       fontWeight: "400",
     },
     h2: {
-      fontFamily: "Changa",
-      fontSize: "2em",
-      fontWeight: "400",
+      fontFamily: "Lalezar",
+      fontSize: "2.6em",
+      fontWeight: "500",
     },
     h3: {
       fontFamily: "Changa",
-      fontSize: "1.1em",
-      fontWeight: "600",
-      lineHeight: "1em",
+      fontSize: "1.4em",
+      fontWeight: "700",
+      lineHeight: "1.3em",
     },
     button: {
       fontSize: "1.4em",
@@ -98,20 +130,20 @@ export const customTheme = createTheme({
           main: "#567F8A",
         },
         text: {
-          primary: "##61523D",
-          secondary: "#3D5F61",
+          primary: "#61523D",
+          secondary: "#567F8A",
           grey: " #c1c1c1",
         },
         background: {
           default: "#BEF1F7",
-          defaultBlue: "#3D5F61",
+          defaultBlue: "#567F8A",
           defaultBrown: "#61523D",
           defaultWhite: "#EAFBFF",
           paper: "#3D5F61",
           blueDark: "#567F8A",
           blue: "#95DCE0",
           blueLight: "#BEF1F7",
-          blueExtraLight: "#DFF6FF",
+          blueExtraLight: "#CFF6FF",
           yellowDark: "#8A7256",
           yellow: "#E1C095",
           yellowLight: "#E9CFAF",

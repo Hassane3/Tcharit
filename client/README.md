@@ -83,8 +83,8 @@ Fix Todo :
 
 *******HERE**********
 
-**05/02/25
-    Fix page refresh disfunction
+**06/02/25
+    Ui improv : tank bottom nav
 **04/02/25
     Scanner : 
     - Handling wrong qr code

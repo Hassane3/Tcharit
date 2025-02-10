@@ -17,7 +17,6 @@ import { Close } from "@mui/icons-material";
 import PersonPinCircleIcon from "@mui/icons-material/PersonPinCircle";
 import { HighFlow, LowFlow, NullFlow } from "../../utils/constants/Icons";
 import { auth } from "../../firebase/firebase";
-import SwipeableBox from "./SwipeableBox";
 
 interface BottomNavProps {
   tankLatLng: latLngProps;
@@ -158,22 +157,80 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
     console.log("newValue >", newValue);
     setTankStatus(newValue);
   };
-
   return (
-    <div style={{ height: "100%" }}>
+    <SwipeableDrawer
+      anchor="bottom"
+      open={openBottomNav}
+      onClose={toggleDrawer(false)}
+      onOpen={toggleDrawer(true)}
+      swipeAreaWidth={drawerBleeding}
+      disableSwipeToOpen={false}
+      ModalProps={{
+        keepMounted: true,
+      }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          top: -drawerBleeding,
+          visibility: "visible",
+          right: 20,
+          left: 20,
+          backgroundColor: customTheme.palette.background.defaultWhite,
+          boxShadow: "0px -10px 10px -10px rgba(0, 0, 0, 0.2)",
+          borderRadius: "40px 40px 0px 0px",
+          display: "flex column",
+          justifyContent: "center",
+          alignItems: "center",
+          height: drawerBleeding,
+          overflow: "hidden",
+        }}
+      >
+        {/* <Puller backgroundColor={customTheme.palette.background.yellowDark}/> */}
+        {/* Puller */}
+        <div
+          style={{
+            width: 30,
+            height: 6,
+            backgroundColor: customTheme.palette.background.blueDark,
+            borderRadius: 3,
+            position: "absolute",
+            top: 8,
+            left: "calc(50% - 15px)",
+          }}
+        />
+        <Typography
+          variant="h3"
+          sx={{
+            p: 2,
+            fontSize: "1.2em",
+            fontWeight: "500",
+            lineHeight: "unset",
+            color: customTheme.palette.background.blueDark,
+            textAlign: "center",
+          }}
+        >
+          Report water flow
+          {/* Signaler le débit d'eau */}
+          {/* تنبيه عن حالة تدفق المياه */}
+        </Typography>
+      </div>
+      {/* <Box style={{ px: 2, pb: 2, height: "100%", overflow: "auto" }}> */}
       <Box
         style={{
           height: "100%",
-          //   overflow: "auto",
+          overflow: "auto",
           backgroundColor: customTheme.palette.background.defaultWhite,
-          //   marginBottom: "20px",
-          //   display: "flex",
+          marginRight: "20px",
+          marginLeft: "20px",
+          marginBottom: "20px",
+          borderRadius: "0 0 40px 40px",
           // padding: "20px 0",
         }}
       >
         {/* <Skeleton variant="rectangular" height="100%" /> */}
         {!isAddPostAllowed && (
-          <NavContent>
+          <PostBoxInfos>
             <PersonPinCircleIcon
               sx={{
                 color: customTheme.palette.background.defaultBlue,
@@ -201,16 +258,23 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
             >
               <span>Continu</span>
             </Button>
-          </NavContent>
+          </PostBoxInfos>
         )}
         {isAddPostAllowed && (
-          <NavContent>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              margin: "20px",
+            }}
+          >
             <div
               style={{
                 height: "100px",
                 width: "100px",
                 textAlign: "center",
-                // marginBottom: "30px 10px 0",
+                marginBottom: "30px 10px 0",
               }}
             >
               <img
@@ -242,7 +306,7 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
               valueLabelFormat={valueLabelFormat}
               sx={{
                 width: "60%",
-                margin: "40px 0",
+                marginBottom: "30px",
                 ".css-j9vys8-MuiSlider-thumb": {
                   backgroundColor:
                     tankStatus === 0
@@ -260,10 +324,24 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
                       : tankStatus === 1
                         ? customTheme.palette.background.yellow
                         : customTheme.palette.background.blue,
-                  fontSize: "2em",
-                  fontWeight: 600,
-                  display: "block",
+                  fontSize: "1em",
                 },
+                // "& .MuiSlider-rail": {
+                //   backgroundColor: customTheme.palette.background.greyLight,
+                //   opacity: 1,
+                // },
+                // "& .css-lq5hqx-MuiSlider-mark": {
+                //   borderRadius: "50%",
+                //   height: "16px",
+                //   width: "16px",
+                //   backgroundColor: customTheme.palette.background.greyLight,
+                // },
+                // "& .MuiSlider-markActive:after": {
+                //   height: "40px",
+                //   width: "40px",
+                //   backgroundColor: "tomato",
+                //   color: "tomato",
+                // },
               }}
             />
             <Button
@@ -284,7 +362,44 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
             >
               <span>Continu</span>
             </Button>
-          </NavContent>
+          </div>
+
+          // <FlowButtons>
+          //   <FlowButton
+          //     id="empty"
+          //     backgroundColor={customTheme.palette.background.red}
+          //     textColor={customTheme.palette.background.defaultBlue}
+          //     onClick={setConfirmationBox(true, TankStatus.EMPTY)}
+          //   >
+          //     <NullFlow />
+          //     <Typography variant="button" sx={{ fontSize: "1.2em" }}>
+          //       منعدم
+          //     </Typography>
+          //   </FlowButton>
+          //   <FlowButton
+          //     backgroundColor={customTheme.palette.background.yellow}
+          //     textColor={customTheme.palette.background.defaultBlue}
+          //     onClick={setConfirmationBox(true, TankStatus.HALFFUll)}
+          //   >
+          //     <LowFlow />
+          //     {/* <img src="/img/low_flow.svg" alt="" /> */}
+          //     <Typography variant="button" sx={{ fontSize: "1.2em" }}>
+          //       ضئيل
+          //     </Typography>
+          //   </FlowButton>
+          //   <FlowButton
+          //     id="full"
+          //     backgroundColor={customTheme.palette.background.blue}
+          //     textColor={customTheme.palette.background.defaultBlue}
+          //     onClick={setConfirmationBox(true, TankStatus.FULL)}
+          //   >
+          //     <HighFlow />
+          //     {/* <img src="/img/high_flow.svg" alt="" /> */}
+          //     <Typography variant="button" sx={{ fontSize: "1.2em" }}>
+          //       قوي
+          //     </Typography>
+          //   </FlowButton>
+          // </FlowButtons>
         )}
       </Box>
 
@@ -302,18 +417,48 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
           </Typography>
         </Box>
       </Modal>
-    </div>
+    </SwipeableDrawer>
   );
 };
 
-const NavContent = styled.div`
+const FlowButtons = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px;
+  justify-content: space-around;
+
+  > button {
+    border-radius: 0;
+  }
+  #full {
+    border-top-right-radius: 10px;
+  }
+  #empty {
+    border-top-left-radius: 10px;
+  }
+`;
+const FlowButton = styled(Button)<{
+  backgroundColor: string;
+  textColor: string;
+}>`
+  display: flex;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: space-between !important;
   width: 100%;
-  height: 100%;
+  background-color: ${(props) => props.backgroundColor} !important;
+  color: ${(props) => props.textColor};
+
+  svg {
+    width: 60px;
+  }
+  span {
+    font-weight: 500;
+    color: ${(props) => props.textColor};
+  }
+`;
+
+const PostBoxInfos = styled.div`
+  text-align: center;
+  padding: 30px 30px;
 `;
 
 export default BottomNav;
