@@ -53,3 +53,30 @@ export const calculateDateDifference = (dateStr: string) => {
 
   return diffInDays;
 };
+
+export const checkAndRequestGeolocation = async (): Promise<any> => {
+  try {
+    const permission = await navigator.permissions.query({
+      name: "geolocation",
+    });
+
+    if (permission.state === "granted") {
+      return true;
+    } else if (permission.state === "prompt") {
+      return true;
+    } else {
+      alert("❌ Denied geolocation \nPlease verify geolocation is activated");
+      if (navigator.userAgent.includes("Chrome")) {
+        window.open("chrome://settings/content/location", "_blank");
+      } else if (navigator.userAgent.includes("Firefox")) {
+        window.open("about:preferences#privacy", "_blank");
+      } else if (navigator.userAgent.includes("Opera")) {
+        window.open("about:preferences#privacy", "_blank");
+      } else {
+        alert("Please activate geolocation in parameters.");
+      }
+    }
+  } catch (error) {
+    alert("Unable to get your location");
+  }
+};
