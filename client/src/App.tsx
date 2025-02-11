@@ -44,6 +44,8 @@ declare module "@mui/material/styles" {
     greyLight: string;
   }
 }
+
+// MUI Costum theme
 export const customTheme = createTheme({
   cssVariables: {
     colorSchemeSelector: "data-toolpad-color-scheme",
@@ -192,6 +194,7 @@ export const customTheme = createTheme({
     },
   },
 });
+
 function App(): JSX.Element {
   // const [tanksData, setTanksData] = useState<Array<tankDataProps>>([]);
   const [tanksData, setTanksData] = useState<Array<tankDataProps>>([]);
@@ -210,6 +213,7 @@ function App(): JSX.Element {
     email: null,
   });
   const [tankAgentData, setTankAgentData] = useState<{} | null>(null);
+
   // We track user connection state; and get user datas from firestore
   const fetchTankAgentData = async () => {
     auth.onAuthStateChanged(async (user) => {
@@ -299,25 +303,10 @@ function App(): JSX.Element {
     );
   }, [cookies]);
 
-  const { palette } = createTheme();
-
   console.log("page state : ", document.readyState);
   return (
     <BrowserRouter>
-      <AppProvider
-        theme={customTheme}
-        // navigation={[
-        //   {
-        //     segment: "home",
-        //     title: "Home",
-        //   },
-        //   {
-        //     segment: "login",
-        //     title: "Login",
-        //   },
-        // ]}
-        // session={useSession()}
-      >
+      <AppProvider theme={customTheme}>
         <Routes>
           <Route
             path="/"
@@ -345,13 +334,11 @@ function App(): JSX.Element {
               />
             }
           />
-          {/* <Route path="/tank:id" element={<Tank />} /> */}
           <Route
             path="/tank/:id"
             element={
               <Tank
                 tanksData={tanksData}
-                // HERE
                 setCookie={setCookie}
                 cookies={cookies}
                 userData={userData}
@@ -363,7 +350,6 @@ function App(): JSX.Element {
             element={<Login handleSetTankAgentData={setTankAgentData} />}
           />
           <Route path="*" element={<NoPage />} />
-          {/* </Route> */}
         </Routes>
       </AppProvider>
     </BrowserRouter>

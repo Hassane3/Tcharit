@@ -4,8 +4,6 @@ import TankStatus from "../models/utils/TankStatus";
 import { useNavigate, useNavigation, useParams } from "react-router-dom";
 import styled from "styled-components";
 
-import { GLOBAL_STYLE } from "../utils/constants/constants";
-
 //DATA
 import { postsProps, tankDataProps } from "./MapPage";
 import CheckPosts from "./CheckPosts";
@@ -19,23 +17,12 @@ import {
 } from "../firebase/operations";
 import { UserType } from "../models/utils/UsersType";
 import {
-  ArrowSvg,
   EmptyTank,
   FullTank,
   HalfFullTank,
   UnsetTank,
-  Wave,
 } from "../utils/constants/Icons";
-import {
-  Box,
-  Button,
-  Container,
-  Skeleton,
-  SwipeableDrawer,
-  Typography,
-} from "@mui/material";
-import { AppProvider } from "@toolpad/core";
-import { ArrowBackIos, Height } from "@mui/icons-material";
+import { Box, Button, Typography } from "@mui/material";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import CommentsDisabledRoundedIcon from "@mui/icons-material/CommentsDisabledRounded";
 import { customTheme, UserData } from "../App";
@@ -54,7 +41,7 @@ const Tank = (props: TankProps) => {
   const { tanksData, setCookie, cookies, userData } = props;
   const navigateTo = useNavigate();
 
-  // VARIABLES (STATES)
+  // VARIABLES
   const [selectedTankData, setSelectedTankData] = useState<tankDataProps>();
   const tankId: number = parseInt(useParams().id as string);
   const [tankStatus, setTankStatus] = useState<TankStatus>(TankStatus.UNKNOWN);
@@ -64,6 +51,22 @@ const Tank = (props: TankProps) => {
 
   const [isAddPostAllowed, setIsAddPostAllowed] = useState<boolean>(false);
   const [openBottomNav, setOpenBottomNav] = useState<boolean>(false);
+
+  const lastPost =
+    selectedTankData &&
+    selectedTankData.posts &&
+    Object.values(selectedTankData.posts).at(-1);
+
+  const headerLarge = 170;
+  const headerTight = 70;
+  const [headerHeight, setHeaderHeight] = useState<number>(headerLarge);
+  const waveHeight =
+    lastPost?.status === "EMPTY"
+      ? -100
+      : lastPost?.status === "HALFFULL"
+        ? -headerHeight * 0.5
+        : -headerHeight * 0.1;
+
   useEffect(() => {
     const tankData = tanksData.find((tank: tankDataProps) => {
       return tank.id === tankId;
@@ -118,20 +121,7 @@ const Tank = (props: TankProps) => {
     }
   };
 
-  const lastPost =
-    selectedTankData &&
-    selectedTankData.posts &&
-    Object.values(selectedTankData.posts).at(-1);
-
-  const headerLarge = 170;
-  const headerTight = 70;
-  const [headerHeight, setHeaderHeight] = useState<number>(headerLarge);
-  const waveHeight =
-    lastPost?.status === "EMPTY"
-      ? -100
-      : lastPost?.status === "HALFFULL"
-        ? -headerHeight * 0.5
-        : -headerHeight * 0.1;
+  //  Handle header height while scrolling
   useEffect(() => {
     const handleScroll = () => {
       let newHeight; // Minimum height: 100px

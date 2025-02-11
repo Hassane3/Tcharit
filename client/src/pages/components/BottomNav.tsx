@@ -18,6 +18,7 @@ import PersonPinCircleIcon from "@mui/icons-material/PersonPinCircle";
 import { HighFlow, LowFlow, NullFlow } from "../../utils/constants/Icons";
 import { auth } from "../../firebase/firebase";
 import SwipeableBox from "./SwipeableBox";
+import { checkAndRequestGeolocation } from "../../utils/methods/methods";
 
 interface BottomNavProps {
   tankLatLng: latLngProps;
@@ -68,74 +69,6 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
       setOpenBottomNav(newOpen);
     };
   const drawerBleeding = 56;
-
-  // useEffect(() => {
-  //   console.log("isAddPostAllowed > ", isAddPostAllowed);
-  //   // console.log("UE > ", open);
-  //   // if (!isAddPostAllowed) {
-  //   //   setTimeout(() => {
-  //   //     setOpen(false);
-  //   //   }, 3000);
-  //   // }
-  // }, []);
-
-  const handleCheckTank = () => {
-    // If user is a random person we check his position else if its cistern agent, we do not:
-    let user = auth.currentUser;
-    if (user) {
-      setIsAddPostAllowed(true);
-    } else if (navigator.geolocation.getCurrentPosition) {
-      navigator.geolocation.getCurrentPosition(
-        (success) => {
-          let latLng = new LatLng(
-            success.coords.latitude,
-            success.coords.longitude
-          );
-          console.log("handleCheck");
-          // We test if the actual position is near the tank position (the value 0.01 is for test, 0.0001 for high precision) :
-          // alert(
-          //   "lat : " +
-          //     latLng.lat +
-          //     "lng :" +
-          //     latLng.lng +
-          //     "\n" +
-          //     "tank lat : " +
-          //     tankLatLng.lat +
-          //     "tank lng :" +
-          //     tankLatLng.lng
-          // );
-          console.log("getCurrentPos");
-          if (
-            //
-            // latLng.lat > tankLatLng.lat - 0.001 &&
-            // latLng.lat < tankLatLng.lat + 0.001 &&
-            // latLng.lng > tankLatLng.lng - 0.001 &&
-            // latLng.lng < tankLatLng.lng + 0.001
-            1 == 1
-          ) {
-            // If user cookie exist, that means he has posted recently
-            if (cookies.userId) {
-              alert(
-                "Vous ne pouvez ajouter un post car venez de le faire. Pour pouvoir ajouter un post de nouveau, il faut attendre unpeu et puis rafraichir la page"
-              );
-            } else {
-              setIsAddPostAllowed(true);
-            }
-          } else {
-            setIsLocModalVisible(true);
-            // alert("U are far from tank ! `\t` Try to come closer");
-          }
-        },
-        (error) => {
-          console.log("ERROR => ", error);
-          alert("Unable to get your location, please activate to geolocation");
-          // TREAT ERROR TYPES
-        }
-      );
-    } else {
-      alert("Geolocation not supported");
-    }
-  };
   const [tankStatus, setTankStatus] = useState<number | number[]>(0);
   const valueLabelFormat = (value: number) => {
     return value === 0 ? "empty" : value === 1 ? "half" : "full";
@@ -154,6 +87,108 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
       label: "full",
     },
   ];
+
+  //   // If user is a random person we check his position else if its cistern agent, we do not:
+  //   let user = auth.currentUser;
+  //   if (user) {
+  //     setIsAddPostAllowed(true);
+  //   } else if (navigator.geolocation.getCurrentPosition) {
+  //     navigator.geolocation.getCurrentPosition(
+  //       (success) => {
+  //         let latLng = new LatLng(
+  //           success.coords.latitude,
+  //           success.coords.longitude
+  //         );
+  //         console.log("handleCheck");
+  //         // We test if the actual position is near the tank position (the value 0.01 is for test, 0.0001 for high precision) :
+  //         // alert(
+  //         //   "lat : " +
+  //         //     latLng.lat +
+  //         //     "lng :" +
+  //         //     latLng.lng +
+  //         //     "\n" +
+  //         //     "tank lat : " +
+  //         //     tankLatLng.lat +
+  //         //     "tank lng :" +
+  //         //     tankLatLng.lng
+  //         // );
+  //         console.log("getCurrentPos");
+  //         if (
+  //           //
+  //           // latLng.lat > tankLatLng.lat - 0.001 &&
+  //           // latLng.lat < tankLatLng.lat + 0.001 &&
+  //           // latLng.lng > tankLatLng.lng - 0.001 &&
+  //           // latLng.lng < tankLatLng.lng + 0.001
+  //           1 == 1
+  //         ) {
+  //           // If user cookie exist, that means he has posted recently
+  //           if (cookies.userId) {
+  //             alert(
+  //               "Vous ne pouvez ajouter un post car venez de le faire. Pour pouvoir ajouter un post de nouveau, il faut attendre unpeu et puis rafraichir la page"
+  //             );
+  //           } else {
+  //             setIsAddPostAllowed(true);
+  //           }
+  //         } else {
+  //           setIsLocModalVisible(true);
+  //           // alert("U are far from tank ! `\t` Try to come closer");
+  //         }
+  //       },
+  //       (error) => {
+  //         console.log("ERROR => ", error);
+  //         alert("Unable to get your location, please activate to geolocation");
+  //         // TREAT ERROR TYPES
+  //       }
+  //     );
+  //   } else {
+  //     alert("Geolocation not supported");
+  //   }
+  // };
+  // checkUserPermission
+  const handleCheckTank = () => {
+    // If user is a random person we check his position else if its cistern agent, we do not:
+    let user = auth.currentUser;
+
+    if (user) {
+      setIsAddPostAllowed(true);
+    } else {
+      checkAndRequestGeolocation()
+        .then(() =>
+          navigator.geolocation.getCurrentPosition((position) => {
+            if (position) {
+              let latLng = new LatLng(
+                position.coords.latitude,
+                position.coords.longitude
+              );
+              // We test if the actual position is near the tank position (the value 0.01 is for test, 0.0001 for high precision) :
+              if (
+                latLng.lat > tankLatLng.lat - 0.0001 &&
+                latLng.lat < tankLatLng.lat + 0.0001 &&
+                latLng.lng > tankLatLng.lng - 0.0001 &&
+                latLng.lng < tankLatLng.lng + 0.0001
+              ) {
+                // If user cookie exist, that means he has posted recently
+                if (cookies.userId) {
+                  alert(
+                    "It seems that you have already added a post recently, \n" +
+                      "Please wait before you can add another post."
+                  );
+                } else {
+                  setIsAddPostAllowed(true);
+                }
+              } else {
+                alert(
+                  "It seems that you are far from water tank ! \n" +
+                    "Try to come closer."
+                );
+              }
+            }
+          })
+        )
+        .catch((error) => console.error(error));
+    }
+  };
+
   const handleSetTankStatus = (event: Event, newValue: number | number[]) => {
     console.log("newValue >", newValue);
     setTankStatus(newValue);
