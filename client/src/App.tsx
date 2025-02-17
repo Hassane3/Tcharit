@@ -27,9 +27,11 @@ declare module "@mui/material/styles" {
   }
   interface TypeBackground {
     defaultWhite: string;
+    lightWhite: string;
     defaultBlue: string;
     defaultBrown: string;
     blueDark: string;
+    blueFade: string;
     blue: string;
     blueLight: string;
     blueExtraLight: string;
@@ -64,6 +66,17 @@ export const customTheme = createTheme({
           borderRadius: "40px",
           toUpperCase: "none",
           boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+        },
+        containedSizeSmall: {
+          backgroundColor: "#567F8A",
+          color: "#EAFBFF",
+        },
+        containedPrimary: {
+          backgroundColor: "#567F8A",
+          color: "#EAFBFF",
+        },
+        containedWarning: {
+          borderRadius: "10px",
         },
       },
     },
@@ -100,16 +113,34 @@ export const customTheme = createTheme({
         },
       },
     },
+    MuiListItem: {
+      styleOverrides: {
+        root: {
+          span: {
+            fontSize: "1.3em",
+          },
+        },
+      },
+    },
+    MuiListItemButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: "10px",
+        },
+      },
+    },
   },
   typography: {
     fontFamily: "Changa",
     h1: {
       fontFamily: "Lalezar",
+      fontSize: "50px",
       fontWeight: "400",
+      lineHeight: 0.8,
     },
     h2: {
       fontFamily: "Lalezar",
-      fontSize: "2.6em",
+      fontSize: "30px",
       fontWeight: "500",
     },
     h3: {
@@ -117,6 +148,12 @@ export const customTheme = createTheme({
       fontSize: "1.4em",
       fontWeight: "700",
       lineHeight: "1.3em",
+    },
+    h4: {
+      fontFamily: "Changa",
+      fontSize: "18px",
+      fontWeight: "400",
+      lineHeight: "1.1em",
     },
     button: {
       fontSize: "1.4em",
@@ -127,23 +164,25 @@ export const customTheme = createTheme({
     light: {
       palette: {
         primary: {
-          main: "#3D5F61",
+          main: "#EAFBFF",
         },
         secondary: {
           main: "#567F8A",
         },
         text: {
-          primary: "#61523D",
-          secondary: "#567F8A",
+          primary: "#567F8A",
+          secondary: "#95DCE0",
           grey: " #c1c1c1",
         },
         background: {
-          default: "#BEF1F7",
+          default: "#EAFBFF",
           defaultBlue: "#567F8A",
           defaultBrown: "#61523D",
           defaultWhite: "#EAFBFF",
-          paper: "#3D5F61",
+          lightWhite: "#B5CDD3",
+          paper: "#EAFBFF",
           blueDark: "#567F8A",
+          blueFade: "#809FA7",
           blue: "#95DCE0",
           blueLight: "#BEF1F7",
           blueExtraLight: "#CFF6FF",
@@ -159,29 +198,29 @@ export const customTheme = createTheme({
         },
       },
     },
-    dark: {
-      palette: {
-        primary: {
-          main: "#3D5F61",
-        },
-        secondary: {
-          main: "#567F8A",
-        },
-        text: {
-          primary: "#EAFBFF",
-          secondary: "#3D5F61",
-          grey: "#b8b8b8",
-        },
-        background: {
-          default: "#EAFBFF",
-          paper: "#3D5F61",
-          blueDark: "#567F8A",
-          yellowDark: "#8A7256",
-          redDark: "#8A5656",
-          greyLight: "#adadad",
-        },
-      },
-    },
+    // dark: {
+    //   palette: {
+    //     primary: {
+    //       main: "#567F8A",
+    //     },
+    //     secondary: {
+    //       main: "#CFF6FF",
+    //     },
+    //     text: {
+    //       primary: "#EAFBFF",
+    //       secondary: "#95DCE0",
+    //       grey: "#b8b8b8",
+    //     },
+    //     background: {
+    //       default: "#EAFBFF",
+    //       paper: "#567F8A",
+    //       blueDark: "#567F8A",
+    //       yellowDark: "#8A7256",
+    //       redDark: "#8A5656",
+    //       greyLight: "#adadad",
+    //     },
+    //   },
+    // },
   },
 
   breakpoints: {
@@ -348,6 +387,10 @@ function App(): JSX.Element {
           <Route
             path="/login"
             element={<Login handleSetTankAgentData={setTankAgentData} />}
+          />
+          <Route
+            path="/notifications"
+            // element={<Login handleSetTankAgentData={setTankAgentData} />}
           />
           <Route path="*" element={<NoPage />} />
         </Routes>

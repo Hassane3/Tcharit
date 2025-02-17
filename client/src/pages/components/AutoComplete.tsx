@@ -69,6 +69,9 @@ const AutoComplete = (props: AutoCompleteProps) => {
             id="input-with-sx"
             variant="filled"
             sx={{
+              "& .MuiFilledInput-root ": {
+                backgroundColor: customTheme.palette.background.defaultWhite,
+              },
               "& .MuiFormLabel-root": {
                 color: customTheme.palette.text.grey,
               },
@@ -76,7 +79,7 @@ const AutoComplete = (props: AutoCompleteProps) => {
                 color: customTheme.palette.background.defaultBlue,
               },
               "& .MuiInputBase-input": {
-                color: customTheme.palette.text.secondary,
+                color: customTheme.palette.text.primary,
               },
             }}
           />

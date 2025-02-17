@@ -80,7 +80,7 @@ const MapTankBox = (props: mapTankBoxProps) => {
           <p className="popUp_name">{tank.name}</p>
           <p
             className="popUp_description"
-            // style={{ color: getTankStatusColor(tank.posts[tank.posts.at(-1)], "dark") }}
+            style={{ color: customTheme.palette.background.defaultBrown }}
           >
             {lastPost
               ? lastPost.status === TankStatus.EMPTY

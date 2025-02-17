@@ -43,3 +43,14 @@ p {
 .scanReader {
   position: absolute;
 }
+
+#menuDrawer > .MuiPaper-root {
+  width: 300px;
+}
+/* PHONE */
+@media only screen and (max-width: 400px) {
+  #menuDrawer > .MuiPaper-root {
+     width: 100%;
+  }
+  
+}

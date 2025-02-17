@@ -145,13 +145,13 @@ const Login = (props: loginProps) => {
       <Button
         type="submit"
         variant="contained"
-        size="small"
+        size="large"
         // disableElevation
         fullWidth
         sx={{
           my: 2,
-          backgroundColor: customTheme.palette.background.blue,
-          color: customTheme.palette.text.secondary,
+          // backgroundColor: customTheme.palette.background.default,
+          // color: customTheme.palette.text.primary,
         }}
       >
         Log In
@@ -193,12 +193,16 @@ const Login = (props: loginProps) => {
           forgotPasswordLink: ForgotPasswordLink,
         }}
         sx={{
-          "& .MuiTypography-root": {
-            color: customTheme.palette.background.defaultWhite,
+          "& .MuiBox-root": {
+            borderRadius: "40px",
           },
-          "& .MuiSvgIcon-root": {
-            color: customTheme.palette.background.defaultWhite,
-          },
+
+          // "& .MuiTypography-root": {
+          //   color: customTheme.palette.background.default,
+          // },
+          // "& .MuiSvgIcon-root": {
+          //   color: customTheme.palette.background.default,
+          // },
         }}
       />
     </div>
