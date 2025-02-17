@@ -4,9 +4,9 @@ This app is a first try of a project that will, in a primary time, be used in a 
 
 ## https://tcharit.netlify.app (use mobile mode, its more intuitive)
 
-![MENU#2_thumb](https://github.com/user-attachments/assets/b98c238a-0933-43cc-9eb9-b658776f48d3)
-![MAP#2_thumb](https://github.com/user-attachments/assets/993bf28b-8194-4fe3-be56-57cf219350cc)
-![TANK#2_thumb](https://github.com/user-attachments/assets/120141ad-6724-42a6-b70c-f697d773cd3d)
+![MENU#2](https://github.com/user-attachments/assets/bc465245-b58b-48d8-aa90-a6b8ab5ae480)
+![MAP](https://github.com/user-attachments/assets/40f702a2-7ba7-40c0-affe-bf7086392f1e)
+![TANK](https://github.com/user-attachments/assets/2df7e9bd-0caa-4678-9d65-b906a978898e)
 
 The aim of this app is to allow to inhabitants to get state informations about water tanks in real time.
 This app prevent them for wasting time outside seeking water, in a region where the summer is very hot and nights of winter are colds.
