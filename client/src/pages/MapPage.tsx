@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from "react";
 // LIBS
-// import { MapContainer } from 'react-leaflet/MapContainer'
 import { MapContainer, TileLayer } from "react-leaflet";
-// import { TileLayer } from 'react-leaflet/TileLayer'
-// import { useMap } from 'react-leaflet/hooks'
-// import { Marker } from 'react-leaflet';
 import { Icon, LatLng } from "leaflet";
 // MODELS
 import TankStatus from "../models/utils/TankStatus";
@@ -13,30 +9,14 @@ import { UserType } from "../models/utils/UsersType";
 import { handleTimeFormat } from "../utils/methods/methods";
 import { MyMarker } from "./components/MyMarker";
 import AutoComplete from "./components/AutoComplete";
-import {
-  Box,
-  Button,
-  Chip,
-  Divider,
-  Drawer,
-  DrawerProps,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-} from "@mui/material";
+import { Button, DrawerProps } from "@mui/material";
 
 import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
 import styled from "styled-components";
 import ModalPopUp from "./components/ModalPopUp";
 import { useNavigate } from "react-router-dom";
-import { doc, getDoc } from "firebase/firestore";
-import { auth, firestoreDb } from "../firebase/firebase";
 
 import { customTheme, UserData } from "../App";
-import { Settings } from "@mui/icons-material";
-import { blue } from "@mui/material/colors";
 import WaterDropIcon from "@mui/icons-material/WaterDrop";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import Menu from "./components/Menu";
@@ -90,14 +70,7 @@ export const WaterIcon = () => {
 };
 
 function MapPage(props: mapPageProps) {
-  const {
-    tanksData,
-    visitedTank,
-    user,
-    userData,
-    setVisitedTank,
-    setUserData,
-  } = props;
+  const { tanksData, visitedTank, user, userData, setVisitedTank } = props;
 
   const [searchValue, setSearchValue] = useState<string | null>(
     tanksData.at(0)?.name || ""
@@ -106,10 +79,6 @@ function MapPage(props: mapPageProps) {
   const [favorites, setFavorites] = useState<Array<string> | undefined>(
     localStorage.getItem("favorites")?.split(",")
   );
-  const customIcon = new Icon({
-    iconUrl: "./img/epingle.png",
-    iconSize: [38, 38],
-  });
 
   const options = {
     enableHighAccuracy: true,
@@ -170,19 +139,12 @@ function MapPage(props: mapPageProps) {
   const anchor: DrawerProps["anchor"] = "left";
 
   const handleFavorites = (tankId: number) => {
-    // alert("handleFavorites");
-    // let myStorage = localStorage.getItem("favorites");
-
     let newArray: Array<string> = [];
     let getFavorites = localStorage.getItem("favorites")?.split(",");
-    // alert("favorites >" + favorites);
-    // alert("getFavorites >" + getFavorites);
     if (getFavorites && getFavorites.includes(tankId.toString())) {
-      // alert("it includes");
       // Remove the tank from favorite (return an array that doesn't contain the tankId value)
       newArray = getFavorites.filter((value) => value !== tankId.toString());
 
-      // alert("newArray >" + newArray);
       if (newArray.length === 0) {
         localStorage.removeItem("favorites");
       } else {
@@ -190,17 +152,12 @@ function MapPage(props: mapPageProps) {
       }
       setFavorites(newArray);
     } else {
-      // alert("it doesn't includes");
-      // newArray.(favorites&&favorites + tankId.toString())
-      // newArray = [favorites + tankId.toString()];
       // We add it
-      // myStorage &&
       if (getFavorites !== undefined && getFavorites.length > 0) {
         newArray = [getFavorites + "," + tankId.toString()];
       } else {
         newArray = [tankId.toString()];
       }
-      // alert("new Array >" + newArray);
       localStorage.setItem("favorites", newArray.toString());
       setFavorites(newArray);
     }
@@ -215,11 +172,11 @@ function MapPage(props: mapPageProps) {
           visitedTank ? visitedTank.latLng : [43.300787, 5.37724]
         }
         zoom={18}
-        scrollWheelZoom={false}
+        scrollWheelZoom={true}
         style={{ color: "blue" }}
       >
         <Header>
-          <TopSection>
+          <TopSection onClick={(e) => e.stopPropagation()}>
             <AutoComplete
               tanksData={tanksData}
               searchValue={searchValue}

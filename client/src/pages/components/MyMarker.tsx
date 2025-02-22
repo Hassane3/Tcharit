@@ -71,6 +71,7 @@ export const MyMarker = (props: MarkerProps): JSX.Element => {
   };
 
   const customIconn = createCustomIcon(LocationOnIcon, marker.name);
+
   return (
     <Container>
       <Marker
@@ -90,7 +91,7 @@ export const MyMarker = (props: MarkerProps): JSX.Element => {
           autoPan={false}
           closeButton={false}
           minWidth={200}
-          maxHeight={240}
+          maxHeight={210}
         >
           <MapTankBox
             tank={marker}

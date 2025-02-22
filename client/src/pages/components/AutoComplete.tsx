@@ -23,11 +23,13 @@ const AutoComplete = (props: AutoCompleteProps) => {
     handleSetSearchValue,
     handleSetInputValue,
   } = props;
+
   const map = useMap();
 
   const [isCheckedFavorites, setIsCheckedFavorites] = useState<boolean>(false);
   const [tankList, setTankList] = useState<Array<tankDataProps>>([]);
   const [isFavLabelActive, setIsFavLabelActive] = useState<boolean>(false);
+
   useEffect(() => {
     // transform localStorage value to array of number values
     let favTanks = localStorage.getItem("favorites")?.split(",").map(Number);
@@ -38,16 +40,40 @@ const AutoComplete = (props: AutoCompleteProps) => {
     }
   }, [isCheckedFavorites, tanksData]);
 
+  // Disable map interaction when Autocomplete is focused
+  const handleFocus = () => {
+    if (map) {
+      map.dragging.disable();
+      map.scrollWheelZoom.disable();
+    }
+  };
+
+  // Enable map interaction when clicking outside Autocomplete
+  const handleBlur = () => {
+    if (map) {
+      map.dragging.enable();
+      map.scrollWheelZoom.enable();
+    }
+  };
+
   return (
     <Autocomplete
       value={searchValue}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
       onChange={(event: any, newValue: string) => {
         handleSetSearchValue(newValue);
         const tank = tanksData.find((tank) => tank.name === newValue);
+
         tank &&
-          map.setView(tank.latLng, map.getZoom(), {
-            animate: true,
-          });
+          map.setView(
+            // "-0.0007" to avoid having the marker hidden by the keyboard (on mobile)
+            { lat: tank.latLng.lat - 0.0007, lng: tank.latLng.lng },
+            map.getZoom(),
+            {
+              animate: true,
+            }
+          );
       }}
       inputValue={inputValue}
       onInputChange={(event, newInputValue) => {
@@ -66,6 +92,7 @@ const AutoComplete = (props: AutoCompleteProps) => {
       loading
       renderInput={(params) => (
         <Box
+          onClick={(e) => e.preventDefault()}
           sx={{
             display: "flex",
             alignItems: "center",
@@ -84,6 +111,7 @@ const AutoComplete = (props: AutoCompleteProps) => {
               className="facInavtive"
               onClick={(e) => {
                 e.stopPropagation();
+                e.preventDefault();
                 setIsCheckedFavorites(!isCheckedFavorites);
                 // Display favorite label for one s
                 setIsFavLabelActive(true);
