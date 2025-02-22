@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import { postsProps, tankDataProps } from "../MapPage";
 import TankStatus from "../../models/utils/TankStatus";
 import styled from "styled-components";
-import { Button } from "@mui/material";
+import { Button, IconButton, Typography } from "@mui/material";
+import StarOutlineRoundedIcon from "@mui/icons-material/StarOutlineRounded";
+import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import CheckIcon from "@mui/icons-material/Check";
 import { useNavigate } from "react-router-dom";
 import { getDiffTime } from "../../utils/methods/methods";
@@ -12,23 +14,32 @@ import {
   HalfFullTank,
   UnsetTank,
 } from "../../utils/constants/Icons";
-import { GLOBAL_STYLE } from "../../utils/constants/constants";
 import { PostBottomBox } from "../CheckPosts";
 import { UserType } from "../../models/utils/UsersType";
 import { customTheme } from "../../App";
-import { getTankStatusColor } from "../Tank";
 
 interface mapTankBoxProps {
   tank: tankDataProps;
+  favorites: Array<string> | undefined;
   setVisitedTank: (arg: tankDataProps) => void;
   handleTimeFormat: (arg: number) => string;
+  handleFavorites: (tankId: number) => void;
 }
 
 const MapTankBox = (props: mapTankBoxProps) => {
-  const { tank, setVisitedTank, handleTimeFormat } = props;
+  const { tank, favorites, setVisitedTank, handleTimeFormat, handleFavorites } =
+    props;
   const navigateTo = useNavigate();
   const [lastCheckTime, setLastCheckTime] = useState<number | null>();
   const [lastPost, setLastPost] = useState<postsProps | null>();
+  const [isFavorite, setIsFavorite] = useState<boolean>(
+    favorites?.includes(tank.id.toString()) ? true : false
+  );
+
+  const handleSetTankFav = (isFavorite: boolean) => {
+    setIsFavorite(!isFavorite);
+    handleFavorites(tank.id);
+  };
 
   useEffect(() => {
     if (tank.posts) {
@@ -60,27 +71,64 @@ const MapTankBox = (props: mapTankBoxProps) => {
   }, []);
 
   return (
-    <PopUpBox
-      onClick={(e) => {
-        setVisitedTank(tank);
-        navigateTo("/tank/" + tank.id);
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        width: "100%",
+        padding: "4px",
       }}
-      fontColor={customTheme.palette.background.defaultBrown}
     >
-      <PopUpMainElements>
-        {lastPost
-          ? lastPost.status === TankStatus.EMPTY
-            ? EmptyTank()
-            : lastPost.status === TankStatus.HALFFUll
-              ? HalfFullTank()
-              : FullTank()
-          : UnsetTank()}
-
-        <div className="popUp_text">
-          <p className="popUp_name">{tank.name}</p>
+      <PopUpTop>
+        <IconButton
+          sx={{ m: 0, p: 0, zIndex: 1 }}
+          onClick={(event) => {
+            event.stopPropagation();
+            handleSetTankFav(isFavorite);
+          }}
+        >
+          {isFavorite ? (
+            <StarRoundedIcon
+              style={{ color: customTheme.palette.background.blue }}
+            />
+          ) : (
+            <StarOutlineRoundedIcon
+              style={{ color: customTheme.palette.background.lightWhite }}
+            />
+          )}
+        </IconButton>
+        <Typography
+          variant="h2"
+          color={customTheme.palette.background.defaultBlue}
+        >
+          {tank.name}
+        </Typography>
+      </PopUpTop>
+      <PopUpMainElements
+        onClick={(e) => {
+          setVisitedTank(tank);
+          navigateTo("/tank/" + tank.id);
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            margin: "0 4px 10px 4px",
+          }}
+        >
           <p
             className="popUp_description"
-            style={{ color: customTheme.palette.background.defaultBrown }}
+            style={{
+              paddingRight: "6px",
+              color: lastPost
+                ? lastPost.status === TankStatus.EMPTY
+                  ? customTheme.palette.background.red
+                  : lastPost.status === TankStatus.HALFFUll
+                    ? customTheme.palette.background.yellow
+                    : customTheme.palette.background.blue
+                : "لم يسجل اية حالة لهذا الخزان",
+            }}
           >
             {lastPost
               ? lastPost.status === TankStatus.EMPTY
@@ -90,42 +138,30 @@ const MapTankBox = (props: mapTankBoxProps) => {
                   : "الخزان ممتلئ"
               : "لم يسجل اية حالة لهذا الخزان"}
           </p>
+          {lastPost
+            ? lastPost.status === TankStatus.EMPTY
+              ? EmptyTank()
+              : lastPost.status === TankStatus.HALFFUll
+                ? HalfFullTank()
+                : FullTank()
+            : UnsetTank()}
         </div>
+        <PostBottomBox textColor={customTheme.palette.background.greyLight}>
+          <span>{lastCheckTime && handleTimeFormat(lastCheckTime)}</span>
+          {/* A changer ! */}
+          {lastPost && lastPost.userType === UserType.TANKAGENT && (
+            <span>
+              trusted
+              <CheckIcon sx={{ fontSize: "16px" }} />
+            </span>
+          )}
+        </PostBottomBox>
       </PopUpMainElements>
-
-      <PostBottomBox textColor={customTheme.palette.background.blueDark}>
-        <span>
-          {/* {lastCheckTime && handleTimeFormat(lastCheckTime)} */}
-          {lastCheckTime && handleTimeFormat(lastCheckTime)}
-        </span>
-        {/* A changer ! */}
-        {lastPost && lastPost.userType === UserType.TANKAGENT && (
-          <span>
-            trusted
-            <CheckIcon />
-          </span>
-        )}
-      </PostBottomBox>
-    </PopUpBox>
+    </div>
   );
 };
 
 const PopUpBox = styled(Button)<{ fontColor: string }>`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  /* max-width: 100%; */
-
-  .popUp_icon {
-    height: 70px;
-    /* width: 70px; */
-  }
-
-  .popUp_text {
-    margin-right: 10px;
-    width: 100%;
-  }
-
   .popUp_text p {
     margin: 2px;
     text-align: right;
@@ -144,12 +180,18 @@ const PopUpBox = styled(Button)<{ fontColor: string }>`
     margin: 0;
   }
 `;
-
-const PopUpMainElements = styled.div`
+const PopUpTop = styled.div`
   display: flex;
-  flex-direction: row-reverse;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+`;
+const PopUpMainElements = styled(Button)`
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  margin-bottom: 10px;
+  width: 100%;
+  padding: 0 !important;
 `;
 
 export default MapTankBox;

@@ -103,7 +103,9 @@ function MapPage(props: mapPageProps) {
     tanksData.at(0)?.name || ""
   );
   const [inputValue, setInputValue] = useState<string>("");
-
+  const [favorites, setFavorites] = useState<Array<string> | undefined>(
+    localStorage.getItem("favorites")?.split(",")
+  );
   const customIcon = new Icon({
     iconUrl: "./img/epingle.png",
     iconSize: [38, 38],
@@ -166,6 +168,45 @@ function MapPage(props: mapPageProps) {
       setIsQrModalOpen(state);
 
   const anchor: DrawerProps["anchor"] = "left";
+
+  const handleFavorites = (tankId: number) => {
+    // alert("handleFavorites");
+    // let myStorage = localStorage.getItem("favorites");
+
+    let newArray: Array<string> = [];
+    let getFavorites = localStorage.getItem("favorites")?.split(",");
+    // alert("favorites >" + favorites);
+    // alert("getFavorites >" + getFavorites);
+    if (getFavorites && getFavorites.includes(tankId.toString())) {
+      // alert("it includes");
+      // Remove the tank from favorite (return an array that doesn't contain the tankId value)
+      newArray = getFavorites.filter((value) => value !== tankId.toString());
+
+      // alert("newArray >" + newArray);
+      if (newArray.length === 0) {
+        localStorage.removeItem("favorites");
+      } else {
+        localStorage.setItem("favorites", newArray.toString());
+      }
+      setFavorites(newArray);
+    } else {
+      // alert("it doesn't includes");
+      // newArray.(favorites&&favorites + tankId.toString())
+      // newArray = [favorites + tankId.toString()];
+      // We add it
+      // myStorage &&
+      if (getFavorites !== undefined && getFavorites.length > 0) {
+        newArray = [getFavorites + "," + tankId.toString()];
+      } else {
+        newArray = [tankId.toString()];
+      }
+      // alert("new Array >" + newArray);
+      localStorage.setItem("favorites", newArray.toString());
+      setFavorites(newArray);
+    }
+  };
+  useEffect(() => {}, []);
+
   return (
     <div id="map">
       <MapContainer
@@ -258,8 +299,10 @@ function MapPage(props: mapPageProps) {
           <MyMarker
             key={marker.id}
             marker={marker}
+            favorites={favorites}
             setVisitedTank={setVisitedTank}
             handleTimeFormat={handleTimeFormat}
+            handleFavorites={handleFavorites}
           />
         ))}
 

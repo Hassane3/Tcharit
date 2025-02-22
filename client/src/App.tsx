@@ -5,7 +5,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 //MODELS
 import { useCookies } from "react-cookie";
 //COMPONENTS
-import MapPage, { postsProps, tankDataProps } from "./pages/MapPage";
+import MapPage, { tankDataProps } from "./pages/MapPage";
 import Tank from "./pages/Tank";
 import NoPage from "./pages/NoPage";
 import { DataSnapshot, onValue, ref, remove } from "firebase/database";
@@ -235,16 +235,9 @@ export const customTheme = createTheme({
 });
 
 function App(): JSX.Element {
-  // const [tanksData, setTanksData] = useState<Array<tankDataProps>>([]);
   const [tanksData, setTanksData] = useState<Array<tankDataProps>>([]);
-  // HERE
-  // Cookie
   const [cookies, setCookie] = useCookies(["userId"]);
-  // const [cookies, setCookie] = useCookies(["access_token", "refresh_token"]);
   const [visitedTank, setVisitedTank] = useState<tankDataProps>();
-  // const [lastCheckTime, setLastCheckTime] = useState<number>();
-
-  // When tankAgent is logged
 
   const [user, setUser] = useState<{} | null>(null);
   const [userData, setUserData] = useState<UserData>({
@@ -266,14 +259,11 @@ function App(): JSX.Element {
             email: docSnap.get("email"),
           });
           setTankAgentData(docSnap.data());
-
-          console.log("User is logged in");
         } else {
           setUserData({
             name: null,
             email: null,
           });
-          console.log("User is not logged in");
         }
       }
     });
@@ -284,7 +274,6 @@ function App(): JSX.Element {
   }, []);
 
   useEffect(() => {
-    // let tanks: tankDataProps[];
     let tanks: tankDataProps[] = [];
     // Retrieve tanks data from firebase :
     const dbRef = ref(db, "tanks");
@@ -295,18 +284,12 @@ function App(): JSX.Element {
         snapshot.forEach((tank: any) => {
           tanks.push({ id: parseInt(tank.key), ...tank.val() });
 
-          // if(Math.floor((today - parseInt(post.date)) / _MS_PER_DAY ) > 7){
-
-          // }
-
           const dbPostRef = ref(db, "tanks/" + tank.key + "/posts");
-          // Look at this :
           // database.ref("users").once("value").then((snapshot)
           const posts = onValue(
             dbPostRef,
             (snapshot: DataSnapshot) => {
               snapshot.forEach((post: any) => {
-                let date = "20/01/2025";
                 // We delete posts that are elder than a week :
                 console.log(
                   "calDateDiff >",
@@ -314,7 +297,8 @@ function App(): JSX.Element {
                   " : ",
                   calculateDateDifference(post.val().date)
                 );
-                if (calculateDateDifference(post.val().date) > 7) {
+                // 7
+                if (calculateDateDifference(post.val().date) > 30) {
                   remove(ref(db, "tanks/" + tank.key + "/posts/" + post.key))
                     .then(() => {
                       console.log("Data deleted successfully");
@@ -330,9 +314,6 @@ function App(): JSX.Element {
               alert("Error while fetching datas from db : " + error.message);
             }
           );
-          console.log("tanks > ", tanks);
-          //We verify if there is not old posts that must be deleted in the bd, else we delete them
-
           setTanksData(tanks);
         });
       },
@@ -390,7 +371,7 @@ function App(): JSX.Element {
           />
           <Route
             path="/notifications"
-            // element={<Login handleSetTankAgentData={setTankAgentData} />}
+            // element={<Notifications />}
           />
           <Route path="*" element={<NoPage />} />
         </Routes>
