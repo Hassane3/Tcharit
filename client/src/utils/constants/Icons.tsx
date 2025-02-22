@@ -157,6 +157,38 @@ export const Logo = () => {
     </svg>
   );
 };
+
+export const MenuIcon = (props: iconProps) => {
+  const { backgroundColor } = props;
+  return (
+    <svg
+      width="31"
+      height="24"
+      viewBox="0 0 31 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M3 3H28"
+        stroke={backgroundColor}
+        strokeWidth="5"
+        strokeLinecap="round"
+      />
+      <path
+        d="M3 12H28"
+        stroke={backgroundColor}
+        strokeWidth="5"
+        strokeLinecap="round"
+      />
+      <path
+        d="M3 21H28"
+        stroke={backgroundColor}
+        strokeWidth="5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+};
 export const ArrowSvg = (color: string) => {
   return (
     <svg

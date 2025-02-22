@@ -9,7 +9,7 @@ import { UserType } from "../models/utils/UsersType";
 import { handleTimeFormat } from "../utils/methods/methods";
 import { MyMarker } from "./components/MyMarker";
 import AutoComplete from "./components/AutoComplete";
-import { Button, DrawerProps } from "@mui/material";
+import { Button, DrawerProps, IconButton } from "@mui/material";
 
 import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
 import styled from "styled-components";
@@ -20,6 +20,7 @@ import { customTheme, UserData } from "../App";
 import WaterDropIcon from "@mui/icons-material/WaterDrop";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import Menu from "./components/Menu";
+import { MenuIcon } from "../utils/constants/Icons";
 // Componenets
 
 export interface tanksDataProps {
@@ -191,20 +192,21 @@ function MapPage(props: mapPageProps) {
 
             {/* MENU BUTTON */}
             <React.Fragment>
-              <Button
-                variant="text"
+              <IconButton
                 onClick={toggleDrawer(anchor, true)}
                 sx={{
                   width: "fit-content",
                   height: "fit-content",
-                  margin: "6px",
+                  margin: "20px",
                   zIndex: "1000",
                   padding: "0",
                   color: customTheme.palette.background.defaultBlue,
                 }}
               >
-                <MenuRoundedIcon fontSize="large" sx={{ fontSize: "50px" }} />
-              </Button>
+                <MenuIcon
+                  backgroundColor={customTheme.palette.background.defaultBlue}
+                />
+              </IconButton>
               <Menu
                 userData={userData}
                 anchorState={anchorState}
@@ -272,6 +274,7 @@ function MapPage(props: mapPageProps) {
 export const Header = styled.div`
   display: flex;
   flex-direction: column;
+  padding: 4px;
 `;
 export const TopSection = styled.div`
   display: flex;
