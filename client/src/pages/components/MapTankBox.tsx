@@ -99,7 +99,11 @@ const MapTankBox = (props: mapTankBoxProps) => {
         </IconButton>
         <Typography
           variant="h2"
-          color={customTheme.palette.background.defaultBlue}
+          color={
+            lastPost
+              ? customTheme.palette.background.defaultBlue
+              : customTheme.palette.background.greyLight
+          }
         >
           {tank.name}
         </Typography>
@@ -120,14 +124,16 @@ const MapTankBox = (props: mapTankBoxProps) => {
           <p
             className="popUp_description"
             style={{
-              paddingRight: "6px",
+              paddingRight: "14px",
+              maxWidth: "170px",
+              textAlign: "right",
               color: lastPost
                 ? lastPost.status === TankStatus.EMPTY
                   ? customTheme.palette.background.red
                   : lastPost.status === TankStatus.HALFFUll
                     ? customTheme.palette.background.yellow
                     : customTheme.palette.background.blue
-                : "لم يسجل اية حالة لهذا الخزان",
+                : customTheme.palette.background.greyLight,
             }}
           >
             {lastPost
