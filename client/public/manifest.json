@@ -1,7 +1,7 @@
 {
   "short_name": "Tcharit",
   "name": "Tcharit",
-  "description": "Water cisterns state",
+  "description": "Be aware of water tanks states",
   "icons": [
     {
       "src": "logo.svg",
@@ -20,7 +20,8 @@
     }
   ],
   "start_url": ".",
-  "display": "standalone",
+  "display": "fullscreen",
+  "orientation": "portrait",
   "theme_color": "#000000",
   "background_color": "#ffffff",
   "permissions": ["geolocation"]
