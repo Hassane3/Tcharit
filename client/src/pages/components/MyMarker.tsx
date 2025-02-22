@@ -1,24 +1,30 @@
 import React, { JSX } from "react";
 import { Marker, Popup, useMap } from "react-leaflet";
 import { tankDataProps } from "../MapPage";
-import { DivIcon, Icon } from "leaflet";
-import TankStatus from "../../models/utils/TankStatus";
+import { DivIcon } from "leaflet";
 import MapTankBox from "./MapTankBox";
 import { SvgIconComponent } from "@mui/icons-material";
-import WaterDropIcon from "@mui/icons-material/WaterDrop";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import ReactDOMServer from "react-dom/server"; // To render React elements to static markup
-import { Box, Container, Typography } from "@mui/material";
+import { Container, Typography } from "@mui/material";
 import { customTheme } from "../../App";
 
 interface MarkerProps {
   marker: tankDataProps;
+  favorites: Array<string> | undefined;
   setVisitedTank: (visitedTank: tankDataProps) => void | undefined;
   handleTimeFormat: (arg: number) => string;
+  handleFavorites: (tankId: number) => void;
 }
 
 export const MyMarker = (props: MarkerProps): JSX.Element => {
-  const { marker, setVisitedTank, handleTimeFormat } = props;
+  const {
+    marker,
+    favorites,
+    setVisitedTank,
+    handleTimeFormat,
+    handleFavorites,
+  } = props;
   const map = useMap();
 
   // To be able to use mui icons in leaflet :
@@ -70,24 +76,28 @@ export const MyMarker = (props: MarkerProps): JSX.Element => {
       <Marker
         key={marker.id}
         position={marker.latLng}
-        // icon={customIconn}
         icon={customIconn}
         eventHandlers={{
           click: (e) => {
-            console.log("marker clicked", e);
-            // setClickedMarker(marker);
-            // setViewOnClick(e);
             map.setView(marker.latLng, map.getZoom(), {
               animate: true,
             });
           },
         }}
       >
-        <Popup className="popUp_container" autoPan={false}>
+        <Popup
+          className="popUp_container"
+          autoPan={false}
+          closeButton={false}
+          minWidth={200}
+          maxHeight={240}
+        >
           <MapTankBox
             tank={marker}
+            favorites={favorites}
             setVisitedTank={setVisitedTank}
             handleTimeFormat={handleTimeFormat}
+            handleFavorites={handleFavorites}
           />
         </Popup>
       </Marker>

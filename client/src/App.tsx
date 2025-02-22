@@ -5,7 +5,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 //MODELS
 import { useCookies } from "react-cookie";
 //COMPONENTS
-import MapPage, { postsProps, tankDataProps } from "./pages/MapPage";
+import MapPage, { tankDataProps } from "./pages/MapPage";
 import Tank from "./pages/Tank";
 import NoPage from "./pages/NoPage";
 import { DataSnapshot, onValue, ref, remove } from "firebase/database";
@@ -27,9 +27,11 @@ declare module "@mui/material/styles" {
   }
   interface TypeBackground {
     defaultWhite: string;
+    lightWhite: string;
     defaultBlue: string;
     defaultBrown: string;
     blueDark: string;
+    blueFade: string;
     blue: string;
     blueLight: string;
     blueExtraLight: string;
@@ -64,6 +66,17 @@ export const customTheme = createTheme({
           borderRadius: "40px",
           toUpperCase: "none",
           boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+        },
+        containedSizeSmall: {
+          backgroundColor: "#567F8A",
+          color: "#EAFBFF",
+        },
+        containedPrimary: {
+          backgroundColor: "#567F8A",
+          color: "#EAFBFF",
+        },
+        containedWarning: {
+          borderRadius: "10px",
         },
       },
     },
@@ -100,16 +113,34 @@ export const customTheme = createTheme({
         },
       },
     },
+    MuiListItem: {
+      styleOverrides: {
+        root: {
+          span: {
+            fontSize: "1.3em",
+          },
+        },
+      },
+    },
+    MuiListItemButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: "10px",
+        },
+      },
+    },
   },
   typography: {
     fontFamily: "Changa",
     h1: {
       fontFamily: "Lalezar",
+      fontSize: "50px",
       fontWeight: "400",
+      lineHeight: 0.8,
     },
     h2: {
       fontFamily: "Lalezar",
-      fontSize: "2.6em",
+      fontSize: "30px",
       fontWeight: "500",
     },
     h3: {
@@ -117,6 +148,12 @@ export const customTheme = createTheme({
       fontSize: "1.4em",
       fontWeight: "700",
       lineHeight: "1.3em",
+    },
+    h4: {
+      fontFamily: "Changa",
+      fontSize: "18px",
+      fontWeight: "400",
+      lineHeight: "1.1em",
     },
     button: {
       fontSize: "1.4em",
@@ -127,23 +164,25 @@ export const customTheme = createTheme({
     light: {
       palette: {
         primary: {
-          main: "#3D5F61",
+          main: "#EAFBFF",
         },
         secondary: {
           main: "#567F8A",
         },
         text: {
-          primary: "#61523D",
-          secondary: "#567F8A",
+          primary: "#567F8A",
+          secondary: "#95DCE0",
           grey: " #c1c1c1",
         },
         background: {
-          default: "#BEF1F7",
+          default: "#EAFBFF",
           defaultBlue: "#567F8A",
           defaultBrown: "#61523D",
           defaultWhite: "#EAFBFF",
-          paper: "#3D5F61",
+          lightWhite: "#B5CDD3",
+          paper: "#EAFBFF",
           blueDark: "#567F8A",
+          blueFade: "#809FA7",
           blue: "#95DCE0",
           blueLight: "#BEF1F7",
           blueExtraLight: "#CFF6FF",
@@ -159,29 +198,29 @@ export const customTheme = createTheme({
         },
       },
     },
-    dark: {
-      palette: {
-        primary: {
-          main: "#3D5F61",
-        },
-        secondary: {
-          main: "#567F8A",
-        },
-        text: {
-          primary: "#EAFBFF",
-          secondary: "#3D5F61",
-          grey: "#b8b8b8",
-        },
-        background: {
-          default: "#EAFBFF",
-          paper: "#3D5F61",
-          blueDark: "#567F8A",
-          yellowDark: "#8A7256",
-          redDark: "#8A5656",
-          greyLight: "#adadad",
-        },
-      },
-    },
+    // dark: {
+    //   palette: {
+    //     primary: {
+    //       main: "#567F8A",
+    //     },
+    //     secondary: {
+    //       main: "#CFF6FF",
+    //     },
+    //     text: {
+    //       primary: "#EAFBFF",
+    //       secondary: "#95DCE0",
+    //       grey: "#b8b8b8",
+    //     },
+    //     background: {
+    //       default: "#EAFBFF",
+    //       paper: "#567F8A",
+    //       blueDark: "#567F8A",
+    //       yellowDark: "#8A7256",
+    //       redDark: "#8A5656",
+    //       greyLight: "#adadad",
+    //     },
+    //   },
+    // },
   },
 
   breakpoints: {
@@ -196,16 +235,9 @@ export const customTheme = createTheme({
 });
 
 function App(): JSX.Element {
-  // const [tanksData, setTanksData] = useState<Array<tankDataProps>>([]);
   const [tanksData, setTanksData] = useState<Array<tankDataProps>>([]);
-  // HERE
-  // Cookie
   const [cookies, setCookie] = useCookies(["userId"]);
-  // const [cookies, setCookie] = useCookies(["access_token", "refresh_token"]);
   const [visitedTank, setVisitedTank] = useState<tankDataProps>();
-  // const [lastCheckTime, setLastCheckTime] = useState<number>();
-
-  // When tankAgent is logged
 
   const [user, setUser] = useState<{} | null>(null);
   const [userData, setUserData] = useState<UserData>({
@@ -227,14 +259,11 @@ function App(): JSX.Element {
             email: docSnap.get("email"),
           });
           setTankAgentData(docSnap.data());
-
-          console.log("User is logged in");
         } else {
           setUserData({
             name: null,
             email: null,
           });
-          console.log("User is not logged in");
         }
       }
     });
@@ -245,7 +274,6 @@ function App(): JSX.Element {
   }, []);
 
   useEffect(() => {
-    // let tanks: tankDataProps[];
     let tanks: tankDataProps[] = [];
     // Retrieve tanks data from firebase :
     const dbRef = ref(db, "tanks");
@@ -256,18 +284,12 @@ function App(): JSX.Element {
         snapshot.forEach((tank: any) => {
           tanks.push({ id: parseInt(tank.key), ...tank.val() });
 
-          // if(Math.floor((today - parseInt(post.date)) / _MS_PER_DAY ) > 7){
-
-          // }
-
           const dbPostRef = ref(db, "tanks/" + tank.key + "/posts");
-          // Look at this :
           // database.ref("users").once("value").then((snapshot)
           const posts = onValue(
             dbPostRef,
             (snapshot: DataSnapshot) => {
               snapshot.forEach((post: any) => {
-                let date = "20/01/2025";
                 // We delete posts that are elder than a week :
                 console.log(
                   "calDateDiff >",
@@ -275,7 +297,8 @@ function App(): JSX.Element {
                   " : ",
                   calculateDateDifference(post.val().date)
                 );
-                if (calculateDateDifference(post.val().date) > 7) {
+                // 7
+                if (calculateDateDifference(post.val().date) > 30) {
                   remove(ref(db, "tanks/" + tank.key + "/posts/" + post.key))
                     .then(() => {
                       console.log("Data deleted successfully");
@@ -291,9 +314,6 @@ function App(): JSX.Element {
               alert("Error while fetching datas from db : " + error.message);
             }
           );
-          console.log("tanks > ", tanks);
-          //We verify if there is not old posts that must be deleted in the bd, else we delete them
-
           setTanksData(tanks);
         });
       },
@@ -348,6 +368,10 @@ function App(): JSX.Element {
           <Route
             path="/login"
             element={<Login handleSetTankAgentData={setTankAgentData} />}
+          />
+          <Route
+            path="/notifications"
+            // element={<Notifications />}
           />
           <Route path="*" element={<NoPage />} />
         </Routes>

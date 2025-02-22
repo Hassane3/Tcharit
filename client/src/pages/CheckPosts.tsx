@@ -299,11 +299,16 @@ export const PostBottomBox = styled.div<{ textColor: string }>`
   display: flex;
   flex-direction: row-reverse;
   justify-content: space-between;
+  align-items: flex-end;
   width: inherit;
   span {
-    font-size: 16px;
+    font-size: 14px;
+    font-weight: 400;
     color: ${(props) => props.textColor};
     display: flex;
+    align-items: center;
+    text-transform: lowercase;
+    line-height: 1;
   }
 `;
 export default CheckPosts;

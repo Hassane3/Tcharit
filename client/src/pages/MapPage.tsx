@@ -19,25 +19,27 @@ import {
   Chip,
   Divider,
   Drawer,
+  DrawerProps,
   List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import AccountBoxIcon from "@mui/icons-material/AccountBox";
+
 import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
 import styled from "styled-components";
 import ModalPopUp from "./components/ModalPopUp";
 import { useNavigate } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, firestoreDb } from "../firebase/firebase";
-import { logoutUser } from "../firebase/operations";
+
 import { customTheme, UserData } from "../App";
 import { Settings } from "@mui/icons-material";
 import { blue } from "@mui/material/colors";
 import WaterDropIcon from "@mui/icons-material/WaterDrop";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
+import Menu from "./components/Menu";
 // Componenets
 
 export interface tanksDataProps {
@@ -82,9 +84,11 @@ interface mapPageProps {
   setVisitedTank: (visitedTank: tankDataProps) => void | undefined;
   setUserData: (userData: UserData) => void;
 }
+
 export const WaterIcon = () => {
   return <WaterDropIcon />;
 };
+
 function MapPage(props: mapPageProps) {
   const {
     tanksData,
@@ -99,7 +103,9 @@ function MapPage(props: mapPageProps) {
     tanksData.at(0)?.name || ""
   );
   const [inputValue, setInputValue] = useState<string>("");
-
+  const [favorites, setFavorites] = useState<Array<string> | undefined>(
+    localStorage.getItem("favorites")?.split(",")
+  );
   const customIcon = new Icon({
     iconUrl: "./img/epingle.png",
     iconSize: [38, 38],
@@ -137,12 +143,10 @@ function MapPage(props: mapPageProps) {
     setInputValue(newValue);
   };
 
-  type Anchor = "left";
   const [anchorState, setAnchorState] = useState<boolean>(false);
-  const anchor = "left";
 
   const toggleDrawer =
-    (anchor: Anchor, open: boolean) =>
+    (anchor: DrawerProps["anchor"], open: boolean) =>
     (event: React.KeyboardEvent | React.MouseEvent) => {
       if (
         event.type === "keydown" &&
@@ -156,108 +160,6 @@ function MapPage(props: mapPageProps) {
 
   //Menu list
   const navigateTo = useNavigate();
-  const list = (anchor: Anchor) => (
-    <Box
-      sx={{ width: 250 }}
-      role="presentation"
-      onClick={toggleDrawer(anchor, false)}
-      onKeyDown={toggleDrawer(anchor, false)}
-    >
-      <List>
-        {["Connect"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton
-              sx={{ flexDirection: "column", alignItems: "start" }}
-              onClick={() => navigateTo("/Login")}
-            >
-              <Box sx={{ display: "flex" }}>
-                <ListItemIcon>
-                  {text === "Connect" && <AccountBoxIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} sx={{ margin: 0 }} />
-              </Box>
-              {text === "Connect" && (
-                <p
-                  style={{
-                    fontSize: "10px",
-                    textDecoration: "underline",
-                    color: customTheme.palette.text.grey,
-                  }}
-                >
-                  reserved for cistern fillers
-                </p>
-              )}
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-    </Box>
-  );
-
-  const listUserLoggedIn = () => {
-    return (
-      <Box
-        sx={{ width: 250 }}
-        role="presentation"
-        onClick={toggleDrawer(anchor, false)}
-        onKeyDown={toggleDrawer(anchor, false)}
-      >
-        <List>
-          <ListItem sx={{ flexDirection: "column", alignItems: "stretch" }}>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <ListItemIcon>
-                <AccountBoxIcon />
-              </ListItemIcon>
-              <ListItemText
-                primary={userData.name}
-                sx={{ margin: 0, textTransform: "capitalize" }}
-              />
-              <ListItemButton
-                sx={{ display: "contents", alignSelf: "flex-end" }}
-                // onClick={}
-              >
-                <Settings />
-              </ListItemButton>
-            </Box>
-            <ListItemText
-              secondary={userData.email}
-              sx={{
-                margin: 0,
-                textTransform: "capitalize",
-                fontSize: "2rem",
-              }}
-            />
-          </ListItem>
-          <Divider />
-          <ListItem sx={{ justifyContent: "end" }}>
-            <Button variant="contained" onClick={handleLogout}>
-              logout
-            </Button>
-          </ListItem>
-        </List>
-      </Box>
-    );
-  };
-
-  const handleLogout = () => {
-    try {
-      logoutUser();
-      // logoutUser
-      //   .then((value) => {
-      //     console.log(value);
-      //     setUserData({
-      //       name: null,
-      //       email: null,
-      //     });
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //   });
-    } catch (error) {
-      console.error("Error when login out : ", error);
-    }
-  };
 
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
 
@@ -265,29 +167,46 @@ function MapPage(props: mapPageProps) {
     (state: boolean) => (event: React.KeyboardEvent | React.MouseEvent) =>
       setIsQrModalOpen(state);
 
-  // // When tankAgent is logged
-  // const [user, setUser] = useState<{} | null>(null);
-  // const [tankAgentData, setTankAgentData] = useState<{} | null>(null);
-  // // We track user connection state; and get user datas from firestore
-  // const fetchTankAgentData = async () => {
-  //   auth.onAuthStateChanged(async (user) => {
-  //     setUser(user);
-  //     if (user) {
-  //       const docRef = doc(firestoreDb, "users", user.uid);
-  //       const docSnap = await getDoc(docRef);
-  //       if (docSnap.exists()) {
-  //         setTankAgentData(docSnap.data());
-  //         console.log("User is not logged in");
-  //       } else {
-  //         console.log("User is not logged in");
-  //       }
-  //     }
-  //   });
-  // };
+  const anchor: DrawerProps["anchor"] = "left";
 
-  // useEffect(() => {
-  //   fetchTankAgentData();
-  // }, []);
+  const handleFavorites = (tankId: number) => {
+    // alert("handleFavorites");
+    // let myStorage = localStorage.getItem("favorites");
+
+    let newArray: Array<string> = [];
+    let getFavorites = localStorage.getItem("favorites")?.split(",");
+    // alert("favorites >" + favorites);
+    // alert("getFavorites >" + getFavorites);
+    if (getFavorites && getFavorites.includes(tankId.toString())) {
+      // alert("it includes");
+      // Remove the tank from favorite (return an array that doesn't contain the tankId value)
+      newArray = getFavorites.filter((value) => value !== tankId.toString());
+
+      // alert("newArray >" + newArray);
+      if (newArray.length === 0) {
+        localStorage.removeItem("favorites");
+      } else {
+        localStorage.setItem("favorites", newArray.toString());
+      }
+      setFavorites(newArray);
+    } else {
+      // alert("it doesn't includes");
+      // newArray.(favorites&&favorites + tankId.toString())
+      // newArray = [favorites + tankId.toString()];
+      // We add it
+      // myStorage &&
+      if (getFavorites !== undefined && getFavorites.length > 0) {
+        newArray = [getFavorites + "," + tankId.toString()];
+      } else {
+        newArray = [tankId.toString()];
+      }
+      // alert("new Array >" + newArray);
+      localStorage.setItem("favorites", newArray.toString());
+      setFavorites(newArray);
+    }
+  };
+  useEffect(() => {}, []);
+
   return (
     <div id="map">
       <MapContainer
@@ -300,7 +219,7 @@ function MapPage(props: mapPageProps) {
         style={{ color: "blue" }}
       >
         <Header>
-          <FirstSection>
+          <TopSection>
             <AutoComplete
               tanksData={tanksData}
               searchValue={searchValue}
@@ -316,35 +235,29 @@ function MapPage(props: mapPageProps) {
             {/* MENU BUTTON */}
             <React.Fragment>
               <Button
+                variant="text"
                 onClick={toggleDrawer(anchor, true)}
-                // variant=""
-
                 sx={{
                   width: "fit-content",
                   height: "fit-content",
                   margin: "6px",
                   zIndex: "1000",
+                  padding: "0",
                   color: customTheme.palette.background.defaultBlue,
                 }}
               >
                 <MenuRoundedIcon fontSize="large" sx={{ fontSize: "50px" }} />
               </Button>
-              <Drawer
+              <Menu
+                userData={userData}
+                anchorState={anchorState}
+                user={user}
                 anchor={anchor}
-                open={anchorState}
-                onClose={toggleDrawer(anchor, false)}
-                sx={{
-                  backgroundImage: "none",
-                }}
-                PaperProps={{
-                  sx: { backgroundImage: "none" },
-                }}
-              >
-                {user ? listUserLoggedIn() : list(anchor)}
-              </Drawer>
+                toggleDrawer={toggleDrawer}
+              />
             </React.Fragment>
-          </FirstSection>
-          <Divider
+          </TopSection>
+          {/* <Divider
             textAlign="left"
             variant="middle"
             sx={{
@@ -359,16 +272,22 @@ function MapPage(props: mapPageProps) {
                 width: "20%",
               },
             }}
-          >
-            {/* <Chip label="Or" size="small" color={"secondary"} /> */}
-          </Divider>
+          > */}
+          {/* <Chip label="Or" size="small" color={"secondary"} /> */}
+          {/* </Divider> */}
           <Button
             onClick={handleQrModalState(true)}
             variant="text"
             size="large"
             sx={{ width: "fit-content", zIndex: "1000", p: 1 }}
           >
-            <QrCodeScannerIcon sx={{ mr: 1, fontSize: 50 }} />
+            <QrCodeScannerIcon
+              sx={{
+                mr: 1,
+                fontSize: 50,
+                color: customTheme.palette.background.defaultBlue,
+              }}
+            />
           </Button>
           <ModalPopUp
             isQrModalOpen={isQrModalOpen}
@@ -380,8 +299,10 @@ function MapPage(props: mapPageProps) {
           <MyMarker
             key={marker.id}
             marker={marker}
+            favorites={favorites}
             setVisitedTank={setVisitedTank}
             handleTimeFormat={handleTimeFormat}
+            handleFavorites={handleFavorites}
           />
         ))}
 
@@ -390,11 +311,12 @@ function MapPage(props: mapPageProps) {
     </div>
   );
 }
-const Header = styled.div`
+
+export const Header = styled.div`
   display: flex;
   flex-direction: column;
 `;
-const FirstSection = styled.div`
+export const TopSection = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
