@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "types": ["i18next"],
     "target": "es5",
     "lib": [
       "dom",
@@ -22,7 +23,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     // "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "paths": {
+      "react": [ "./node_modules/@types/react" ]
+    }
   },
   "ts-node": {
     "compilerOptions": {

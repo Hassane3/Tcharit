@@ -59,15 +59,6 @@ const CheckPosts = (props: { tankData: tankDataProps }): JSX.Element => {
   let today = new Date().toLocaleDateString();
   return (
     <Container>
-      <span
-        style={{
-          color: customTheme.palette.background.greyLight,
-          margin: "0 10px",
-          fontSize: "1.1em",
-        }}
-      >
-        {"Water flow state according to users reports :"}
-      </span>
       {
         //NEW:
         //We use reverse to display recent posts first.

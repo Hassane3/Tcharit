@@ -17,6 +17,7 @@ import {
 import { PostBottomBox } from "../CheckPosts";
 import { UserType } from "../../models/utils/UsersType";
 import { customTheme } from "../../App";
+import { useTranslation } from "react-i18next";
 
 interface mapTankBoxProps {
   tank: tankDataProps;
@@ -29,7 +30,10 @@ interface mapTankBoxProps {
 const MapTankBox = (props: mapTankBoxProps) => {
   const { tank, favorites, setVisitedTank, handleTimeFormat, handleFavorites } =
     props;
+
   const navigateTo = useNavigate();
+  const { t } = useTranslation();
+
   const [lastCheckTime, setLastCheckTime] = useState<number | null>();
   const [lastPost, setLastPost] = useState<postsProps | null>();
   const [isFavorite, setIsFavorite] = useState<boolean>(
@@ -121,12 +125,20 @@ const MapTankBox = (props: mapTankBoxProps) => {
             margin: "0 4px 10px 4px",
           }}
         >
+          {lastPost
+            ? lastPost.status === TankStatus.EMPTY
+              ? EmptyTank()
+              : lastPost.status === TankStatus.HALFFUll
+                ? HalfFullTank()
+                : FullTank()
+            : UnsetTank()}
           <p
             className="popUp_description"
             style={{
-              paddingRight: "14px",
+              padding: "0 14px",
               maxWidth: "170px",
-              textAlign: "right",
+              textAlign: "left",
+              textTransform: "lowercase",
               color: lastPost
                 ? lastPost.status === TankStatus.EMPTY
                   ? customTheme.palette.background.red
@@ -138,26 +150,19 @@ const MapTankBox = (props: mapTankBoxProps) => {
           >
             {lastPost
               ? lastPost.status === TankStatus.EMPTY
-                ? "الخزان فارغ"
+                ? t("common.tank.tank_status.tank_is_empty")
                 : lastPost.status === TankStatus.HALFFUll
-                  ? "الخزان نصف ممتلئ"
-                  : "الخزان ممتلئ"
-              : "لم يسجل اية حالة لهذا الخزان"}
+                  ? t("common.tank.tank_status.tank_is_halfFull")
+                  : t("common.tank.tank_status.tank_is_full")
+              : t("common.tank.tank_status.tank_is_unset")}
           </p>
-          {lastPost
-            ? lastPost.status === TankStatus.EMPTY
-              ? EmptyTank()
-              : lastPost.status === TankStatus.HALFFUll
-                ? HalfFullTank()
-                : FullTank()
-            : UnsetTank()}
         </div>
         <PostBottomBox textColor={customTheme.palette.background.greyLight}>
           <span>{lastCheckTime && handleTimeFormat(lastCheckTime)}</span>
           {/* A changer ! */}
           {lastPost && lastPost.userType === UserType.TANKAGENT && (
             <span>
-              trusted
+              {t("common.tank.trusted_info")}
               <CheckIcon sx={{ fontSize: "16px" }} />
             </span>
           )}

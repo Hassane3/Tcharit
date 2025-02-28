@@ -6,6 +6,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { customTheme } from "../../App";
 import StarOutlineRoundedIcon from "@mui/icons-material/StarOutlineRounded";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
+import { useTranslation } from "react-i18next";
 
 interface AutoCompleteProps {
   tanksData: Array<tankDataProps>;
@@ -25,7 +26,7 @@ const AutoComplete = (props: AutoCompleteProps) => {
   } = props;
 
   const map = useMap();
-
+  const { t } = useTranslation();
   const [isCheckedFavorites, setIsCheckedFavorites] = useState<boolean>(false);
   const [tankList, setTankList] = useState<Array<tankDataProps>>([]);
   const [isFavLabelActive, setIsFavLabelActive] = useState<boolean>(false);
@@ -161,14 +162,14 @@ const AutoComplete = (props: AutoCompleteProps) => {
                     bottom: "-10%",
                   }}
                 >
-                  favorite
+                  {t("common.tank.favorite")}
                 </span>
               )}
             </IconButton>
           </div>
           <TextField
             {...params}
-            label="Select cistern"
+            label={t("common.tank.select_cistern")}
             id="input-with-sx"
             variant="filled"
             sx={{

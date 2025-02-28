@@ -1,0 +1,72 @@
+{
+  "title": "تشاريت",
+  "common": {
+    "menu": {
+      "reserved_for_cistern_fillers": "خاص لمالئي الخزان",
+      "notifications": "انذارات"
+    },
+    "tank": {
+      "tank_status": {
+        "tank_is_full": "الخزان ممتلئ",
+        "tank_is_halfFull": "الخزان نصف ممتلئ",
+        "tank_is_empty": "الخزان فارغ",
+        "tank_is_unset": " لم يسجل اية حالة لهذا الخزان"
+      },
+      "water_flow": {
+        "high": "قوي",
+        "average": "ضئيل",
+        "weak": "منعدم"
+      },
+      "tank_status_according_to_users ": "نسبة الخزان حسب المستخدمين",
+      "report_water_flow": "تنبيه عن كمية تدفق المياه",
+      "trusted_info": "معلومة موثوقة",
+      "since_datetime": " {{datetime}} {{datetime}}منذ ",
+      "geolocation_user_position": "من اجل التأكد من ان التنبيهات موثوقة, يجب على المنبه بان يكون بجانب الخزان.",
+      "tank_report_confirmation": "هل انت واثق بانك تريد ان  تشير بان الخزان '{{tank}}' {{status}}",
+      "tank_page_infos#1": "هنا يمكن رؤية الإشارات التي تركها المستخدمين.",
+      "tank_page_infos#2": "يجب الاخذ بعين الاعتبار الوقت الظاهر عند كل إشارة و التأكد بصحة المعلومة لحالة الخزان و هذا بتكرار رأي واحد أو عند اثبات الكلمة 'موثوقة'",
+      "favorite": "favorite",
+      "select_cistern": "اختر الخزان"
+    }
+  },
+  "languages": {
+    "english": "english",
+    "french": "Français",
+    "arabic": "العربية"
+  },
+  "navigation": {
+    "confirm": "تطبيق",
+    "connect": "دخول",
+    "disconnect": "خروج",
+    "cancel": "الغي",
+    "back": "ارجع",
+    "next": "اكمل",
+    "previous": "سابق",
+    "continu": "اكمل",
+    "yes": "نعم",
+    "no": "لا"
+  },
+  "days": {
+    "monday": "الاثنين",
+    "tuesday": "الثلاثاء",
+    "wednesday": "الأربعاء",
+    "thursday": "الخميس",
+    "friday": "الجمعة",
+    "saturday": "السبت",
+    "sunday": "الأحد"
+  },
+  "months": {
+    "january": "جانفي",
+    "february": "فيفري",
+    "march": "مارس",
+    "april": "افريل",
+    "may": "ماي",
+    "june": "جوان",
+    "july": "جويليا",
+    "august": "اوت",
+    "september": "سبتمبر",
+    "october": "اكتوبر",
+    "november": "نوفمبر",
+    "december": "ديسمبر"
+  }
+}
