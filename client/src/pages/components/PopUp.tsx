@@ -80,21 +80,23 @@ const PopUp = (props: PopUpProps): JSX.Element => {
   );
 };
 
-const ModalContainer = styled(Modal)`
+export const ModalContainer = styled(Modal)`
   display: flex;
   align-items: center;
   justify-content: center;
 `;
-const BoxContainer = styled(Box)<{
-  backgroundColor: string;
+export const BoxContainer = styled(Box)<{
+  backgroundColor?: string;
 }>`
   margin: 40px;
   padding: 20px;
   border-radius: 40px;
+  width: 300px;
   min-height: 300px;
   background-color: ${(props) => props.backgroundColor};
   text-align: center;
   display: flex;
+  justify-content: center;
   position: relative;
 
   > div {

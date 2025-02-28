@@ -1,0 +1,72 @@
+{
+  "title": "Tcharit",
+  "common": {
+    "menu": {
+      "reserved_for_cistern_fillers": "Réservé pour les remplisseurs de réservoirs",
+      "notifications": "Notifications"
+    },
+    "tank": {
+      "tank_status": {
+        "tank_is_full": "Le réservoir est rempli",
+        "tank_is_halfFull": "Le réservoir est à moitié",
+        "tank_is_empty": "Le réservoir est vide",
+        "tank_is_unset": "Aucun information d'état signalée"
+      },
+      "water_flow": {
+        "high": "Élevé",
+        "average": "Moyen",
+        "weak": "Faible"
+      },
+      "tank_status_according_to_users ": "L'état du réservoir d'après les utilisateurs",
+      "report_water_flow": "Signaler le débit d'eau",
+      "trusted_info": "Fiable",
+      "since_datetime": "Depuis {{datetime}} {{datetime}}",
+      "geolocation_user_position": "Vous devez être proche du réservoir pour pouvoir signaler le débit d'eau",
+      "tank_report_confirmation": "Êtes-vous sure de vouloir indiquer que le réservoir '{{tank}}' est {{status}}",
+      "tank_page_infos#1": "Ici, vous trouvez les indications laissée par les utilisateurs.",
+      "tank_page_infos#2": "Le temps indiqué sur chaque indication doit être prit en considération et il est important également de s'assurer qu'une indication est fiable en estimant son degrée de cohérence avec le reste des indications.",
+      "favorite": "Favoris",
+      "select_cistern": "Réservoirs"
+    }
+  },
+  "languages": {
+    "english": "english",
+    "french": "Français",
+    "arabic": "العربية"
+  },
+  "navigation": {
+    "confirm": "Confirmer",
+    "connect": "Se connecter",
+    "disconnect": "Se déconnecter",
+    "cancel": "Annuler",
+    "back": "Retour",
+    "next": "Continuer",
+    "previous": "Précédent",
+    "continu": "Continuer",
+    "yes": "Oui",
+    "no": "Non"
+  },
+  "days": {
+    "monday": "Lundi",
+    "tuesday": "Mardi",
+    "wednesday": "Mercredi",
+    "thursday": "Jeudi",
+    "friday": "Vendredi",
+    "saturday": "Samedi",
+    "sunday": "Dimanche"
+  },
+  "months": {
+    "january": "Janvier",
+    "february": "Février",
+    "march": "Mars",
+    "april": "Avril",
+    "may": "Mai",
+    "june": "Juin",
+    "july": "Juillet",
+    "august": "Août",
+    "september": "Septembre",
+    "october": "Octobre",
+    "november": "Novembre",
+    "december": "Décembre"
+  }
+}

@@ -20,9 +20,10 @@ import {
   EmptyTank,
   FullTank,
   HalfFullTank,
+  Infos,
   UnsetTank,
 } from "../utils/constants/Icons";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, IconButton, Typography } from "@mui/material";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import CommentsDisabledRoundedIcon from "@mui/icons-material/CommentsDisabledRounded";
 import { customTheme, UserData } from "../App";
@@ -160,14 +161,14 @@ const Tank = (props: TankProps) => {
           },
         }}
       />
-      <Header
-        headerHeight={headerHeight}
-        backgroundColor={customTheme.palette.background.defaultWhite}
-        style={{
-          transition: "height 0.2s ease-in-out",
-        }}
-      >
-        <HeaderElements headerHeight={headerHeight}>
+      <Header headerHeight={headerHeight}>
+        <HeaderElements
+          headerHeight={headerHeight}
+          backgroundColor={customTheme.palette.background.defaultWhite}
+          style={{
+            transition: "height 0.2s ease-in-out",
+          }}
+        >
           <div
             style={{
               // If lang === arabic flex : 1 else 0
@@ -234,14 +235,14 @@ const Tank = (props: TankProps) => {
                   : FullTank()
               : UnsetTank()}
           </PopUpMainElements>
-
           {/* <span id="checkPosts_title"> : حالة تدفق المياه حسب المستخدمين </span> */}
         </HeaderElements>
         {/* {headerHeight > headerTight && (
           <span id="checkPosts_title">
-            {"Water flow state according to users reports :"}
+          {"Water flow state according to users reports :"}
           </span>
-        )} */}
+          )} */}
+        {/* WAVES */}
         <div
           style={{
             position: "absolute",
@@ -290,8 +291,29 @@ const Tank = (props: TankProps) => {
             </div> */}
           </div>
         </div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            margin: "0 20px",
+          }}
+        >
+          <IconButton>
+            <Infos
+              backgroundColor={customTheme.palette.background.defaultBlue}
+            />
+          </IconButton>
+          <span
+            style={{
+              color: customTheme.palette.background.defaultBlue,
+              margin: "0 4px",
+              fontSize: "16px",
+            }}
+          >
+            {"Water flow state according to users reports :"}
+          </span>
+        </div>
       </Header>
-
       {selectedTankData && selectedTankData.posts ? (
         <div>
           <CheckPosts tankData={selectedTankData} />
@@ -321,18 +343,6 @@ const Tank = (props: TankProps) => {
       {selectedTankData &&
         (console.log("selectedTankData >", selectedTankData),
         (
-          // <BottomNav
-          //   selectedTankData={selectedTankData}
-          //   setConfirmationBox={handleConfirmationBox}
-          //   tankLatLng={selectedTankData.latLng}
-          //   openBottomNav={openBottomNav}
-          //   setOpenBottomNav={setOpenBottomNav}
-          //   setTankStatus={handleTankStatus}
-          //   cookies={cookies}
-          //   isAddPostAllowed={isAddPostAllowed}
-          //   setIsAddPostAllowed={setIsAddPostAllowed}
-          //   userData={userData}
-          // />
           <SwipeableBox navLabel="Report water flow">
             <BottomNav
               selectedTankData={selectedTankData}
@@ -416,18 +426,14 @@ export const getPostsStatusColor = (
 const Page = styled.div`
   min-height: 100vh;
 `;
-const Header = styled(Box)<{ headerHeight: number; backgroundColor: string }>`
-  display: flex column;
-  justify-content: space-between;
-  padding: 10px;
-  background-color: ${(props) => props.backgroundColor};
-  box-shadow: rgba(0, 0, 0, 0.2) 0 1px 10px 0px;
+const Header = styled(Box)<{ headerHeight: number }>`
+  /* display: flex column;
+  justify-content: space-between; */
+
   position: fixed;
   z-index: 10;
   width: 100%;
   height: ${(props) => props.headerHeight + "px"};
-  overflow: hidden;
-  border-radius: 0 0 40px 40px;
 
   #checkPosts_title {
     color: ${() => customTheme.palette.background.defaultWhite};
@@ -442,11 +448,19 @@ const Header = styled(Box)<{ headerHeight: number; backgroundColor: string }>`
     }
   }
 `;
-const HeaderElements = styled.div<{ headerHeight: number }>`
+const HeaderElements = styled.div<{
+  headerHeight: number;
+  backgroundColor: string;
+}>`
   display: flex;
   justify-content: space-between;
   flex-direction: ${(props) => (props.headerHeight < 170 ? "row" : "column")};
-  /* margin: 20px 0; */
+  background-color: ${(props) => props.backgroundColor};
+  box-shadow: rgba(0, 0, 0, 0.2) 0 1px 10px 0px;
+  width: 100%;
+  padding: 10px;
+  border-radius: 0 0 40px 40px;
+  overflow: hidden;
 `;
 const PopUpMainElements = styled(Box)`
   display: flex;
@@ -464,7 +478,6 @@ const PopUpMainElements = styled(Box)`
 
   #tank_text p {
     margin: 2px;
-    /* text-align: right; */
   }
   #tank_description {
     font-family: "changa";

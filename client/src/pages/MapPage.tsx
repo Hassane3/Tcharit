@@ -21,6 +21,7 @@ import WaterDropIcon from "@mui/icons-material/WaterDrop";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import Menu from "./components/Menu";
 import { MenuIcon } from "../utils/constants/Icons";
+import { useTranslation } from "react-i18next";
 // Componenets
 
 export interface tanksDataProps {
@@ -115,6 +116,12 @@ function MapPage(props: mapPageProps) {
 
   const [anchorState, setAnchorState] = useState<boolean>(false);
 
+  const [language, setLanguage] = useState<string>(
+    () => localStorage.getItem("lang") || "en"
+  );
+
+  const { t, i18n } = useTranslation();
+
   const toggleDrawer =
     (anchor: DrawerProps["anchor"], open: boolean) =>
     (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -163,7 +170,10 @@ function MapPage(props: mapPageProps) {
       setFavorites(newArray);
     }
   };
-  useEffect(() => {}, []);
+  useEffect(() => {
+    i18n.changeLanguage(language);
+    console.log("Language >", language);
+  }, [language]);
 
   return (
     <div id="map">
@@ -213,27 +223,11 @@ function MapPage(props: mapPageProps) {
                 user={user}
                 anchor={anchor}
                 toggleDrawer={toggleDrawer}
+                language={language}
+                setLanguage={setLanguage}
               />
             </React.Fragment>
           </TopSection>
-          {/* <Divider
-            textAlign="left"
-            variant="middle"
-            sx={{
-              zIndex: "1000",
-              "&::before, &::after": {
-                borderColor: "primary.dark",
-                borderWidth: "1px",
-                opacity: 0.6,
-                alignSelf: "left",
-              },
-              "&::after": {
-                width: "20%",
-              },
-            }}
-          > */}
-          {/* <Chip label="Or" size="small" color={"secondary"} /> */}
-          {/* </Divider> */}
           <Button
             onClick={handleQrModalState(true)}
             variant="text"

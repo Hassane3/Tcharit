@@ -1,0 +1,72 @@
+{
+  "title": "Tcharit",
+  "common": {
+    "menu": {
+      "reserved_for_cistern_fillers": "reserved for cistern fillers",
+      "notifications": "notifications"
+    },
+    "tank": {
+      "tank_status": {
+        "tank_is_full": "The water tank is full",
+        "tank_is_halfFull": "The water tank is half-full",
+        "tank_is_empty": "The water tank is emtpy",
+        "tank_is_unset": "No reports have been posted"
+      },
+      "water_flow": {
+        "high": "High",
+        "average": "Average",
+        "weak": "Weak"
+      },
+      "tank_status_according_to_users ": "Tank status according to users",
+      "report_water_flow": "Report water flow",
+      "trusted_info": "trusted",
+      "since_datetime": "since {{datetime}} {{datetime}}",
+      "geolocation_user_position": "To be sure that cistern reports are truthful, you must be beside of the concerned cistern",
+      "tank_report_confirmation": "Are you sure you want to prevent that the cistern '{{tank}}' is {{status}}",
+      "tank_page_infos#1": "Here you can see the reports left by users.",
+      "tank_page_infos#2": "The time shown for each report should be taken into account and it is important to ensure that a report is truthful by estimating its degree of consistency with the rest of the reports.",
+      "favorite": "favorite",
+      "select_cistern": "Select cistern"
+    }
+  },
+  "languages": {
+    "english": "english",
+    "french": "Français",
+    "arabic": "العربية"
+  },
+  "navigation": {
+    "confirm": "Confirm",
+    "connect": "connect",
+    "disconnect": "Disconnect",
+    "cancel": "Cancel",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "continu": "Continu",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "days": {
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday",
+    "sunday": "Sunday"
+  },
+  "months": {
+    "january": "January",
+    "february": "February",
+    "march": "March",
+    "april": "April",
+    "may": "May",
+    "june": "June",
+    "july": "July",
+    "august": "August",
+    "september": "September",
+    "october": "October",
+    "november": "November",
+    "december": "December"
+  }
+}
