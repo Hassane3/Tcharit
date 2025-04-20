@@ -16,6 +16,7 @@
     "@types/leaflet": "^1.9.15",
     "@types/react": "^19.0.1",
     "@types/react-dom": "^18.0.0",
+    "ajv": "^8.17.1",
     "D": "^1.0.0",
     "firebase": "^11.0.2",
     "i18next": "^24.2.2",
