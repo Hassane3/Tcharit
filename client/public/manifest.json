@@ -12,6 +12,27 @@
       "src": "logo-512.png",
       "sizes": "512x512",
       "type": "image/png"
+    },
+    {
+      "src": "logo-152.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "img/instantane_tcharit_01.png",
+      "sizes": "692x336",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Wonder Widgets"
+    },
+    {
+      "src": "img/instantane_tcharit_02.png",
+      "sizes": "692x337",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Wonder Widgets"
     }
   ],
   "start_url": ".",
