@@ -22,14 +22,14 @@
   "screenshots": [
     {
       "src": "img/instantane_tcharit_01.png",
-      "sizes": "692x336",
+      "sizes": "334x192",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "Wonder Widgets"
     },
     {
       "src": "img/instantane_tcharit_02.png",
-      "sizes": "692x337",
+      "sizes": "334x192",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "Wonder Widgets"
