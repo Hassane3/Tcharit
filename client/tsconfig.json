@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
     "types": ["i18next"],
-    "target": "es5",
+    "target": "esnext",
     "lib": [
       "dom",
       "dom.iterable",
-      "esnext"
+      "esnext",
+      "webworker"
     ],
     // If using styled-component :
     // "paths": {
@@ -27,6 +28,7 @@
     "paths": {
       "react": [ "./node_modules/@types/react" ]
     }
+    
   },
   "ts-node": {
     "compilerOptions": {
