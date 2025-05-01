@@ -16,6 +16,7 @@ import { UserType } from "../models/utils/UsersType";
 
 const CheckPosts = (props: { tankData: tankDataProps }): JSX.Element => {
   const { tankData } = props;
+  console.log("[CheckPosts] render 🚀", tankData?.id); // ← ajoute ça tout en haut
   const [postsData, setPostsData] = useState<Array<postsProps>>([]);
   let date = "";
   const [lastCheckTime, setLastCheckTime] = useState<number>();
@@ -302,4 +303,4 @@ export const PostBottomBox = styled.div<{ textColor: string }>`
     line-height: 1;
   }
 `;
-export default CheckPosts;
+export default React.memo(CheckPosts);

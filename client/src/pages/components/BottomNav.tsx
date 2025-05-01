@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  CircularProgress,
   Modal,
   Slider,
   SwipeableDrawer,
@@ -13,12 +14,19 @@ import { latLngProps, tankDataProps } from "../MapPage";
 import TankStatus from "../../models/utils/TankStatus";
 import { GLOBAL_STYLE } from "../../utils/constants/constants";
 import { customTheme, UserData } from "../../App";
-import { Close } from "@mui/icons-material";
 import PersonPinCircleIcon from "@mui/icons-material/PersonPinCircle";
-import { HighFlow, LowFlow, NullFlow } from "../../utils/constants/Icons";
+import { LoadingButton } from "@mui/lab";
+import {
+  HighFlow,
+  Infos,
+  LowFlow,
+  NullFlow,
+} from "../../utils/constants/Icons";
 import { auth } from "../../firebase/firebase";
 import SwipeableBox from "./SwipeableBox";
 import { checkAndRequestGeolocation } from "../../utils/methods/methods";
+import { BoxContainer, ModalContainer } from "./PopUp";
+import { Close } from "../../utils/constants/Icons";
 
 interface BottomNavProps {
   tankLatLng: latLngProps;
@@ -62,7 +70,10 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
   const [isUserFarFromTank, setIsUserFarFromTank] = useState<boolean>(false);
   const [isLocModalVisible, setIsLocModalVisible] = useState<boolean>(false);
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   // const [open, setOpen] = useState<boolean>(false);
+  // MSG :
+  const [msgFarFromTank, setMsgFarFromTank] = useState<boolean>(false);
 
   const toggleDrawer =
     (newOpen: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -87,6 +98,9 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
       label: "full",
     },
   ];
+  function handleClick() {
+    setIsLoading(true);
+  }
 
   //   // If user is a random person we check his position else if its cistern agent, we do not:
   //   let user = auth.currentUser;
@@ -145,10 +159,10 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
   //   }
   // };
   // checkUserPermission
-  const handleCheckTank = () => {
+  const handleCheckTank = async () => {
     // If user is a random person we check his position else if its cistern agent, we do not:
     let user = auth.currentUser;
-
+    setIsLoading(true);
     if (user) {
       setIsAddPostAllowed(true);
     } else {
@@ -169,7 +183,7 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
               ) {
                 // If user cookie exist, that means he has posted recently
                 if (cookies.userId) {
-                  alert(
+                  console.log(
                     "It seems that you have already added a post recently, \n" +
                       "Please wait before you can add another post."
                   );
@@ -177,7 +191,8 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
                   setIsAddPostAllowed(true);
                 }
               } else {
-                alert(
+                setMsgFarFromTank(true);
+                console.log(
                   "It seems that you are far from water tank ! \n" +
                     "Try to come closer."
                 );
@@ -185,7 +200,8 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
             }
           })
         )
-        .catch((error) => console.error(error));
+        .catch((error) => console.error(error))
+        .finally(() => setIsLoading(false));
     }
   };
 
@@ -226,12 +242,18 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
               of the concerned cistern
             </Typography>
             <Button
+              loading={isLoading}
+              // disabled={isLoading}
               variant="contained"
               onClick={handleCheckTank}
               size="large"
               sx={{
                 background: customTheme.palette.background.blueDark,
                 color: customTheme.palette.background.defaultWhite,
+                // "& .MuiCircularProgress-root": {
+                "& .MuiCircularProgress-root": {
+                  color: customTheme.palette.background.blueDark,
+                },
               }}
             >
               <span>Continu</span>
@@ -330,7 +352,11 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
       >
         <Box sx={{ textAlign: "center" }}>
           <Button onClick={() => setIsLocModalVisible(false)}>
-            <Close />
+            <Close
+              backgroundColor={customTheme.palette.background.defaultBlue}
+              width={22}
+              height={22}
+            />
           </Button>
           <Typography variant="h3">
             Apparently, your position is far from the cistern, please try to
@@ -338,6 +364,55 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
           </Typography>
         </Box>
       </Modal>
+
+      <ModalContainer
+        open={msgFarFromTank}
+        onClose={() => setMsgFarFromTank(false)}
+      >
+        <BoxContainer
+          sx={{ backgroundColor: customTheme.palette.background.defaultWhite }}
+        >
+          <Button
+            onClick={() => setMsgFarFromTank(false)}
+            sx={{
+              minWidth: "unset",
+              position: "absolute",
+              top: 20,
+              right: 20,
+              padding: 0,
+              color: customTheme.palette.background.defaultBlue,
+            }}
+          >
+            <Close
+              backgroundColor={customTheme.palette.background.defaultBlue}
+            />
+          </Button>
+          <div>
+            <Infos
+              backgroundColor={customTheme.palette.background.defaultBlue}
+              width={22}
+              height={22}
+            />
+            <Typography variant="h3">
+              Apparently, your position is far from the cistern, please try to
+              come closer
+            </Typography>
+            <Button
+              variant="contained"
+              size="large"
+              onClick={() => {
+                setMsgFarFromTank(false);
+              }}
+              sx={{
+                backgroundColor: customTheme.palette.background.defaultBlue,
+                color: customTheme.palette.background.defaultWhite,
+              }}
+            >
+              <span>Ok</span>
+            </Button>
+          </div>
+        </BoxContainer>
+      </ModalContainer>
     </div>
   );
 };

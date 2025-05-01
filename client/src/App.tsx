@@ -61,7 +61,7 @@ export const customTheme = createTheme({
         },
         containedSizeLarge: {
           textTransform: "none",
-          fontSize: "1.4em",
+          fontSize: "1.2em",
           fontWeight: "600",
           borderRadius: "40px",
           toUpperCase: "none",
@@ -145,7 +145,7 @@ export const customTheme = createTheme({
     },
     h3: {
       fontFamily: "Changa",
-      fontSize: "1.4em",
+      fontSize: "1.2em",
       fontWeight: "700",
       lineHeight: "1.3em",
     },

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, Suspense, useMemo } from "react";
 //MODELS
 import TankStatus from "../models/utils/TankStatus";
 import { useNavigate, useNavigation, useParams } from "react-router-dom";
@@ -23,13 +23,15 @@ import {
   Infos,
   UnsetTank,
 } from "../utils/constants/Icons";
-import { Box, Button, IconButton, Typography } from "@mui/material";
+import { Box, Button, IconButton, Skeleton, Typography } from "@mui/material";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import CommentsDisabledRoundedIcon from "@mui/icons-material/CommentsDisabledRounded";
 import { customTheme, UserData } from "../App";
 import { Global } from "@emotion/react";
 import SwipeableBox from "./components/SwipeableBox";
-
+// UI
+import { lazyWithDelay } from "../utils/ui/Skeleton";
+import { SkeletonCheckPosts } from "../utils/ui/Skeleton";
 interface TankProps {
   tanksData: tankDataProps[];
   setCookie: (userIdTitle: any, userIdValue: any, option: any) => void;
@@ -73,8 +75,10 @@ const Tank = (props: TankProps) => {
       return tank.id === tankId;
     });
 
-    setSelectedTankData(tankData);
-    console.log("UE");
+    if (tankData?.id !== selectedTankData?.id) {
+      setSelectedTankData(tankData);
+      console.log("SelectedTankData changed");
+    }
   }, [tankId, tanksData]);
 
   // METHODS
@@ -138,6 +142,10 @@ const Tank = (props: TankProps) => {
     return () => window.removeEventListener("scroll", handleScroll); // Cleanup
   }, []);
 
+  const CheckPosts = useMemo(
+    () => lazyWithDelay(() => import("./CheckPosts"), 1000),
+    []
+  );
   return (
     <Page
       style={
@@ -295,7 +303,7 @@ const Tank = (props: TankProps) => {
           style={{
             display: "flex",
             alignItems: "center",
-            margin: "0 20px",
+            margin: "0 8px",
           }}
         >
           <IconButton>
@@ -307,14 +315,41 @@ const Tank = (props: TankProps) => {
             style={{
               color: customTheme.palette.background.defaultBlue,
               margin: "0 4px",
-              fontSize: "16px",
+              fontSize: "12px",
             }}
           >
-            {"Water flow state according to users reports :"}
+            {"Water flow state according to users reports "}
           </span>
         </div>
       </Header>
-      {selectedTankData && selectedTankData.posts ? (
+      {selectedTankData?.posts ? (
+        <Suspense fallback={<SkeletonCheckPosts />}>
+          <CheckPosts tankData={selectedTankData} />
+        </Suspense>
+      ) : (
+        <div
+          style={{
+            paddingBottom: "100px",
+            paddingTop: "50vh",
+            textAlign: "center",
+          }}
+        >
+          <CommentsDisabledRoundedIcon
+            style={{
+              fontSize: "50px",
+              color: customTheme.palette.background.blueDark,
+            }}
+          />
+          <Typography
+            variant="h3"
+            style={{ color: customTheme.palette.background.blueDark }}
+          >
+            No cistern state has been posted
+          </Typography>
+        </div>
+      )}
+
+      {/* {selectedTankData && selectedTankData.posts ? (
         <div>
           <CheckPosts tankData={selectedTankData} />
         </div>
@@ -339,25 +374,41 @@ const Tank = (props: TankProps) => {
             No cistern state has been posted
           </Typography>
         </div>
+      )} */}
+      {selectedTankData && (
+        <SwipeableBox
+          navLabel="Report water flow"
+          openBottomNav={openBottomNav}
+          setOpenBottomNav={setOpenBottomNav}
+        >
+          <BottomNav
+            selectedTankData={selectedTankData}
+            setConfirmationBox={handleConfirmationBox}
+            tankLatLng={selectedTankData.latLng}
+            openBottomNav={openBottomNav}
+            setOpenBottomNav={setOpenBottomNav}
+            setTankStatus={handleTankStatus}
+            cookies={cookies}
+            isAddPostAllowed={isAddPostAllowed}
+            setIsAddPostAllowed={setIsAddPostAllowed}
+            userData={userData}
+          />
+        </SwipeableBox>
       )}
-      {selectedTankData &&
-        (console.log("selectedTankData >", selectedTankData),
-        (
-          <SwipeableBox navLabel="Report water flow">
-            <BottomNav
-              selectedTankData={selectedTankData}
-              setConfirmationBox={handleConfirmationBox}
-              tankLatLng={selectedTankData.latLng}
-              openBottomNav={openBottomNav}
-              setOpenBottomNav={setOpenBottomNav}
-              setTankStatus={handleTankStatus}
-              cookies={cookies}
-              isAddPostAllowed={isAddPostAllowed}
-              setIsAddPostAllowed={setIsAddPostAllowed}
-              userData={userData}
-            />
-          </SwipeableBox>
-        ))}
+      {openBottomNav && (
+        <div
+          style={{
+            height: "100vh",
+            width: "100vw",
+            position: "fixed",
+            top: 0,
+            left: 0,
+            zIndex: 1,
+            backgroundColor: "#000",
+            opacity: 0.3,
+          }}
+        ></div>
+      )}
       {isConfirmBoxOpen &&
         (console.log("isConfirmBox >", isConfirmBoxOpen),
         (
@@ -459,7 +510,7 @@ const HeaderElements = styled.div<{
   box-shadow: rgba(0, 0, 0, 0.2) 0 1px 10px 0px;
   width: 100%;
   padding: 10px;
-  border-radius: 0 0 40px 40px;
+  border-radius: 0 0 30px 30px;
   overflow: hidden;
 `;
 const PopUpMainElements = styled(Box)`

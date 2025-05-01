@@ -4,10 +4,14 @@ import { Button, Typography } from "@mui/material";
 
 type SwipeableBoxProps = {
   navLabel: string;
+  openBottomNav: boolean;
+  setOpenBottomNav: (state: boolean) => void;
   children?: React.ReactNode;
 };
 const SwipeableBox: React.FC<SwipeableBoxProps> = ({
   navLabel,
+  openBottomNav,
+  setOpenBottomNav,
   children,
   ...props
 }) => {
@@ -35,6 +39,13 @@ const SwipeableBox: React.FC<SwipeableBoxProps> = ({
     };
   }, []);
 
+  useEffect(() => {
+    if (openBottomNav) {
+      setNavHeight(navMaxHeight);
+    } else {
+      setNavHeight(navMinHeight);
+    }
+  }, [openBottomNav]);
   const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
     setIsDragging(true);
   };
@@ -43,7 +54,6 @@ const SwipeableBox: React.FC<SwipeableBoxProps> = ({
     const touch = event.touches[0];
     console.log("ScreenY : ", window.visualViewport?.height);
 
-    // setMousePos({ y: touch.clientY });
     window.visualViewport &&
       setNavHeight(window.visualViewport?.height - touch.clientY - navBottom);
   };
@@ -53,18 +63,20 @@ const SwipeableBox: React.FC<SwipeableBoxProps> = ({
     setIsDragging(true);
     if (navHeight > navMaxHeight / 2) {
       setNavHeight(navMaxHeight);
+      setOpenBottomNav(true);
     } else {
       setNavHeight(navMinHeight);
+      setOpenBottomNav(false);
     }
   };
 
-  // const [navHeight, setNavHeight] = useState<number>(40);
   return (
     <div
       id="bottomNav"
       {...props}
       style={{
         position: "fixed",
+        zIndex: 20,
         // height: navHeight,
         width: "-webkit-fill-available",
         margin: "10px",
@@ -73,7 +85,7 @@ const SwipeableBox: React.FC<SwipeableBoxProps> = ({
         height: navHeight,
         minHeight: navMinHeight,
         maxHeight: navMaxHeight,
-        borderRadius: "40px",
+        borderRadius: "30px",
         bottom: navBottom,
         overflow: "hidden",
 
@@ -114,21 +126,9 @@ const SwipeableBox: React.FC<SwipeableBoxProps> = ({
           }}
         >
           {navLabel}
-          {/* Report water flow */}
-          {/* Signaler le débit d'eau */}
-          {/* تنبيه عن حالة تدفق المياه */}
         </Typography>
       </div>
       <div style={{ height: navMaxHeight - navMinHeight }}>{children}</div>
-      {/* <h1>Swipeable Box</h1>
-      <div style={{}}>
-        <img
-          src="../img/empty_tap_gif.gif"
-          alt=""
-          style={{ height: "160px" }}
-        />
-        <p>Mouse Inside Box: {mousePos.y}px</p>
-      </div> */}
     </div>
   );
 };

@@ -5,7 +5,7 @@ import { Box, Button, Modal, Typography } from "@mui/material";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import { customTheme } from "../../App";
-import { Close } from "../../utils/constants/Icons";
+import { Close, Infos } from "../../utils/constants/Icons";
 
 interface PopUpProps {
   tankStatus: TankStatus;
@@ -50,6 +50,11 @@ const PopUp = (props: PopUpProps): JSX.Element => {
           {/* <CloseRoundedIcon fontSize="large" /> */}
         </Button>
         <div>
+          <Infos
+            backgroundColor={customTheme.palette.background.defaultBlue}
+            width={22}
+            height={22}
+          />
           <Typography
             variant="h3"
             color={customTheme.palette.background.defaultBlue}
@@ -90,7 +95,7 @@ export const BoxContainer = styled(Box)<{
 }>`
   margin: 40px;
   padding: 20px;
-  border-radius: 40px;
+  border-radius: 30px;
   width: 300px;
   min-height: 300px;
   background-color: ${(props) => props.backgroundColor};
