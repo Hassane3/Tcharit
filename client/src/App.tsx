@@ -16,6 +16,7 @@ import Login from "./pages/Login";
 import { createTheme } from "@mui/material";
 import { doc, getDoc } from "firebase/firestore";
 import { calculateDateDifference } from "./utils/methods/methods";
+import ResetPassword from "./pages/ResetPassword";
 
 export interface UserData {
   name: string | null;
@@ -152,6 +153,12 @@ export const customTheme = createTheme({
     h4: {
       fontFamily: "Changa",
       fontSize: "18px",
+      fontWeight: "400",
+      lineHeight: "1.1em",
+    },
+    h5: {
+      fontFamily: "Changa",
+      fontSize: "14px",
       fontWeight: "400",
       lineHeight: "1.1em",
     },
@@ -369,6 +376,7 @@ function App(): JSX.Element {
             path="/login"
             element={<Login handleSetTankAgentData={setTankAgentData} />}
           />
+          <Route path="/resetPassword" element={<ResetPassword />} />
           <Route
             path="/notifications"
             // element={<Notifications />}

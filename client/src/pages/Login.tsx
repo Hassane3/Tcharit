@@ -15,9 +15,11 @@ import {
   Link,
   OutlinedInput,
   TextField,
+  Typography,
 } from "@mui/material";
 import { AccountCircle, Visibility, VisibilityOff } from "@mui/icons-material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 
 import { useNavigate } from "react-router-dom";
 import { customTheme } from "../App";
@@ -30,15 +32,21 @@ const Login = (props: loginProps) => {
   const { handleSetTankAgentData } = props;
   const providers = [{ id: "credentials", name: "Email and Password" }];
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  function handleClick() {
+    setIsLoading(true);
+  }
   // ...
   // const [tankAgentData, setTankAgentData] = useState<{}>();
   const navigateTo = useNavigate();
+
   const signIn: (
     provider: AuthProvider,
     formData: FormData
   ) => Promise<AuthResponse> | void = (provider, formData) => {
     const promise = new Promise<AuthResponse>(async (resolve) => {
-      //   setTimeout(() => {
+      setIsLoading(true);
       const email = formData?.get("email");
       const password = formData?.get("password");
       //call firebase fonction that verify if mail and psw exists. if true --> connect else --> show error connection
@@ -52,6 +60,7 @@ const Login = (props: loginProps) => {
             } else {
               console.log("error authentication");
             }
+            setIsLoading(false);
           }
         );
       }
@@ -59,7 +68,6 @@ const Login = (props: loginProps) => {
         type: "CredentialsSignin",
         error: "Invalid credentials.",
       });
-      //   }, 300);
     });
     return promise;
   };
@@ -87,6 +95,9 @@ const Login = (props: loginProps) => {
         sx={{
           "& .MuiFormLabel-root": {
             color: customTheme.palette.text.grey,
+          },
+          "& .MuiInputBase-root": {
+            fontFamily: "Poppins",
           },
         }}
       />
@@ -135,6 +146,7 @@ const Login = (props: loginProps) => {
             </InputAdornment>
           }
           label="Password"
+          sx={{ fontFamily: "Poppins" }}
         />
       </FormControl>
     );
@@ -146,6 +158,7 @@ const Login = (props: loginProps) => {
         type="submit"
         variant="contained"
         size="large"
+        loading={isLoading}
         // disableElevation
         fullWidth
         sx={{
@@ -159,43 +172,87 @@ const Login = (props: loginProps) => {
     );
   }
 
+  function Title() {
+    return (
+      <Typography variant="h2" style={{ marginBottom: 8 }}>
+        Login
+      </Typography>
+    );
+  }
+
+  function Subtitle() {
+    return (
+      <Typography variant="h5" style={{}}>
+        Cistern agent ? Please sign in{" "}
+      </Typography>
+    );
+  }
+
   function ForgotPasswordLink() {
     return (
-      <Link href="/" variant="body2">
+      <Link
+        href="/resetPassword"
+        variant="body2"
+        sx={{ color: customTheme.palette.text.grey }}
+      >
         Forgot password?
       </Link>
     );
   }
-
-  function Title() {
-    return <h2 style={{ marginBottom: 8 }}>Login</h2>;
+  function RememberMe() {
+    return <></>;
   }
-
   return (
     <div
       style={{
-        backgroundColor: customTheme.palette.background.blueLight,
+        backgroundColor: customTheme.palette.background.lightWhite,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        height: "100vh",
       }}
     >
-      <Box>
-        <Button onClick={() => navigateTo("/mapPage")}>
-          <ArrowBackIosIcon />
+      <div
+        style={{
+          // If lang === arabic flex : 1 else 0
+          // flex: 0,
+          // justifyContent: "left",
+          // alignItems: "flex-start",
+          alignSelf: "flex-start",
+        }}
+      >
+        <Button
+          size="large"
+          onClick={() => navigateTo("/", { state: { anchorState: true } })}
+          sx={{ padding: 0 }}
+        >
+          <ChevronLeftRoundedIcon
+            sx={{
+              color: customTheme.palette.background.defaultBlue,
+              fontSize: "50px",
+            }}
+          />
         </Button>
-      </Box>
+      </div>
+
       <SignInPage
         signIn={signIn}
         providers={providers}
         slots={{
           title: Title,
+          subtitle: Subtitle,
           emailField: CustomEmailField,
           passwordField: CustomPasswordField,
           submitButton: CustomButton,
           forgotPasswordLink: ForgotPasswordLink,
+          rememberMe: RememberMe,
         }}
         sx={{
           "& .MuiBox-root": {
-            borderRadius: "40px",
+            borderRadius: "30px",
           },
+          minHeight: "unset",
+          height: "100%",
 
           // "& .MuiTypography-root": {
           //   color: customTheme.palette.background.default,
