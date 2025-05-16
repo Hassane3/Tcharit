@@ -14,7 +14,7 @@ import { Button, DrawerProps, IconButton } from "@mui/material";
 import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
 import styled from "styled-components";
 import ModalPopUp from "./components/ModalPopUp";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import { customTheme, UserData } from "../App";
 import WaterDropIcon from "@mui/icons-material/WaterDrop";
@@ -114,14 +114,15 @@ function MapPage(props: mapPageProps) {
     setInputValue(newValue);
   };
 
-  const [anchorState, setAnchorState] = useState<boolean>(false);
+  const location = useLocation();
+  const menuOpen = location.state?.anchorState ?? false;
+  const [anchorState, setAnchorState] = useState<boolean>(menuOpen);
 
   const [language, setLanguage] = useState<string>(
-    () => localStorage.getItem("lang") || "en"
+    () => localStorage.getItem("language") || "en"
   );
 
   const { t, i18n } = useTranslation();
-
   const toggleDrawer =
     (anchor: DrawerProps["anchor"], open: boolean) =>
     (event: React.KeyboardEvent | React.MouseEvent) => {
