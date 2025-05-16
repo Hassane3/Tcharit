@@ -119,7 +119,7 @@ function MapPage(props: mapPageProps) {
   const [anchorState, setAnchorState] = useState<boolean>(menuOpen);
 
   const [language, setLanguage] = useState<string>(
-    () => localStorage.getItem("lang") || "en"
+    () => localStorage.getItem("language") || "en"
   );
 
   const { t, i18n } = useTranslation();
