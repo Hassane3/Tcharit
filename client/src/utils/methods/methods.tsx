@@ -1,26 +1,35 @@
+import { t } from "i18next";
 import React from "react";
 
-export const handleTimeFormat = (diffInSnds: number): string => {
+export const handleTimeFormat = (diffInSnds: number): [any, string?] => {
   // if less then a minute
   if (diffInSnds < 60) {
-    return "now";
+    // return t("time.now");
+    return ["now"];
     // if less then an hour (3600s in an hour)
   } else if (diffInSnds < 3600) {
-    return Math.floor(diffInSnds / 60) + "min";
+    let time = Math.floor(diffInSnds / 60);
+    return [time, t("time.minute")];
     // if less then a day ()
   } else if (diffInSnds < 3600 * 24) {
-    return Math.floor(diffInSnds / 60 / 60) + "hours";
+    let time = Math.floor(diffInSnds / 60 / 60);
+    let suffix = time > 1 ? t("time.hours") : t("time.hour");
+    return [time, suffix];
     // if less than a week
   } else if (diffInSnds < 3600 * 24 * 7) {
-    return Math.floor(diffInSnds / 60 / 60 / 24) + "days";
+    let day = Math.floor(diffInSnds / 60 / 60 / 24);
+    let suffix = day > 1 ? t("time.days") : t("time.day");
+    return [day, suffix];
   }
   // if less than a month
   else if (diffInSnds < 3600 * 24 * 7 * 30) {
     let weeks = Math.round(diffInSnds / 60 / 60 / 24 / 7);
-    return weeks > 1 ? weeks + "weeks" : weeks + "week";
+    let suffix = weeks > 1 ? t("time.weeks") : t("time.week");
+    return [weeks, suffix];
   } else {
     let months = Math.round(diffInSnds / 60 / 60 / 24 / 7 / 4);
-    return months > 1 ? months + "months" : months + "month";
+    let suffix = months > 1 ? t("time.months") : t("time.month");
+    return [months, suffix];
   }
 };
 
@@ -52,6 +61,12 @@ export const calculateDateDifference = (dateStr: string) => {
   const diffInDays = Math.floor(timeDifference / (1000 * 3600 * 24));
 
   return diffInDays;
+};
+
+// Display date in arab mode
+export const dateToArab = (originalDate: string) => {
+  const [day, month, year] = originalDate.split("/");
+  return `${day}-${month}-${year}`;
 };
 
 export const checkAndRequestGeolocation = async (): Promise<any> => {

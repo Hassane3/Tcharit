@@ -13,7 +13,7 @@ interface MarkerProps {
   marker: tankDataProps;
   favorites: Array<string> | undefined;
   setVisitedTank: (visitedTank: tankDataProps) => void | undefined;
-  handleTimeFormat: (arg: number) => string;
+  handleTimeFormat: (arg: number) => [any, string?];
   handleFavorites: (tankId: number) => void;
 }
 
@@ -27,6 +27,7 @@ export const MyMarker = (props: MarkerProps): JSX.Element => {
   } = props;
   const map = useMap();
 
+  const lang = localStorage.getItem("language");
   // To be able to use mui icons in leaflet :
   const createCustomIcon = (
     IconComponent: SvgIconComponent,
@@ -70,7 +71,10 @@ export const MyMarker = (props: MarkerProps): JSX.Element => {
     });
   };
 
-  const customIconn = createCustomIcon(LocationOnIcon, marker.name);
+  const customIconn = createCustomIcon(
+    LocationOnIcon,
+    lang === "ar" ? marker.arab_name : marker.latin_name
+  );
 
   return (
     <Container>

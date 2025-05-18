@@ -32,6 +32,7 @@ import SwipeableBox from "./components/SwipeableBox";
 // UI
 import { lazyWithDelay } from "../utils/ui/Skeleton";
 import { SkeletonCheckPosts } from "../utils/ui/Skeleton";
+import { useTranslation } from "react-i18next";
 interface TankProps {
   tanksData: tankDataProps[];
   setCookie: (userIdTitle: any, userIdValue: any, option: any) => void;
@@ -66,9 +67,12 @@ const Tank = (props: TankProps) => {
   const waveHeight =
     lastPost?.status === "EMPTY"
       ? -100
-      : lastPost?.status === "HALFFULL"
+      : lastPost?.status === "HALF_FULL"
         ? -headerHeight * 0.5
         : -headerHeight * 0.1;
+
+  const { t } = useTranslation();
+  const lang = localStorage.getItem("language");
 
   useEffect(() => {
     const tankData = tanksData.find((tank: tankDataProps) => {
@@ -77,7 +81,6 @@ const Tank = (props: TankProps) => {
 
     if (tankData?.id !== selectedTankData?.id) {
       setSelectedTankData(tankData);
-      console.log("SelectedTankData changed");
     }
   }, [tankId, tanksData]);
 
@@ -212,7 +215,9 @@ const Tank = (props: TankProps) => {
                 id="tank_name"
                 color={customTheme.palette.background.defaultBlue}
               >
-                {selectedTankData?.name}
+                {lang === "ar"
+                  ? selectedTankData?.arab_name
+                  : selectedTankData?.latin_name}
               </Typography>
               <Typography
                 variant="h3"
@@ -228,11 +233,11 @@ const Tank = (props: TankProps) => {
                 {headerHeight > headerTight &&
                   (selectedTankData && selectedTankData.posts
                     ? lastPost?.status === TankStatus.EMPTY
-                      ? "water tank is empty"
+                      ? t("common.tank.tank_status.tank_is_empty")
                       : lastPost?.status === TankStatus.HALFFUll
-                        ? "water tank is half full"
-                        : "water tank is full "
-                    : "No infos has been set for this tank")}
+                        ? t("common.tank.tank_status.tank_is_halfFull")
+                        : t("common.tank.tank_status.tank_is_full")
+                    : t("common.tank.tank_status.tank_is_unset"))}
               </Typography>
             </div>
             {selectedTankData && selectedTankData.posts
@@ -243,13 +248,8 @@ const Tank = (props: TankProps) => {
                   : FullTank()
               : UnsetTank()}
           </PopUpMainElements>
-          {/* <span id="checkPosts_title"> : حالة تدفق المياه حسب المستخدمين </span> */}
         </HeaderElements>
-        {/* {headerHeight > headerTight && (
-          <span id="checkPosts_title">
-          {"Water flow state according to users reports :"}
-          </span>
-          )} */}
+
         {/* WAVES */}
         <div
           style={{
@@ -302,6 +302,7 @@ const Tank = (props: TankProps) => {
         <div
           style={{
             display: "flex",
+            flexDirection: lang === "ar" ? "row-reverse" : "row",
             alignItems: "center",
             margin: "0 8px",
           }}
@@ -318,7 +319,7 @@ const Tank = (props: TankProps) => {
               fontSize: "12px",
             }}
           >
-            {"Water flow state according to users reports "}
+            {t("common.tank.tank_page_infos#0")}
           </span>
         </div>
       </Header>
@@ -344,7 +345,7 @@ const Tank = (props: TankProps) => {
             variant="h3"
             style={{ color: customTheme.palette.background.blueDark }}
           >
-            No cistern state has been posted
+            {t("common.tank.tank_status.tank_is_unset")}
           </Typography>
         </div>
       )}
@@ -377,7 +378,7 @@ const Tank = (props: TankProps) => {
       )} */}
       {selectedTankData && (
         <SwipeableBox
-          navLabel="Report water flow"
+          navLabel={t("common.tank.report_water_flow")}
           openBottomNav={openBottomNav}
           setOpenBottomNav={setOpenBottomNav}
         >
@@ -387,7 +388,7 @@ const Tank = (props: TankProps) => {
             tankLatLng={selectedTankData.latLng}
             openBottomNav={openBottomNav}
             setOpenBottomNav={setOpenBottomNav}
-            setTankStatus={handleTankStatus}
+            // setTankStatus={handleTankStatus}
             cookies={cookies}
             isAddPostAllowed={isAddPostAllowed}
             setIsAddPostAllowed={setIsAddPostAllowed}
@@ -409,16 +410,14 @@ const Tank = (props: TankProps) => {
           }}
         ></div>
       )}
-      {isConfirmBoxOpen &&
-        (console.log("isConfirmBox >", isConfirmBoxOpen),
-        (
-          <PopUp
-            tankStatus={tankStatus}
-            isConfirmBoxOpen={isConfirmBoxOpen}
-            addPost={handleAddPost}
-            setConfirmationBox={handleConfirmationBox}
-          />
-        ))}
+      {isConfirmBoxOpen && (
+        <PopUp
+          tankStatus={tankStatus}
+          isConfirmBoxOpen={isConfirmBoxOpen}
+          addPost={handleAddPost}
+          setConfirmationBox={handleConfirmationBox}
+        />
+      )}
     </Page>
   );
 };

@@ -57,6 +57,7 @@ const AutoComplete = (props: AutoCompleteProps) => {
     }
   };
 
+  const lang = localStorage.getItem("language");
   return (
     <Autocomplete
       value={searchValue}
@@ -64,7 +65,10 @@ const AutoComplete = (props: AutoCompleteProps) => {
       onBlur={handleBlur}
       onChange={(event: any, newValue: string) => {
         handleSetSearchValue(newValue);
-        const tank = tanksData.find((tank) => tank.name === newValue);
+        const tank = tanksData.find(
+          (tank) =>
+            (lang === "ar" ? tank.arab_name : tank.latin_name) === newValue
+        );
 
         tank &&
           map.setView(
@@ -81,7 +85,9 @@ const AutoComplete = (props: AutoCompleteProps) => {
         handleSetInputValue(newInputValue);
       }}
       id="controllable-states-demo"
-      options={tankList.map((tank: any) => tank.name)}
+      options={tankList.map((tank: any) =>
+        lang === "ar" ? tank.arab_name : tank.latin_name
+      )}
       sx={{
         width: 300,
         zIndex: "1000",

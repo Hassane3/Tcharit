@@ -23,7 +23,7 @@ interface mapTankBoxProps {
   tank: tankDataProps;
   favorites: Array<string> | undefined;
   setVisitedTank: (arg: tankDataProps) => void;
-  handleTimeFormat: (arg: number) => string;
+  handleTimeFormat: (arg: number) => [any, string?];
   handleFavorites: (tankId: number) => void;
 }
 
@@ -39,6 +39,8 @@ const MapTankBox = (props: mapTankBoxProps) => {
   const [isFavorite, setIsFavorite] = useState<boolean>(
     favorites?.includes(tank.id.toString()) ? true : false
   );
+
+  const lang = localStorage.getItem("language");
 
   const handleSetTankFav = (isFavorite: boolean) => {
     setIsFavorite(!isFavorite);
@@ -109,7 +111,7 @@ const MapTankBox = (props: mapTankBoxProps) => {
               : customTheme.palette.background.greyLight
           }
         >
-          {tank.name}
+          {lang === "ar" ? tank.arab_name : tank.latin_name}
         </Typography>
       </PopUpTop>
       <PopUpMainElements
@@ -158,11 +160,26 @@ const MapTankBox = (props: mapTankBoxProps) => {
           </p>
         </div>
         <PostBottomBox textColor={customTheme.palette.background.greyLight}>
-          <span>{lastCheckTime && handleTimeFormat(lastCheckTime)}</span>
+          <span>
+            {/* {lastCheckTime && handleTimeFormat(lastCheckTime)} */}
+            {lang === "ar" ? (
+              lastCheckTime &&
+              handleTimeFormat(lastCheckTime)
+                .reverse()
+                .map((time: string) => <span>{time}&nbsp;</span>)
+            ) : (
+              <span>
+                {lastCheckTime &&
+                  handleTimeFormat(lastCheckTime).map((time: string) => (
+                    <span>{time}&nbsp;</span>
+                  ))}
+              </span>
+            )}
+          </span>
           {/* A changer ! */}
           {lastPost && lastPost.userType === UserType.TANKAGENT && (
             <span>
-              {t("common.tank.trusted_info")}
+              <span>{t("common.info.trusted")}</span>
               <CheckIcon sx={{ fontSize: "16px" }} />
             </span>
           )}

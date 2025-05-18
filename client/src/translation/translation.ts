@@ -64,6 +64,21 @@ export interface Common {
     search: string,
     close: string,
 }
+
+export interface Login {
+  signup: string;
+  title:string;
+  subtitle:string;
+  email:string;
+  password: string;
+  login: string;
+  forgot_password:string;
+  reset_password:string;
+  enter_email:string;
+  send_email:string;
+  alert_succes: string;
+  alert_fail:string;
+}
 export interface Contact {
     contact: string;
     subject: string;

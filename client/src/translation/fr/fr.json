@@ -12,6 +12,11 @@
         "tank_is_empty": "Le réservoir est vide",
         "tank_is_unset": "Aucun information d'état signalée"
       },
+      "tank_state": {
+        "full": "Rempli",
+        "half_full": "Presque vide",
+        "empty": "Vide"
+      },
       "water_flow": {
         "high": "Élevé",
         "average": "Moyen",
@@ -19,14 +24,18 @@
       },
       "tank_status_according_to_users ": "L'état du réservoir d'après les utilisateurs",
       "report_water_flow": "Signaler le débit d'eau",
-      "trusted_info": "Fiable",
       "since_datetime": "Depuis {{datetime}} {{datetime}}",
       "geolocation_user_position": "Vous devez être proche du réservoir pour pouvoir signaler le débit d'eau",
-      "tank_report_confirmation": "Êtes-vous sure de vouloir indiquer que le réservoir '{{tank}}' est {{status}}",
+      "tank_report_confirmation": "Êtes-vous sure de vouloir indiquer que le réservoir est {{tankStatus}}",
+      "tank_far_from_tank": "Il parait que votre position est loin de la citerne, veuillez vous rapprocher de celle-ci",
+      "tank_page_infos#0": "État du débit d'eau selon les utilisateurs",
       "tank_page_infos#1": "Ici, vous trouvez les indications laissée par les utilisateurs.",
       "tank_page_infos#2": "Le temps indiqué sur chaque indication doit être prit en considération et il est important également de s'assurer qu'une indication est fiable en estimant son degrée de cohérence avec le reste des indications.",
       "favorite": "Favoris",
       "select_cistern": "Réservoirs"
+    },
+    "info": {
+      "trusted": "Fiable"
     }
   },
   "languages": {
@@ -44,16 +53,31 @@
     "previous": "Précédent",
     "continu": "Continuer",
     "yes": "Oui",
-    "no": "Non"
+    "no": "Non",
+    "ok": "Ok"
+  },
+  "Login": {
+    "title": "Connexion",
+    "subtitle": "Agent de citerne ? Merci de vous connecter",
+    "email": "Email",
+    "password": "Mot de passe",
+    "login": "Se connecter",
+    "forgot_password": "Mot de passe oublié ?",
+    "reset_password": "Changer de mot de passe",
+    "enter_email": "Entrez votre adresse email",
+    "send_email": "Envoyer l'email",
+    "alert_succes": "Si ce mail existe dans notre système, vous devrez avoir reçu un mail depuis lequel vous pouvez changer votre mot de passe",
+    "alert_fail": "Une erreur est survenue, merci de réessayer"
   },
   "days": {
-    "monday": "Lundi",
-    "tuesday": "Mardi",
-    "wednesday": "Mercredi",
-    "thursday": "Jeudi",
-    "friday": "Vendredi",
-    "saturday": "Samedi",
-    "sunday": "Dimanche"
+    "today": "Today",
+    "lundi": "Lundi",
+    "mardi": "Mardi",
+    "mercredi": "Mercredi",
+    "jeudi": "Jeudi",
+    "vendredi": "Vendredi",
+    "samedi": "Samedi",
+    "dimanche": "Dimanche"
   },
   "months": {
     "january": "Janvier",
@@ -68,5 +92,21 @@
     "october": "Octobre",
     "november": "Novembre",
     "december": "Décembre"
+  },
+  "time": {
+    "now": "Maintenant",
+    "hour": "Heure",
+    "hours": "Heures",
+    "minutes": "Min",
+    "minute": "Min",
+    "second": "Seconde",
+    "seconds": "Secondes",
+    "sec": "Sec",
+    "days": "Jours",
+    "day": "Jour",
+    "weeks": "Semaines",
+    "week": "Semaine",
+    "month": "Mois",
+    "months": "Mois"
   }
 }

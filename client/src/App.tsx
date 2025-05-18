@@ -298,12 +298,6 @@ function App(): JSX.Element {
             (snapshot: DataSnapshot) => {
               snapshot.forEach((post: any) => {
                 // We delete posts that are elder than a week :
-                console.log(
-                  "calDateDiff >",
-                  post.val().date,
-                  " : ",
-                  calculateDateDifference(post.val().date)
-                );
                 // 7
                 if (calculateDateDifference(post.val().date) > 30) {
                   remove(ref(db, "tanks/" + tank.key + "/posts/" + post.key))
@@ -330,7 +324,6 @@ function App(): JSX.Element {
     );
   }, [cookies]);
 
-  console.log("page state : ", document.readyState);
   return (
     <BrowserRouter>
       <AppProvider theme={customTheme}>

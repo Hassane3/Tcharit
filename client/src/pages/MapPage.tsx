@@ -29,7 +29,8 @@ export interface tanksDataProps {
 }
 export interface tankDataProps {
   id: number;
-  name: string;
+  latin_name: string;
+  arab_name: string;
   // description: string;
   // latLng: [number, number]
   latLng: latLngProps;
@@ -75,7 +76,7 @@ function MapPage(props: mapPageProps) {
   const { tanksData, visitedTank, user, userData, setVisitedTank } = props;
 
   const [searchValue, setSearchValue] = useState<string | null>(
-    tanksData.at(0)?.name || ""
+    tanksData.at(0)?.latin_name || ""
   );
   const [inputValue, setInputValue] = useState<string>("");
   const [favorites, setFavorites] = useState<Array<string> | undefined>(
@@ -173,7 +174,6 @@ function MapPage(props: mapPageProps) {
   };
   useEffect(() => {
     i18n.changeLanguage(language);
-    console.log("Language >", language);
   }, [language]);
 
   return (

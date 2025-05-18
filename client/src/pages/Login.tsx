@@ -17,22 +17,28 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { AccountCircle, Visibility, VisibilityOff } from "@mui/icons-material";
+import {
+  AccountCircle,
+  RememberMe,
+  Visibility,
+  VisibilityOff,
+} from "@mui/icons-material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 
 import { useNavigate } from "react-router-dom";
 import { customTheme } from "../App";
+import { useTranslation } from "react-i18next";
 
 interface loginProps {
   handleSetTankAgentData: ({}) => void;
 }
-
 const Login = (props: loginProps) => {
   const { handleSetTankAgentData } = props;
   const providers = [{ id: "credentials", name: "Email and Password" }];
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { t, i18n } = useTranslation();
 
   function handleClick() {
     setIsLoading(true);
@@ -40,6 +46,7 @@ const Login = (props: loginProps) => {
   // ...
   // const [tankAgentData, setTankAgentData] = useState<{}>();
   const navigateTo = useNavigate();
+  let lang = localStorage.getItem("language");
 
   const signIn: (
     provider: AuthProvider,
@@ -76,7 +83,7 @@ const Login = (props: loginProps) => {
     return (
       <TextField
         id="input-with-icon-textfield"
-        label="Email"
+        label={t("Login.email")}
         name="email"
         type="email"
         size="small"
@@ -120,7 +127,7 @@ const Login = (props: loginProps) => {
           htmlFor="outlined-adornment-password"
           sx={{ color: customTheme.palette.text.grey }}
         >
-          Password
+          {t("Login.password")}
         </InputLabel>
         <OutlinedInput
           id="outlined-adornment-password"
@@ -163,11 +170,9 @@ const Login = (props: loginProps) => {
         fullWidth
         sx={{
           my: 2,
-          // backgroundColor: customTheme.palette.background.default,
-          // color: customTheme.palette.text.primary,
         }}
       >
-        Log In
+        {t("Login.login")}
       </Button>
     );
   }
@@ -175,15 +180,15 @@ const Login = (props: loginProps) => {
   function Title() {
     return (
       <Typography variant="h2" style={{ marginBottom: 8 }}>
-        Login
+        {t("Login.title")}
       </Typography>
     );
   }
 
   function Subtitle() {
     return (
-      <Typography variant="h5" style={{}}>
-        Cistern agent ? Please sign in{" "}
+      <Typography variant="h5" style={{ textAlign: "center" }}>
+        {t("Login.subtitle")}
       </Typography>
     );
   }
@@ -193,12 +198,15 @@ const Login = (props: loginProps) => {
       <Link
         href="/resetPassword"
         variant="body2"
-        sx={{ color: customTheme.palette.text.grey }}
+        sx={{
+          color: customTheme.palette.text.grey,
+        }}
       >
-        Forgot password?
+        {t("Login.forgot_password")}
       </Link>
     );
   }
+
   function RememberMe() {
     return <></>;
   }
@@ -214,10 +222,6 @@ const Login = (props: loginProps) => {
     >
       <div
         style={{
-          // If lang === arabic flex : 1 else 0
-          // flex: 0,
-          // justifyContent: "left",
-          // alignItems: "flex-start",
           alignSelf: "flex-start",
         }}
       >
@@ -251,15 +255,11 @@ const Login = (props: loginProps) => {
           "& .MuiBox-root": {
             borderRadius: "30px",
           },
+          "& .MuiStack-root ": {
+            justifyContent: lang === "ar" ? "flex-end" : "flex-start",
+          },
           minHeight: "unset",
           height: "100%",
-
-          // "& .MuiTypography-root": {
-          //   color: customTheme.palette.background.default,
-          // },
-          // "& .MuiSvgIcon-root": {
-          //   color: customTheme.palette.background.default,
-          // },
         }}
       />
     </div>

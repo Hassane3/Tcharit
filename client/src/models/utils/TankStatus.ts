@@ -1,6 +1,6 @@
 enum TankStatus {
     FULL = "FULL",
-    HALFFUll = "HALFFULL",
+    HALFFUll = "HALF_FULL",
     EMPTY = "EMPTY",
     UNKNOWN = "UNKNOWN"
 }
