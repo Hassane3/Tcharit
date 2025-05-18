@@ -13,31 +13,19 @@ import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../firebase/firebase";
 import { AuthProvider, SignInPage, type SignInPageProps } from "@toolpad/core";
 import { AccountCircle } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
 
 export default function ResetPassword() {
-  // const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const navigateTo = useNavigate();
-
-  // const handleSubmit = async () => {
-  //   try {
-  //     // Exemple avec Firebase
-  //     setIsLoading(true);
-  //     await sendPasswordResetEmail(auth, email).then(() => setIsLoading(false));
-  //     setStatus("success");
-  //   } catch (error) {
-  //     console.error(error);
-  //     setStatus("error");
-  //     setIsLoading(false);
-  //   }
-  // };
+  const { t } = useTranslation();
 
   function Title() {
     return (
       <Typography variant="h3" style={{ marginBottom: 8 }}>
-        Reset password
+        {t("Login.reset_password")}
       </Typography>
     );
   }
@@ -47,7 +35,7 @@ export default function ResetPassword() {
         variant="h5"
         style={{ color: customTheme.palette.text.secondary }}
       >
-        Enter your email adress
+        {t("Login.enter_email")}
       </Typography>
     );
   }
@@ -55,7 +43,7 @@ export default function ResetPassword() {
     return (
       <TextField
         id="input-with-icon-textfield"
-        label="Email"
+        label={t("Login.email")}
         name="email"
         type="email"
         size="small"
@@ -82,14 +70,11 @@ export default function ResetPassword() {
         loading={isLoading}
         // disableElevation
         fullWidth
-        // onClick={handleSubmit}
         sx={{
           my: 2,
-          // backgroundColor: customTheme.palette.background.default,
-          // color: customTheme.palette.text.primary,
         }}
       >
-        Send email
+        {t("Login.send_email")}
       </Button>
     );
   }
@@ -101,14 +86,12 @@ export default function ResetPassword() {
       const email = formData?.get("email")?.toString();
       setIsLoading(true);
       try {
-        // Exemple avec Firebase
         setIsLoading(true);
         alert(email);
         await sendPasswordResetEmail(auth, email ? email : "").then(() =>
           setIsLoading(false)
         );
         setStatus("success");
-        // resolve({ success: "true" });
       } catch (error) {
         console.error(error);
         setStatus("error");
@@ -137,7 +120,6 @@ export default function ResetPassword() {
           },
           minHeight: "unset",
           flex: 1,
-          // height: "100%",
         }}
       />
     );
@@ -154,9 +136,6 @@ export default function ResetPassword() {
     >
       <div
         style={{
-          // If lang === arabic flex : 1 else 0
-          // flex: 0,
-          // justifyContent: "left",
           alignItems: "flex-start",
         }}
       >
@@ -171,13 +150,12 @@ export default function ResetPassword() {
       </div>
       {status === "success" && (
         <Alert severity="success" sx={{ mt: 2 }}>
-          If this email exist in our system, you will receive an email from
-          which you can reset your password.
+          {t("Login.alert_succes")}
         </Alert>
       )}
       {status === "error" && (
         <Alert severity="error" sx={{ mt: 2 }}>
-          An error occurred. Please try again.
+          {t("Login.alert_fail")}
         </Alert>
       )}
       <LoginPage />

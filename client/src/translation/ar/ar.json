@@ -12,6 +12,11 @@
         "tank_is_empty": "الخزان فارغ",
         "tank_is_unset": " لم يسجل اية حالة لهذا الخزان"
       },
+      "tank_state": {
+        "full": "ممتلئ",
+        "half_full": "نصف ممتلئ",
+        "empty": "فارغ"
+      },
       "water_flow": {
         "high": "قوي",
         "average": "ضئيل",
@@ -19,14 +24,18 @@
       },
       "tank_status_according_to_users ": "نسبة الخزان حسب المستخدمين",
       "report_water_flow": "تنبيه عن كمية تدفق المياه",
-      "trusted_info": "معلومة موثوقة",
       "since_datetime": " {{datetime}} {{datetime}}منذ ",
       "geolocation_user_position": "من اجل التأكد من ان التنبيهات موثوقة, يجب على المنبه بان يكون بجانب الخزان.",
-      "tank_report_confirmation": "هل انت واثق بانك تريد ان  تشير بان الخزان '{{tank}}' {{status}}",
+      "tank_report_confirmation": "هل انت واثق بانك تريد ان  تشير بان الخزان {{tankStatusLng}}",
+      "tank_far_from_tank": "يبدو أن موقعك بعيد عن الخزان، يرجى التقرب اكثر",
+      "tank_page_infos#0": "حالة تدفق المياه وفقًا لتقارير المستخدمين",
       "tank_page_infos#1": "هنا يمكن رؤية الإشارات التي تركها المستخدمين.",
       "tank_page_infos#2": "يجب الاخذ بعين الاعتبار الوقت الظاهر عند كل إشارة و التأكد بصحة المعلومة لحالة الخزان و هذا بتكرار رأي واحد أو عند اثبات الكلمة 'موثوقة'",
       "favorite": "favorite",
       "select_cistern": "اختر الخزان"
+    },
+    "info": {
+      "trusted": "موثوق"
     }
   },
   "languages": {
@@ -44,29 +53,60 @@
     "previous": "سابق",
     "continu": "اكمل",
     "yes": "نعم",
-    "no": "لا"
+    "no": "لا",
+    "ok": "مفهوم"
+  },
+  "Login": {
+    "title": "دخول",
+    "subtitle": "مالئ خزان ؟ يرجى تسجيل الدخول",
+    "email": "البريد إلكتروني",
+    "password": "كلمة السر",
+    "login": "تسجيل الدخول",
+    "forgot_password": "نسيت كلمة السر؟",
+    "reset_password": "تغيير كلمة المرور",
+    "enter_email": "أدخل البريد الإلكتروني",
+    "send_email": "ارسال",
+    "alert_succes": "إذا كان هذا البريد الإلكتروني موجودًا في نظامنا، فستتلقى بريدًا إلكترونيًا يمكنك من خلاله إعادة تغيير كلمة المرور",
+    "alert_fail": "هناك خلل ما، يُرجى المحاولة مرة أخرى"
   },
   "days": {
-    "monday": "الاثنين",
-    "tuesday": "الثلاثاء",
-    "wednesday": "الأربعاء",
-    "thursday": "الخميس",
-    "friday": "الجمعة",
-    "saturday": "السبت",
-    "sunday": "الأحد"
+    "today": "اليوم",
+    "lundi": "الاثنين",
+    "mardi": "الثلاثاء",
+    "mercredi": "الأربعاء",
+    "jeudi": "الخميس",
+    "vendredi": "الجمعة",
+    "samedi": "السبت",
+    "dimanche": "الأحد"
   },
   "months": {
     "january": "جانفي",
     "february": "فيفري",
     "march": "مارس",
-    "april": "افريل",
+    "april": "أفريل",
     "may": "ماي",
     "june": "جوان",
     "july": "جويليا",
-    "august": "اوت",
+    "august": "أوت",
     "september": "سبتمبر",
     "october": "اكتوبر",
     "november": "نوفمبر",
     "december": "ديسمبر"
+  },
+  "time": {
+    "now": "الآن",
+    "hour": "ساعة",
+    "hours": "ساعات",
+    "minute": "دقيقة",
+    "minutes": "دقائق",
+    "second": "ثانية",
+    "sec": "ثانية",
+    "seconds": "ثوان",
+    "days": "أيام",
+    "day": "يوم",
+    "weeks": "أسابيع",
+    "week": "أسبوع",
+    "month": "شهر",
+    "months": "شهور"
   }
 }

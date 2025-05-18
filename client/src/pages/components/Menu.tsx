@@ -111,7 +111,7 @@ const Menu = (props: menuProps) => {
     >
       {/* {user ? listUserLoggedIn() : list()} */}
       <MenuContainer
-        backgroundColor={customTheme.palette.background.defaultWhite}
+        backgroundcolor={customTheme.palette.background.defaultWhite}
         role="presentation"
         // onKeyDown={toggleDrawer(anchor, false)}
       >
@@ -165,8 +165,8 @@ const Menu = (props: menuProps) => {
                       justifyContent: "center",
                     }}
                   >
-                    {languages.map((lang) => (
-                      <ListItem sx={{ padding: 0 }}>
+                    {languages.map((lang, index) => (
+                      <ListItem key={index} sx={{ padding: 0 }}>
                         <ListItemButton
                           sx={{
                             justifyContent: "center",
@@ -409,10 +409,10 @@ const Menu = (props: menuProps) => {
   );
 };
 
-const MenuContainer = styled.div<{ backgroundColor: string }>`
+const MenuContainer = styled.div<{ backgroundcolor: string }>`
   display: flex;
   flex-direction: column;
-  background-color: ${(props) => props.backgroundColor};
+  background-color: ${(props) => props.backgroundcolor};
   padding: 16px;
   height: 100%;
   border-radius: 0 0 30px 30px;

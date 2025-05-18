@@ -27,6 +27,7 @@ import SwipeableBox from "./SwipeableBox";
 import { checkAndRequestGeolocation } from "../../utils/methods/methods";
 import { BoxContainer, ModalContainer } from "./PopUp";
 import { Close } from "../../utils/constants/Icons";
+import { useTranslation } from "react-i18next";
 
 interface BottomNavProps {
   tankLatLng: latLngProps;
@@ -35,7 +36,7 @@ interface BottomNavProps {
     arg: boolean,
     tankStatus: TankStatus
   ) => (event: React.KeyboardEvent | React.MouseEvent) => void;
-  setTankStatus: (tankStatus: TankStatus) => void;
+  // setTankStatus: (tankStatus: TankStatus) => void;
   openBottomNav: boolean;
   setOpenBottomNav: (state: boolean) => void;
   cookies: any;
@@ -84,81 +85,25 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
   const valueLabelFormat = (value: number) => {
     return value === 0 ? "empty" : value === 1 ? "half" : "full";
   };
+  const { t } = useTranslation();
   const statusMarks = [
     {
       value: 0,
-      label: "empty",
+      label: t("common.tank.water_flow.weak"),
     },
     {
       value: 1,
-      label: "half-full",
+      label: t("common.tank.water_flow.average"),
     },
     {
       value: 2,
-      label: "full",
+      label: t("common.tank.water_flow.high"),
     },
   ];
   function handleClick() {
     setIsLoading(true);
   }
 
-  //   // If user is a random person we check his position else if its cistern agent, we do not:
-  //   let user = auth.currentUser;
-  //   if (user) {
-  //     setIsAddPostAllowed(true);
-  //   } else if (navigator.geolocation.getCurrentPosition) {
-  //     navigator.geolocation.getCurrentPosition(
-  //       (success) => {
-  //         let latLng = new LatLng(
-  //           success.coords.latitude,
-  //           success.coords.longitude
-  //         );
-  //         console.log("handleCheck");
-  //         // We test if the actual position is near the tank position (the value 0.01 is for test, 0.0001 for high precision) :
-  //         // alert(
-  //         //   "lat : " +
-  //         //     latLng.lat +
-  //         //     "lng :" +
-  //         //     latLng.lng +
-  //         //     "\n" +
-  //         //     "tank lat : " +
-  //         //     tankLatLng.lat +
-  //         //     "tank lng :" +
-  //         //     tankLatLng.lng
-  //         // );
-  //         console.log("getCurrentPos");
-  //         if (
-  //           //
-  //           // latLng.lat > tankLatLng.lat - 0.001 &&
-  //           // latLng.lat < tankLatLng.lat + 0.001 &&
-  //           // latLng.lng > tankLatLng.lng - 0.001 &&
-  //           // latLng.lng < tankLatLng.lng + 0.001
-  //           1 == 1
-  //         ) {
-  //           // If user cookie exist, that means he has posted recently
-  //           if (cookies.userId) {
-  //             alert(
-  //               "Vous ne pouvez ajouter un post car venez de le faire. Pour pouvoir ajouter un post de nouveau, il faut attendre unpeu et puis rafraichir la page"
-  //             );
-  //           } else {
-  //             setIsAddPostAllowed(true);
-  //           }
-  //         } else {
-  //           setIsLocModalVisible(true);
-  //           // alert("U are far from tank ! `\t` Try to come closer");
-  //         }
-  //       },
-  //       (error) => {
-  //         console.log("ERROR => ", error);
-  //         alert("Unable to get your location, please activate to geolocation");
-  //         // TREAT ERROR TYPES
-  //       }
-  //     );
-  //   } else {
-  //     alert("Geolocation not supported");
-  //   }
-  // };
-  // checkUserPermission
   const handleCheckTank = async () => {
     // If user is a random person we check his position else if its cistern agent, we do not:
     let user = auth.currentUser;
@@ -238,8 +183,7 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
               sx={{ padding: "20px 0" }}
               color={customTheme.palette.background.blue}
             >
-              To be sure that cistern reports are truthful, you must be beside
-              of the concerned cistern
+              {t("common.tank.geolocation_user_position")}
             </Typography>
             <Button
               loading={isLoading}
@@ -256,7 +200,7 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
                 },
               }}
             >
-              <span>Continu</span>
+              <span>{t("navigation.continu")}</span>
             </Button>
           </NavContent>
         )}
@@ -340,7 +284,7 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
                 color: customTheme.palette.background.defaultWhite,
               }}
             >
-              <span>Continu</span>
+              <span>{t("navigation.continu")}</span>
             </Button>
           </NavContent>
         )}
@@ -359,8 +303,7 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
             />
           </Button>
           <Typography variant="h3">
-            Apparently, your position is far from the cistern, please try to
-            come closer
+            {t("common.tank.tank_far_from_tank")}
           </Typography>
         </Box>
       </Modal>
@@ -394,8 +337,7 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
               height={22}
             />
             <Typography variant="h3">
-              Apparently, your position is far from the cistern, please try to
-              come closer
+              {t("common.tank.tank_far_from_tank")}
             </Typography>
             <Button
               variant="contained"
@@ -408,7 +350,7 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
                 color: customTheme.palette.background.defaultWhite,
               }}
             >
-              <span>Ok</span>
+              <span>{t("navigation.ok")}</span>
             </Button>
           </div>
         </BoxContainer>

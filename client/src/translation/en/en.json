@@ -12,6 +12,11 @@
         "tank_is_empty": "The water tank is emtpy",
         "tank_is_unset": "No reports have been posted"
       },
+      "tank_state": {
+        "full": "full",
+        "half_full": "half-full",
+        "empty": "empty"
+      },
       "water_flow": {
         "high": "High",
         "average": "Average",
@@ -22,11 +27,16 @@
       "trusted_info": "trusted",
       "since_datetime": "since {{datetime}} {{datetime}}",
       "geolocation_user_position": "To be sure that cistern reports are truthful, you must be beside of the concerned cistern",
-      "tank_report_confirmation": "Are you sure you want to prevent that the cistern '{{tank}}' is {{status}}",
+      "tank_report_confirmation": "Are you sure you want to prevent that the cistern is {{status}}",
+      "tank_far_from_tank": "Apparently, your position is far from the cistern, please try to come closer",
+      "tank_page_infos#0": "Water flow state according to users reports",
       "tank_page_infos#1": "Here you can see the reports left by users.",
       "tank_page_infos#2": "The time shown for each report should be taken into account and it is important to ensure that a report is truthful by estimating its degree of consistency with the rest of the reports.",
       "favorite": "favorite",
       "select_cistern": "Select cistern"
+    },
+    "info": {
+      "trusted": "Trusted"
     }
   },
   "languages": {
@@ -44,16 +54,32 @@
     "previous": "Previous",
     "continu": "Continu",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "ok": "Ok"
+  },
+  "Login": {
+    "signup": "string",
+    "title": "Login",
+    "subtitle": "Cistern agent ? Please log in",
+    "email": "Email",
+    "password": "Password",
+    "login": "Login",
+    "forgot_password": "Forgot password ?",
+    "reset_password": "Reset password",
+    "enter_email": "Enter your email",
+    "send_email": "Send email",
+    "alert_succes": "If this email exist in our system, you will receive an email from which you can reset your password",
+    "alert_fail": "An error occurred. Please try again."
   },
   "days": {
-    "monday": "Monday",
-    "tuesday": "Tuesday",
-    "wednesday": "Wednesday",
-    "thursday": "Thursday",
-    "friday": "Friday",
-    "saturday": "Saturday",
-    "sunday": "Sunday"
+    "today": "Today",
+    "lundi": "Monday",
+    "mardi": "Tuesday",
+    "mercredi": "Wednesday",
+    "jeudi": "Thursday",
+    "vendredi": "Friday",
+    "samedi": "Saturday",
+    "dimanche": "Sunday"
   },
   "months": {
     "january": "January",
@@ -68,5 +94,21 @@
     "october": "October",
     "november": "November",
     "december": "December"
+  },
+  "time": {
+    "now": "Now",
+    "hour": "Hour",
+    "hours": "Hours",
+    "minute": "Min",
+    "min": "Min",
+    "second": "Second",
+    "seconds": "Seconds",
+    "sec": "Sec",
+    "days": "Days",
+    "day": "day",
+    "weeks": "Weeks",
+    "week": "Week",
+    "month": "Month",
+    "months": "Months"
   }
 }

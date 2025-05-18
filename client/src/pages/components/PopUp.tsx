@@ -6,6 +6,7 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import { customTheme } from "../../App";
 import { Close, Infos } from "../../utils/constants/Icons";
+import { useTranslation } from "react-i18next";
 
 interface PopUpProps {
   tankStatus: TankStatus;
@@ -19,6 +20,14 @@ interface PopUpProps {
 
 const PopUp = (props: PopUpProps): JSX.Element => {
   const { tankStatus, isConfirmBoxOpen, addPost, setConfirmationBox } = props;
+  const { t } = useTranslation();
+
+  const tankStatusLng =
+    tankStatus === TankStatus.EMPTY
+      ? t("common.tank.tank_state.empty")
+      : tankStatus === TankStatus.HALFFUll
+        ? t("common.tank.tank_state.half_full")
+        : t("common.tank.tank_state.full");
   return (
     <ModalContainer
       open={isConfirmBoxOpen}
@@ -60,7 +69,7 @@ const PopUp = (props: PopUpProps): JSX.Element => {
             color={customTheme.palette.background.defaultBlue}
           >
             {/* Are you sure you want to prevent that the cistern is {tankStatus} */}
-            هل انت واثق بانك تريد ان تشير بان الخزان ممتلئ
+            {t("common.tank.tank_report_confirmation", { tankStatusLng })}
           </Typography>
           {/* <span style={{ color: customTheme.palette.background.defaultBlue }}>
             (After you add a post, you cannot delete it and you will not able to
@@ -77,7 +86,7 @@ const PopUp = (props: PopUpProps): JSX.Element => {
               color: customTheme.palette.background.defaultWhite,
             }}
           >
-            <span>Yes</span>
+            <span>{t("navigation.yes")}</span>
           </Button>
         </div>
       </BoxContainer>

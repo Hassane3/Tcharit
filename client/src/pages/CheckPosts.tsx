@@ -3,7 +3,11 @@ import { postsProps, tankDataProps } from "./MapPage";
 import styled from "styled-components";
 import { DataSnapshot, onValue, ref } from "firebase/database";
 import { db } from "../firebase/firebase";
-import { getDiffTime, handleTimeFormat } from "../utils/methods/methods";
+import {
+  dateToArab,
+  getDiffTime,
+  handleTimeFormat,
+} from "../utils/methods/methods";
 import { GLOBAL_STYLE } from "../utils/constants/constants";
 import TankStatus from "../models/utils/TankStatus";
 import { getPostsStatusColor } from "./Tank";
@@ -13,6 +17,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import CheckIcon from "@mui/icons-material/Check";
 import { Button, Chip, Divider } from "@mui/material";
 import { UserType } from "../models/utils/UsersType";
+import { useTranslation } from "react-i18next";
 
 const CheckPosts = (props: { tankData: tankDataProps }): JSX.Element => {
   const { tankData } = props;
@@ -58,6 +63,9 @@ const CheckPosts = (props: { tankData: tankDataProps }): JSX.Element => {
   }, [postsData]);
 
   let today = new Date().toLocaleDateString();
+  const lang = localStorage.getItem("language");
+  const { t } = useTranslation();
+
   return (
     <Container>
       {
@@ -75,21 +83,26 @@ const CheckPosts = (props: { tankData: tankDataProps }): JSX.Element => {
                       flexDirection: "row !important",
                       "&::before, &::after": {
                         borderColor: customTheme.palette.text.grey,
-                        borderWidth: "1px",
+                        borderWidth: "0.5px",
                       },
                     }}
                   >
                     <span
                       style={{
-                        fontSize: "1.1em",
+                        fontSize: "1em",
                         fontFamily: "Inter",
-                        fontWeight: 600,
+                        fontWeight: 200,
                         color: customTheme.palette.text.grey,
                       }}
                     >
                       {post.date === today
-                        ? "TODAY"
-                        : post.date + " " + post.weekDay}
+                        ? t("days.today")
+                        : // : post.date + " " + post.weekDay}
+                          lang === "ar"
+                          ? t(`days.${post.weekDay}` as any) +
+                            " " +
+                            dateToArab(post.date)
+                          : post.date + " " + post.weekDay}
                     </span>
                   </Divider>
                 ))}
@@ -160,7 +173,9 @@ const CheckPosts = (props: { tankData: tankDataProps }): JSX.Element => {
                           fontWeight: 800,
                         }}
                       >
-                        {post.status}
+                        {t(
+                          `common.tank.tank_state.${post.status.toLocaleLowerCase()}` as any
+                        )}
                       </span>
                       {/* </Button> */}
                     </div>
@@ -175,13 +190,26 @@ const CheckPosts = (props: { tankData: tankDataProps }): JSX.Element => {
                       >
                         <span>
                           {/* {lastCheckTime && handleTimeFormat(lastCheckTime)} */}
-                          {handleTimeFormat(getDiffTime(post.postTime))}
+                          {lang === "ar" ? (
+                            handleTimeFormat(getDiffTime(post.postTime))
+                              .reverse()
+                              .map((time: string) => <span>{time}&nbsp;</span>)
+                          ) : (
+                            <span>
+                              {handleTimeFormat(getDiffTime(post.postTime)).map(
+                                (time: string) => (
+                                  <span>{time}&nbsp;</span>
+                                )
+                              )}
+                            </span>
+                          )}
                         </span>
+
                         {/* A changer ! */}
                         {post.userType === UserType.TANKAGENT && (
                           <span>
-                            trusted
-                            <CheckIcon />
+                            <span>{t("common.info.trusted")}</span>
+                            <CheckIcon style={{ fontSize: "16px" }} />
                           </span>
                         )}
                       </PostBottomBox>
@@ -291,16 +319,18 @@ export const PostBottomBox = styled.div<{ textColor: string }>`
   display: flex;
   flex-direction: row-reverse;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: center;
   width: inherit;
-  span {
-    font-size: 14px;
-    font-weight: 400;
+  > span {
     color: ${(props) => props.textColor};
     display: flex;
     align-items: center;
-    text-transform: lowercase;
+    text-transform: capitalize;
     line-height: 1;
+    > span {
+      font-size: 10px;
+      font-weight: 400;
+    }
   }
 `;
 export default React.memo(CheckPosts);
