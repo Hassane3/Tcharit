@@ -36,6 +36,10 @@
     },
     "info": {
       "trusted": "موثوق"
+    },
+    "qrCode": {
+      "qr_code": "Code QR",
+      "scan_info": "امسح الرمزالموجود على الخزان"
     }
   },
   "languages": {

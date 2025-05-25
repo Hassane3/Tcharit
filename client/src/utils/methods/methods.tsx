@@ -95,3 +95,23 @@ export const checkAndRequestGeolocation = async (): Promise<any> => {
     alert("Unable to get your location");
   }
 };
+
+export const checkAndRequestCamera = async (): Promise<any> => {
+  try {
+    const permission = await navigator.permissions.query({
+      name: "camera",
+    });
+
+    if (permission.state === "granted") {
+      return true;
+    } else if (permission.state === "prompt") {
+      return true;
+    } else {
+      alert(
+        "❌ Denied camera access \nPlease verify camera is activated on navigator and device parameters"
+      );
+    }
+  } catch (error) {
+    alert("Unable to get access to the camera");
+  }
+};

@@ -37,6 +37,10 @@
     },
     "info": {
       "trusted": "Trusted"
+    },
+    "qrCode": {
+      "qr_code": "Code QR",
+      "scan_info": "Scan the QR Code stuck somewhere on the cistern"
     }
   },
   "languages": {

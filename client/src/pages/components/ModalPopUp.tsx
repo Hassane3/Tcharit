@@ -1,12 +1,14 @@
 import React, { MouseEventHandler } from "react";
 import { Box, Button, Modal, Typography } from "@mui/material";
-import { Close } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import QrScanner from "./QrScanner";
 import { StyledEngineProvider } from "@mui/styled-engine-sc";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import { customTheme } from "../../App";
+import { useTranslation } from "react-i18next";
+import { Close } from "../../utils/constants/Icons";
+import { BoxContainer, ModalContainer } from "./PopUp";
 
 interface ModalPopUpProps {
   isQrModalOpen: boolean;
@@ -18,6 +20,8 @@ const ModalPopUp = (props: ModalPopUpProps) => {
   const { isQrModalOpen, qrModalStateHandler } = props;
 
   const navigateTo = useNavigate();
+  const { t } = useTranslation();
+
   const qrRedirection = (link: string) => {
     // setVisitedTank(tank);
     console.log("MapPage>qr link " + link);
@@ -36,7 +40,7 @@ const ModalPopUp = (props: ModalPopUpProps) => {
     }
   };
   return (
-    <Modal
+    <ModalContainer
       open={isQrModalOpen}
       onClose={qrModalStateHandler(false)}
       aria-labelledby="parent-modal-title"
@@ -48,29 +52,33 @@ const ModalPopUp = (props: ModalPopUpProps) => {
         <Button
           onClick={qrModalStateHandler(false)}
           sx={{
-            display: "flex",
-            alignSelf: "end",
             minWidth: "unset",
-            color: customTheme.palette.background.blueDark,
+            position: "absolute",
+            top: 20,
+            right: 20,
+            padding: 0,
+            color: customTheme.palette.background.defaultBlue,
           }}
         >
-          <CloseRoundedIcon fontSize="large" />
+          <Close backgroundColor={customTheme.palette.background.defaultBlue} />
+          {/* <CloseRoundedIcon fontSize="large" /> */}
         </Button>
-        <Typography
-          id="modal-modal-title"
-          variant="h6"
-          component="h2"
-          color={customTheme.palette.text.secondary}
-          style={{ textAlign: "center", margin: "4px" }}
-        >
-          Scannez le qr code collé quelque part sur la citerne
-        </Typography>
-        <QrScanner
-          // setIsStartScan={setIsStartScan}
-          handleQrRedirection={qrRedirection}
-        />
+        <div>
+          <Typography
+            id="modal-modal-title"
+            variant="h4"
+            color={customTheme.palette.text.primary}
+            style={{ textAlign: "center", margin: "4px" }}
+          >
+            {t("common.qrCode.scan_info")}
+          </Typography>
+          <QrScanner
+            // setIsStartScan={setIsStartScan}
+            handleQrRedirection={qrRedirection}
+          />
+        </div>
       </QrModalStyle>
-    </Modal>
+    </ModalContainer>
   );
 };
 
@@ -79,9 +87,10 @@ const QrModalStyle = styled(Box)<{ backgroundColor: string }>`
   flex-direction: column;
   position: absolute;
   background-color: ${(props) => props.backgroundColor};
-  border-radius: 10px;
+  border-radius: 30px;
   box-shadow: 24;
   margin: 10px;
+  padding-top: 60px;
   overflow: hidden;
   > * {
     /* margin-bottom: 2px; */
