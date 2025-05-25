@@ -3,11 +3,13 @@ import { width } from "@mui/system";
 import React, { ReactElement, useEffect, useRef, useState } from "react";
 import { OnResultFunction, QrReader } from "react-qr-reader";
 import styled from "styled-components";
+import { checkAndRequestCamera } from "../../utils/methods/methods";
 
 export interface QrScannerProps {
   // setIsStartScan: (i: boolean) => void;
   handleQrRedirection: (qrLink: string) => void;
 }
+
 const QrScanner = (props: QrScannerProps) => {
   const { handleQrRedirection } = props;
 
@@ -19,6 +21,20 @@ const QrScanner = (props: QrScannerProps) => {
       qrBorder?.style.removeProperty("animation");
     }, 2000);
   };
+  useEffect(() => {
+    checkAndRequestCamera();
+    // navigator.mediaDevices
+    //   .getUserMedia({ video: true })
+    //   .then((stream) => {
+    //     console.log("Camera access granted");
+    //     // You can now use the stream (e.g., assign it to a video element)
+    //     stream.getTracks().forEach((track) => track.stop()); // optional: stop stream after test
+    //   })
+    //   .catch((err) => {
+    //     console.error("Camera access denied:", err);
+    //     // You can handle permission denial or unsupported device here
+    //   });
+  }, []);
 
   return (
     <div>

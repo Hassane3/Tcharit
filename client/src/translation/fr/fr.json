@@ -36,6 +36,10 @@
     },
     "info": {
       "trusted": "Fiable"
+    },
+    "qrCode": {
+      "qr_code": "Code QR",
+      "scan_info": "Scannez le QR Code collé quelque part sur la citerne"
     }
   },
   "languages": {
