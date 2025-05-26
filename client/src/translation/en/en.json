@@ -27,13 +27,16 @@
       "trusted_info": "trusted",
       "since_datetime": "since {{datetime}} {{datetime}}",
       "geolocation_user_position": "To be sure that cistern reports are truthful, you must be beside of the concerned cistern",
-      "tank_report_confirmation": "Are you sure you want to prevent that the cistern is {{status}}",
+      "tank_report_confirmation": "Are you sure you want to prevent that the cistern is {{tankStatusLng}}",
       "tank_far_from_tank": "Apparently, your position is far from the cistern, please try to come closer",
       "tank_page_infos#0": "Water flow state according to users reports",
       "tank_page_infos#1": "Here you can see the reports left by users.",
       "tank_page_infos#2": "The time shown for each report should be taken into account and it is important to ensure that a report is truthful by estimating its degree of consistency with the rest of the reports.",
       "favorite": "favorite",
       "select_cistern": "Select cistern"
+    },
+    "post": {
+      "post_deleted": "The post has been deleted"
     },
     "info": {
       "trusted": "Trusted"

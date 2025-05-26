@@ -1,7 +1,13 @@
-import React, { JSX, useEffect, useState } from "react";
+import React, {
+  HtmlHTMLAttributes,
+  JSX,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { postsProps, tankDataProps } from "./MapPage";
 import styled from "styled-components";
-import { DataSnapshot, onValue, ref } from "firebase/database";
+import { DataSnapshot, onValue, ref, remove } from "firebase/database";
 import { db } from "../firebase/firebase";
 import {
   dateToArab,
@@ -15,16 +21,34 @@ import { customTheme } from "../App";
 import FaceIcon from "@mui/icons-material/Face";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import CheckIcon from "@mui/icons-material/Check";
-import { Button, Chip, Divider } from "@mui/material";
+import DeleteOutlineRoundedIcon from "@mui/icons-material/DeleteOutlineRounded";
+import {
+  Button,
+  Chip,
+  Divider,
+  Snackbar,
+  SnackbarCloseReason,
+} from "@mui/material";
 import { UserType } from "../models/utils/UsersType";
 import { useTranslation } from "react-i18next";
+import { deletePost } from "../firebase/operations";
 
-const CheckPosts = (props: { tankData: tankDataProps }): JSX.Element => {
-  const { tankData } = props;
-  console.log("[CheckPosts] render 🚀", tankData?.id); // ← ajoute ça tout en haut
+const CheckPosts = (props: {
+  tankData: tankDataProps;
+  user: {} | null;
+}): JSX.Element => {
+  const { tankData, user } = props;
+
   const [postsData, setPostsData] = useState<Array<postsProps>>([]);
   let date = "";
   const [lastCheckTime, setLastCheckTime] = useState<number>();
+
+  const [clickedPost, setClickedPost] = useState<number | null>(null);
+  const [snackOpen, setSnackOpen] = useState<boolean>(false);
+
+  let today = new Date().toLocaleDateString();
+  const lang = localStorage.getItem("language");
+  const { t } = useTranslation();
 
   useEffect(() => {
     let posts: Array<postsProps> = [];
@@ -33,7 +57,7 @@ const CheckPosts = (props: { tankData: tankDataProps }): JSX.Element => {
     return onValue(dbRef, (snapshot: DataSnapshot) => {
       posts = [];
       snapshot.forEach((post: any) => {
-        posts.push({ ...post.val() });
+        posts.push({ id: post.key, ...post.val() });
       });
       setPostsData(posts);
     });
@@ -62,9 +86,50 @@ const CheckPosts = (props: { tankData: tankDataProps }): JSX.Element => {
     };
   }, [postsData]);
 
-  let today = new Date().toLocaleDateString();
-  const lang = localStorage.getItem("language");
-  const { t } = useTranslation();
+  const postEdit = (post: number) => {
+    console.log(post);
+    setClickedPost(post);
+  };
+
+  const divRef = useRef<HTMLDivElement>(null);
+
+  const handleDeletePost = (postId?: number) => {
+    try {
+      deletePost(tankData.id, postId);
+      setSnackOpen(true);
+      setClickedPost(null);
+    } catch (error) {
+      alert("Something went wrong");
+    }
+  };
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (divRef.current && !divRef.current.contains(event.target as Node)) {
+        // Undo action
+        console.log("EFFECT : ", clickedPost);
+        setClickedPost(null);
+      }
+    }
+    console.log("EFFECTOOO");
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      console.log("REMOVED");
+    };
+  }, []);
+
+  // MUI SnackBar
+  const handleClose = (
+    event: React.SyntheticEvent | Event,
+    reason?: SnackbarCloseReason
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackOpen(false);
+  };
 
   return (
     <Container>
@@ -107,158 +172,144 @@ const CheckPosts = (props: { tankData: tankDataProps }): JSX.Element => {
                   </Divider>
                 ))}
               {
-                <div>
+                <Wrapper>
                   <PostBox
-                    key={index}
-                    style={{
-                      // backgroundColor:{getPostsStatusColor(
-                      //   post,
-                      //   post.date !== new Date().toLocaleDateString()
-                      //     ? "light"
-                      //     : "basic"
-                      // )},
-                      backgroundColor: getPostsStatusColor(
-                        post,
-                        post.date !== new Date().toLocaleDateString()
-                          ? "light"
-                          : "basic"
-                      ),
-                      opacity:
-                        post.date !== new Date().toLocaleDateString() ? 0.8 : 1,
-                    }}
+                    id={`post_${index}`}
+                    className={`post ${clickedPost === index ? "shifted" : ""}`}
+                    style={{ transition: "transform 0.3s ease" }}
                   >
-                    <div style={{ justifyContent: "flex-start" }}>
-                      {post.userType === UserType.TANKAGENT ? (
-                        <FaceIcon
-                          color="secondary"
-                          fontSize="large"
-                          style={{
-                            color: customTheme.palette.background.defaultBlue,
-                          }}
-                        />
-                      ) : (
-                        <AccountCircleIcon
-                          fontSize="large"
-                          style={{
-                            color: customTheme.palette.background.defaultWhite,
-                          }}
-                        />
-                      )}
-                    </div>
-                    <div style={{ justifyContent: "center" }}>
-                      <span
+                    <PostTopBox ref={divRef} key={index}>
+                      <PostContainer
+                        onClick={() => user && postEdit(index)}
+                        key={index}
                         style={{
-                          color: customTheme.palette.background.blueDark,
-                          fontSize: "1.4em",
-                          fontFamily: "inter",
+                          // backgroundColor:{getPostsStatusColor(
+                          //   post,
+                          //   post.date !== new Date().toLocaleDateString()
+                          //     ? "light"
+                          //     : "basic"
+                          // )},
+                          backgroundColor: getPostsStatusColor(
+                            post,
+                            post.date !== new Date().toLocaleDateString()
+                              ? "light"
+                              : "basic"
+                          ),
+                          opacity:
+                            post.date !== new Date().toLocaleDateString()
+                              ? 0.8
+                              : 1,
                         }}
                       >
-                        {post.time}
-                      </span>
-                    </div>
-                    <div style={{ justifyContent: "flex-end" }}>
-                      {/* <Button
-                        variant="contained"
-                        disableElevation
-                        disableRipple
-                        sx={{
-                          background: getPostsStatusColor(post, "basic"),
-                          position: "initial",
-                        }}
-                      > */}
-                      <span
-                        id="postStatus"
-                        style={{
-                          color: customTheme.palette.background.defaultWhite,
-                          fontWeight: 800,
-                        }}
-                      >
-                        {t(
-                          `common.tank.tank_state.${post.status.toLocaleLowerCase()}` as any
-                        )}
-                      </span>
-                      {/* </Button> */}
-                    </div>
-                    {/* <div>
-                      <span>{post.date}</span> <span>{post.weekDay}</span>
-                    </div> */}
-                  </PostBox>
-                  {post.date === today &&
-                    (index === 0 || post.userType === UserType.TANKAGENT) && (
-                      <PostBottomBox
-                        textColor={customTheme.palette.background.blueDark}
-                      >
-                        <span>
-                          {/* {lastCheckTime && handleTimeFormat(lastCheckTime)} */}
-                          {lang === "ar" ? (
-                            handleTimeFormat(getDiffTime(post.postTime))
-                              .reverse()
-                              .map((time: string) => <span>{time}&nbsp;</span>)
+                        <div style={{ justifyContent: "flex-start" }}>
+                          {post.userType === UserType.TANKAGENT ? (
+                            <FaceIcon
+                              color="secondary"
+                              fontSize="large"
+                              style={{
+                                color:
+                                  customTheme.palette.background.defaultBlue,
+                              }}
+                            />
                           ) : (
-                            <span>
-                              {handleTimeFormat(getDiffTime(post.postTime)).map(
-                                (time: string) => (
+                            <AccountCircleIcon
+                              fontSize="large"
+                              style={{
+                                color:
+                                  customTheme.palette.background.defaultWhite,
+                              }}
+                            />
+                          )}
+                        </div>
+                        <div style={{ justifyContent: "center" }}>
+                          <span
+                            style={{
+                              color: customTheme.palette.background.blueDark,
+                              fontSize: "1.4em",
+                              fontFamily: "inter",
+                            }}
+                          >
+                            {post.time}
+                          </span>
+                        </div>
+                        <div style={{ justifyContent: "flex-end" }}>
+                          <span
+                            id="postStatus"
+                            style={{
+                              color:
+                                customTheme.palette.background.defaultWhite,
+                              fontWeight: 800,
+                            }}
+                          >
+                            {t(
+                              `common.tank.tank_state.${post.status.toLocaleLowerCase()}` as any
+                            )}
+                          </span>
+                        </div>
+                        {/* <div>
+                        <span>{post.date}</span> <span>{post.weekDay}</span>
+                      </div> */}
+                      </PostContainer>
+                      <Button
+                        onClick={() => handleDeletePost(post.id)}
+                        size="large"
+                      >
+                        <DeleteOutlineRoundedIcon
+                          sx={{
+                            color: customTheme.palette.background.red,
+                            fontSize: "30px",
+                          }}
+                        />
+                      </Button>
+                    </PostTopBox>
+                    {post.date === today &&
+                      (index === 0 || post.userType === UserType.TANKAGENT) && (
+                        <PostBottomBox
+                          textColor={customTheme.palette.background.blueDark}
+                        >
+                          <span>
+                            {/* {lastCheckTime && handleTimeFormat(lastCheckTime)} */}
+                            {lang === "ar" ? (
+                              handleTimeFormat(getDiffTime(post.postTime))
+                                .reverse()
+                                .map((time: string) => (
                                   <span>{time}&nbsp;</span>
-                                )
-                              )}
+                                ))
+                            ) : (
+                              <span>
+                                {handleTimeFormat(
+                                  getDiffTime(post.postTime)
+                                ).map((time: string) => (
+                                  <span>{time}&nbsp;</span>
+                                ))}
+                              </span>
+                            )}
+                          </span>
+
+                          {/* A changer ! */}
+                          {post.userType === UserType.TANKAGENT && (
+                            <span>
+                              <span>{t("common.info.trusted")}</span>
+                              <CheckIcon style={{ fontSize: "16px" }} />
                             </span>
                           )}
-                        </span>
-
-                        {/* A changer ! */}
-                        {post.userType === UserType.TANKAGENT && (
-                          <span>
-                            <span>{t("common.info.trusted")}</span>
-                            <CheckIcon style={{ fontSize: "16px" }} />
-                          </span>
-                        )}
-                      </PostBottomBox>
-                    )}
-                </div>
+                        </PostBottomBox>
+                      )}
+                  </PostBox>
+                </Wrapper>
               }
+              <Snackbar
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "center",
+                }}
+                open={snackOpen}
+                onClose={handleClose}
+                message={t("common.post.post_deleted")}
+                autoHideDuration={3000}
+                key={index}
+              />
             </MainContent>
-
-            // // Display day separator if the actual day of post is different than the previus one
-            // post.date !== date &&
-            //   ((date = post.date),
-            //   post.date === new Date().toLocaleDateString() ? (
-            //     <DaySeparator>TODAY</DaySeparator>
-            //   ) : (
-            //       console.log("post date :"),
-            //     <DaySeparator>
-            //       {post.date} {post.weekDay}
-            //     </DaySeparator>
-            //   )),
-            // (
-            //   <div key={index}>
-            //     {
-            //       // Display day separator if the actual day of post is different than the previus one
-            //       // post.date !== date &&
-            //       //   ((date = post.date),
-            //       //   post.date === new Date().toLocaleDateString() ? (
-            //       //     <DaySeparator>TODAY</DaySeparator>
-            //       //   ) : (
-            //       //     <DaySeparator>
-            //       //       {post.date} {post.weekDay}
-            //       //     </DaySeparator>
-            //       //   ))
-            //     }
-            //     <div key={index}>
-            //       <span>{post.userType} ****</span>
-            //       <span>{post.status} ****</span>
-            //       <span>{post.date} ****</span>
-            //       <span>{post.time} ****</span>
-            //       <span>{post.weekDay}</span>
-            //     </div>
-            //     {index === 0 && (
-            //       <PostBottomBox>
-            //         <span>
-            //           {lastCheckTime && handleTimeFormat(lastCheckTime)}
-            //         </span>
-            //       </PostBottomBox>
-            //     )}
-            //   </div>
-            // )
           );
         })
       }
@@ -268,7 +319,12 @@ const CheckPosts = (props: { tankData: tankDataProps }): JSX.Element => {
 
 const Container = styled.div`
   padding-bottom: 100px;
-  padding-top: 25vh;
+  padding-top: 30vh;
+  overflow: hidden;
+
+  .shifted {
+    transform: translateX(-90px);
+  }
 `;
 
 const MainContent = styled.div`
@@ -281,18 +337,29 @@ const MainContent = styled.div`
   > span {
     margin: 20px 0;
   }
-  > div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    width: 100%;
-    min-height: 11vh;
-  }
+`;
+const Wrapper = styled.div`
+  width: 100%;
+  overflow: hidden;
+  display: inline-flex;
 `;
 
 const PostBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
   width: inherit;
+  min-height: 11vh;
+`;
+const PostTopBox = styled.div`
+  display: inline-flex;
+  width: inherit;
+`;
+
+const PostContainer = styled.div`
+  width: inherit;
+  min-width: 100%;
   padding: 8px;
   border-radius: 10px;
 

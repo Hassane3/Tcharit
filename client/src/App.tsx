@@ -300,13 +300,13 @@ function App(): JSX.Element {
                 // We delete posts that are elder than a week :
                 // 7
                 if (calculateDateDifference(post.val().date) > 30) {
-                  remove(ref(db, "tanks/" + tank.key + "/posts/" + post.key))
-                    .then(() => {
-                      console.log("Data deleted successfully");
-                    })
-                    .catch((error) => {
-                      console.log("Error deleting data:");
-                    });
+                  remove(ref(db, "tanks/" + tank.key + "/posts/" + post.key));
+                  // .then(() => {
+                  //   console.log("Data deleted successfully");
+                  // })
+                  // .catch((error) => {
+                  //   console.log("Error deleting data:");
+                  // });
                 }
                 // We update home last time
               });
@@ -362,6 +362,7 @@ function App(): JSX.Element {
                 setCookie={setCookie}
                 cookies={cookies}
                 userData={userData}
+                user={user}
               />
             }
           />

@@ -37,12 +37,12 @@ interface TankProps {
   tanksData: tankDataProps[];
   setCookie: (userIdTitle: any, userIdValue: any, option: any) => void;
   cookies: Object;
-  // user: {} | null;
+  user: {} | null;
   userData: UserData;
 }
 
 const Tank = (props: TankProps) => {
-  const { tanksData, setCookie, cookies, userData } = props;
+  const { tanksData, setCookie, cookies, user, userData } = props;
   const navigateTo = useNavigate();
 
   // VARIABLES
@@ -55,11 +55,11 @@ const Tank = (props: TankProps) => {
 
   const [isAddPostAllowed, setIsAddPostAllowed] = useState<boolean>(false);
   const [openBottomNav, setOpenBottomNav] = useState<boolean>(false);
-
-  const lastPost =
-    selectedTankData &&
-    selectedTankData.posts &&
-    Object.values(selectedTankData.posts).at(-1);
+  const [lastPost, setLastPost] = useState<postsProps | undefined>();
+  // const lastPost =
+  //   selectedTankData &&
+  //   selectedTankData.posts &&
+  //   Object.values(selectedTankData.posts).at(-1);
 
   const headerLarge = 170;
   const headerTight = 70;
@@ -110,7 +110,7 @@ const Tank = (props: TankProps) => {
       postTime: date.getTime(),
     };
     if (selectedTankData && newPostData) {
-      alert("tank id : " + selectedTankData.id);
+      // alert("tank id : " + selectedTankData.id);
       setANewPost(selectedTankData?.id, newPostData);
       // updateTankStatus(selectedTankData?.id, status);
 
@@ -126,6 +126,7 @@ const Tank = (props: TankProps) => {
       let diffTime = Math.floor((now - selectedTankData.lastPostTime) / 1000);
       updateLastCheck(selectedTankData.id, diffTime);
       setOpenBottomNav(false);
+      setLastPost(newPostData);
     }
   };
 
@@ -149,6 +150,15 @@ const Tank = (props: TankProps) => {
     () => lazyWithDelay(() => import("./CheckPosts"), 1000),
     []
   );
+  useEffect(() => {
+    if (selectedTankData?.posts) {
+      const latest = Object.values(selectedTankData.posts).at(-1);
+      setLastPost(latest);
+    } else {
+      setLastPost(undefined); // in case posts are removed or not available
+    }
+  }, [selectedTankData?.posts]);
+  console.log("lastPost ==> ", lastPost);
   return (
     <Page
       style={
@@ -299,33 +309,36 @@ const Tank = (props: TankProps) => {
             </div> */}
           </div>
         </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: lang === "ar" ? "row-reverse" : "row",
-            alignItems: "center",
-            margin: "0 8px",
-          }}
-        >
-          <IconButton>
-            <Infos
-              backgroundColor={customTheme.palette.background.defaultBlue}
-            />
-          </IconButton>
-          <span
+        {headerHeight > headerTight && (
+          <div
             style={{
-              color: customTheme.palette.background.defaultBlue,
-              margin: "0 4px",
-              fontSize: "12px",
+              display: "flex",
+              flexDirection: lang === "ar" ? "row-reverse" : "row",
+              alignItems: "center",
+              margin: "0 8px",
             }}
           >
-            {t("common.tank.tank_page_infos#0")}
-          </span>
-        </div>
+            <IconButton>
+              <Infos
+                backgroundColor={customTheme.palette.background.defaultBlue}
+              />
+            </IconButton>
+
+            <span
+              style={{
+                color: customTheme.palette.background.defaultBlue,
+                margin: "0 4px",
+                fontSize: "12px",
+              }}
+            >
+              {t("common.tank.tank_page_infos#0")}
+            </span>
+          </div>
+        )}
       </Header>
       {selectedTankData?.posts ? (
         <Suspense fallback={<SkeletonCheckPosts />}>
-          <CheckPosts tankData={selectedTankData} />
+          <CheckPosts tankData={selectedTankData} user={user} />
         </Suspense>
       ) : (
         <div
