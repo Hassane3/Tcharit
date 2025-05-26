@@ -1,7 +1,7 @@
 import React from 'react'
 import { postsProps } from '../pages/MapPage';
 import TankStatus from '../models/utils/TankStatus';
-import { DataSnapshot, child, getDatabase, onValue, push, ref, set, update } from "firebase/database";
+import { DataSnapshot, child, getDatabase, onValue, push, ref, remove, set, update } from "firebase/database";
 import {  getAuth, signInWithEmailAndPassword, signOut, UserCredential } from 'firebase/auth';
  
 export const setANewPost = (tankId: number, postData: postsProps) => {
@@ -9,7 +9,6 @@ export const setANewPost = (tankId: number, postData: postsProps) => {
 
         // Get a key for the new post
         const newPostKey = push(child(ref(db), 'tanks/' + tankId + 'posts')).key;
-        alert("newPostKey : " + newPostKey);
         // Write the new post's data
         const updates = {
             ['/tanks/' + tankId + '/posts/' + newPostKey] : postData
@@ -18,6 +17,12 @@ export const setANewPost = (tankId: number, postData: postsProps) => {
 
         return update(ref(db), updates)
     }
+
+export const deletePost = (tankId: number, postKey?:number) => {
+    const db = getDatabase();
+
+    remove(ref(db, "tanks/" + tankId + "/posts/" + postKey)).then((onfulfilled)=> onfulfilled ).catch((error)=>  error);
+}
 
 export const updateLastCheck = (tankId: number, lastCheckTime : number) => {
     const db = getDatabase();

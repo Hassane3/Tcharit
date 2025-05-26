@@ -46,7 +46,7 @@ export interface latLngProps {
 }
 export interface postsProps {
   // date: Date;
-  // id: number;
+  id?: number;
   date: string;
   postTime: number;
   status: TankStatus;

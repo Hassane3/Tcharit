@@ -34,6 +34,9 @@
       "favorite": "favorite",
       "select_cistern": "اختر الخزان"
     },
+    "post": {
+      "post_deleted": "تم محو التقرير"
+    },
     "info": {
       "trusted": "موثوق"
     },
