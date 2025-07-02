@@ -45,6 +45,8 @@ You can learn more in the [Create React App documentation](https://facebook.gith
 
 To learn React, check out the [React documentation](https://reactjs.org/).
 
+#LOADER.IO
+loaderio-404b56a3dca57f309ba9f8ebf68ff2ac
 
 <!-- LIBS -->
 Map --> React leaflet :
