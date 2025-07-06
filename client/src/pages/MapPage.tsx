@@ -1,17 +1,27 @@
 import React, { useEffect, useState } from "react";
 // LIBS
 import { MapContainer, TileLayer } from "react-leaflet";
-import { Icon, LatLng } from "leaflet";
+import { Icon, LatLng, LatLngExpression } from "leaflet";
 // MODELS
 import TankStatus from "../models/utils/TankStatus";
 // import { DataSnapshot, onValue, ref } from "firebase/database";
 import { UserType } from "../models/utils/UsersType";
-import { handleTimeFormat } from "../utils/methods/methods";
+import {
+  checkAndRequestGeolocation,
+  handleTimeFormat,
+} from "../utils/methods/methods";
 import { MyMarker } from "./components/MyMarker";
 import AutoComplete from "./components/AutoComplete";
-import { Button, DrawerProps, IconButton } from "@mui/material";
+import {
+  Button,
+  DrawerProps,
+  IconButton,
+  TextField,
+  Typography,
+} from "@mui/material";
 
-import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
+import QrCode2RoundedIcon from "@mui/icons-material/QrCode2Rounded";
+import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import styled from "styled-components";
 import ModalPopUp from "./components/ModalPopUp";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -20,8 +30,13 @@ import { customTheme, UserData } from "../App";
 import WaterDropIcon from "@mui/icons-material/WaterDrop";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import Menu from "./components/Menu";
-import { MenuIcon } from "../utils/constants/Icons";
-import { useTranslation } from "react-i18next";
+import { MenuIcon, TemporaryTank } from "../utils/constants/Icons";
+import { Translation, useTranslation } from "react-i18next";
+import { Close } from "../utils/constants/Icons";
+import { randomInt, randomUUID } from "crypto";
+import { setANewCistern } from "../firebase/operations";
+import Footer from "./Footer";
+import TankType from "../models/utils/TankType";
 // Componenets
 
 export interface tanksDataProps {
@@ -29,6 +44,7 @@ export interface tanksDataProps {
 }
 export interface tankDataProps {
   id: number;
+  type: TankType;
   latin_name: string;
   arab_name: string;
   // description: string;
@@ -38,6 +54,7 @@ export interface tankDataProps {
   lastPostTime: number;
   lastCheckTime: number;
   posts: [postsProps];
+  tankAgentId?: string | null;
 }
 
 export interface latLngProps {
@@ -172,9 +189,12 @@ function MapPage(props: mapPageProps) {
       setFavorites(newArray);
     }
   };
+
   useEffect(() => {
     i18n.changeLanguage(language);
   }, [language]);
+  const [newCistern, setNewCistern] = useState<boolean>(false);
+  const [newCisternlatLng, setNewCisternlatLng] = useState<LatLngExpression>();
 
   return (
     <div id="map">
@@ -182,6 +202,11 @@ function MapPage(props: mapPageProps) {
         center={
           // If user return back to mapPage, the page will be focused on the tank that has been visited
           visitedTank ? visitedTank.latLng : [43.300787, 5.37724]
+          // newCistern
+          //   ? newCisternlatLng
+          //   : visitedTank
+          //     ? visitedTank.latLng
+          //     : [43.300787, 5.37724]
         }
         zoom={18}
         scrollWheelZoom={true}
@@ -235,7 +260,7 @@ function MapPage(props: mapPageProps) {
             size="large"
             sx={{ width: "fit-content", zIndex: "1000", p: 1 }}
           >
-            <QrCodeScannerIcon
+            <QrCode2RoundedIcon
               sx={{
                 mr: 1,
                 fontSize: 50,
@@ -253,6 +278,7 @@ function MapPage(props: mapPageProps) {
           <MyMarker
             key={marker.id}
             marker={marker}
+            userData={userData}
             favorites={favorites}
             setVisitedTank={setVisitedTank}
             handleTimeFormat={handleTimeFormat}
@@ -261,6 +287,7 @@ function MapPage(props: mapPageProps) {
         ))}
 
         {/* </MarkerClusterGroup> */}
+        <Footer id={tanksData.length} userData={userData} />
       </MapContainer>
     </div>
   );

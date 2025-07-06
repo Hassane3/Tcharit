@@ -93,7 +93,7 @@ const AutoComplete = (props: AutoCompleteProps) => {
         zIndex: "1000",
         margin: "6px",
         overflow: "hidden",
-        borderRadius: "6px",
+        borderRadius: "10px",
         boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
       }}
       loading

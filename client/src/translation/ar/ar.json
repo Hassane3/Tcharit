@@ -5,6 +5,19 @@
       "reserved_for_cistern_fillers": "خاص لمالئي الخزان",
       "notifications": "انذارات"
     },
+    "mapPage": {
+      "tempo_cistern": {
+        "tempo_cistern": "خزان مؤقت",
+        "info": "لكي يتم إضافة خزان مؤقت يجب تحديد موقعه الجغرافي",
+        "get_geolocation": "احصل على موقعك الجغرافي",
+        "name": "اسم الخزان",
+        "coordinates": "الإحداثيات",
+        "actual_coordonate": "الإحداثيات الحالية :",
+        "confirm_delete": "هل أنت متأكد أنك تريد حذف هذا الخزان ؟",
+        "confirm_deletion": "تم حذف الصهريج",
+        "confirm_add": "تم إضافة الصهريج"
+      }
+    },
     "tank": {
       "tank_status": {
         "tank_is_full": "الخزان ممتلئ",
@@ -25,11 +38,11 @@
       "tank_status_according_to_users ": "نسبة الخزان حسب المستخدمين",
       "report_water_flow": "تنبيه عن كمية تدفق المياه",
       "since_datetime": " {{datetime}} {{datetime}}منذ ",
-      "geolocation_user_position": "من اجل التأكد من ان التنبيهات موثوقة, يجب على المنبه بان يكون بجانب الخزان.",
+      "geolocation_user_position": "من اجل التأكد من ان التنبيهات موثوقة, يجب على المنبه بان يكون بجانب الخزان",
       "tank_report_confirmation": "هل انت واثق بانك تريد ان  تشير بان الخزان {{tankStatusLng}}",
       "tank_far_from_tank": "يبدو أن موقعك بعيد عن الخزان، يرجى التقرب اكثر",
       "tank_page_infos#0": "حالة تدفق المياه وفقًا لتقارير المستخدمين",
-      "tank_page_infos#1": "هنا يمكن رؤية الإشارات التي تركها المستخدمين.",
+      "tank_page_infos#1": "هنا يمكن رؤية الإشارات التي تركها المستخدمين",
       "tank_page_infos#2": "يجب الاخذ بعين الاعتبار الوقت الظاهر عند كل إشارة و التأكد بصحة المعلومة لحالة الخزان و هذا بتكرار رأي واحد أو عند اثبات الكلمة 'موثوقة'",
       "favorite": "favorite",
       "select_cistern": "اختر الخزان"
@@ -54,14 +67,17 @@
     "confirm": "تطبيق",
     "connect": "دخول",
     "disconnect": "خروج",
-    "cancel": "الغي",
+    "cancel": "إلغاء",
     "back": "ارجع",
     "next": "اكمل",
     "previous": "سابق",
     "continu": "اكمل",
     "yes": "نعم",
     "no": "لا",
-    "ok": "مفهوم"
+    "ok": "مفهوم",
+    "select": "تطبيق",
+    "add": "إضافة",
+    "modify": "تغيير"
   },
   "Login": {
     "title": "دخول",

@@ -1,52 +1,53 @@
 {
   "tanks": {
-    "1": {
-      "name": "El-inn",
-      "latLng": [32.4712, 3.6876],
+    "0": {
+      "latin_name": "El-Ein",
+      "arab_name": "العين",
+      "latLng": {
+        "lat": 43.3008381,
+        "lng": 5.3771047
+      },
       "status": "FULL",
-      "lastCheck": 15,
-      "checks": {
-        "1": {
-          "date": 23,
-          "time": 12,
-          "userType": "ANONYM"
-        },
-        "2": {
-          "date": 9,
-          "time": 15,
-          "userType": "TANKCHEF"
-        }
-      }
+      "lastPostTime": 1699181431318,
+      "lastCheckTime": 124722,
+
+      "posts": {}
+    },
+    "1": {
+      "latin_name": "Zeidi",
+      "arab_name": "زايدي",
+      "latLng": {
+        "lat": 43.30085,
+        "lng": 5.378
+      },
+      "lastPostTime": 1699383571645,
+      "lastCheckTime": 187326,
+      "status": "EMPTY",
+      "posts": {}
     },
     "2": {
-      "name": "Zaydi",
-      "latLng": [32.47, 3.688],
-      "status": "EMPTY",
-      "lastCheck": 7,
-      "checks": {
-        "1": {
-          "date": 23,
-          "time": 12,
-          "userType": "ANONYM"
-        },
-        "2": {
-          "date": 9,
-          "time": 15,
-          "userType": "TANKCHEF"
-        }
-      }
+      "latin_name": "Telebokt",
+      "arab_name": "تلبكت",
+      "latLng": {
+        "lat": 43.3015,
+        "lng": 5.37699
+      },
+      "lastPostTime": 1699381937846,
+      "lastCheckTime": 2688,
+      "status": "HALFFULL",
+      "posts": {}
     },
     "3": {
-      "name": "Dorat",
-      "latLng": [32.4718, 3.688],
-      "status": "HALFFULL",
-      "lastCheck": 2
-    },
-    "4": {
-      "name": "El-kherajet",
-      "latLng": [32.4715, 3.646],
+      "latin_name": "El-Kherajet",
+      "arab_name": "الخراجت",
+      "latLng": {
+        "lat": 32.4715,
+        "lng": 3.646
+      },
+      "lastPostTime": 1699105645865,
+      "lastCheckTime": 200507,
       "status": "FULL",
-      "lastCheck": 80
+      "posts": {}
     }
   }
 }

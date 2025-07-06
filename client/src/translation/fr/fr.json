@@ -5,6 +5,19 @@
       "reserved_for_cistern_fillers": "Réservé pour les remplisseurs de réservoirs",
       "notifications": "Notifications"
     },
+    "mapPage": {
+      "tempo_cistern": {
+        "tempo_cistern": "Citerne temporaire",
+        "info": "Pour ajouter une citerne temporaire, il faut déterminer sa geolocation :",
+        "get_geolocation": "Obtenir ma geolocation",
+        "name": "Nom de la citern",
+        "coordinates": "Coordonnés",
+        "actual_coordonate": "Coordonnée actuelle ",
+        "confirm_delete": "Êtes-vous sûr de vouloir supprimer cette citerne ?",
+        "confirm_deletion": "La citerne a bien été supprimée",
+        "confirm_add": "La citerne a bien été ajoutée"
+      }
+    },
     "tank": {
       "tank_status": {
         "tank_is_full": "Le réservoir est rempli",
@@ -61,7 +74,10 @@
     "continu": "Continuer",
     "yes": "Oui",
     "no": "Non",
-    "ok": "Ok"
+    "ok": "Ok",
+    "select": "Selectionner",
+    "add": "Ajouter",
+    "modify": "Modifier"
   },
   "Login": {
     "title": "Connexion",

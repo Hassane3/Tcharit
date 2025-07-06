@@ -5,6 +5,19 @@
       "reserved_for_cistern_fillers": "reserved for cistern fillers",
       "notifications": "notifications"
     },
+    "mapPage": {
+      "tempo_cistern": {
+        "tempo_cistern": "Temporarily cistern",
+        "info": "To be able to add a temporarily cistern you have to indicate its geolocation :",
+        "get_geolocation": "Get your geolocation",
+        "name": "Cistern name",
+        "coordinates": "Coordinates",
+        "actual_coordonate": "Actual coordonate : ",
+        "confirm_delete": "Are you sure you want to delete this tank ?",
+        "confirm_deletion": "The cistern has been deleted successfully",
+        "confirm_add": "The cistern has been added successfully"
+      }
+    },
     "tank": {
       "tank_status": {
         "tank_is_full": "The water tank is full",
@@ -62,7 +75,10 @@
     "continu": "Continu",
     "yes": "Yes",
     "no": "No",
-    "ok": "Ok"
+    "ok": "Ok",
+    "select": "Select",
+    "add": "Add",
+    "modify": "Modify"
   },
   "Login": {
     "signup": "string",

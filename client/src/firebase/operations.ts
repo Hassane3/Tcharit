@@ -1,9 +1,17 @@
 import React from 'react'
-import { postsProps } from '../pages/MapPage';
+import { postsProps, tankDataProps } from '../pages/MapPage';
 import TankStatus from '../models/utils/TankStatus';
 import { DataSnapshot, child, getDatabase, onValue, push, ref, remove, set, update } from "firebase/database";
 import {  getAuth, signInWithEmailAndPassword, signOut, UserCredential } from 'firebase/auth';
  
+export const setANewCistern = (tankId:number,tankData:tankDataProps) =>{
+    const db = getDatabase();
+    const updates = {
+        ['tanks/'+tankId]: tankData
+    };
+      return update(ref(db), updates)  
+}
+
 export const setANewPost = (tankId: number, postData: postsProps) => {
         const db = getDatabase();
 
@@ -22,6 +30,10 @@ export const deletePost = (tankId: number, postKey?:number) => {
     const db = getDatabase();
 
     remove(ref(db, "tanks/" + tankId + "/posts/" + postKey)).then((onfulfilled)=> onfulfilled ).catch((error)=>  error);
+}
+export const deleteTank = (tankId: number) => {
+    const db = getDatabase();
+    remove(ref(db, "tanks/" + tankId )).then((onfulfilled)=> onfulfilled ).catch((error)=>  error);
 }
 
 export const updateLastCheck = (tankId: number, lastCheckTime : number) => {

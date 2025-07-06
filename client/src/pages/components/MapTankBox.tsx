@@ -5,6 +5,8 @@ import styled from "styled-components";
 import { Button, IconButton, Typography } from "@mui/material";
 import StarOutlineRoundedIcon from "@mui/icons-material/StarOutlineRounded";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
+import DeleteOutlineRoundedIcon from "@mui/icons-material/DeleteOutlineRounded";
+import ModeEditRoundedIcon from "@mui/icons-material/ModeEditRounded";
 import CheckIcon from "@mui/icons-material/Check";
 import { useNavigate } from "react-router-dom";
 import { getDiffTime } from "../../utils/methods/methods";
@@ -16,11 +18,14 @@ import {
 } from "../../utils/constants/Icons";
 import { PostBottomBox } from "../CheckPosts";
 import { UserType } from "../../models/utils/UsersType";
-import { customTheme } from "../../App";
+import { customTheme, UserData } from "../../App";
 import { useTranslation } from "react-i18next";
+import { deleteTank } from "../../firebase/operations";
+import UseSnackBar from "./UseSnackBar";
 
 interface mapTankBoxProps {
   tank: tankDataProps;
+  userData: UserData;
   favorites: Array<string> | undefined;
   setVisitedTank: (arg: tankDataProps) => void;
   handleTimeFormat: (arg: number) => [any, string?];
@@ -28,8 +33,14 @@ interface mapTankBoxProps {
 }
 
 const MapTankBox = (props: mapTankBoxProps) => {
-  const { tank, favorites, setVisitedTank, handleTimeFormat, handleFavorites } =
-    props;
+  const {
+    tank,
+    userData,
+    favorites,
+    setVisitedTank,
+    handleTimeFormat,
+    handleFavorites,
+  } = props;
 
   const navigateTo = useNavigate();
   const { t } = useTranslation();
@@ -39,6 +50,10 @@ const MapTankBox = (props: mapTankBoxProps) => {
   const [isFavorite, setIsFavorite] = useState<boolean>(
     favorites?.includes(tank.id.toString()) ? true : false
   );
+
+  // MUI SnackBar
+  const [isSnackOpen, setIsSnackOpen] = useState<boolean>(false);
+  const [snackMessage, setSnackMessage] = useState<string>("");
 
   const lang = localStorage.getItem("language");
 
@@ -76,6 +91,21 @@ const MapTankBox = (props: mapTankBoxProps) => {
     };
   }, []);
 
+  const handleDeleteCistern = (tankId: number) => {
+    const confirm = window.confirm(
+      t("common.mapPage.tempo_cistern.confirm_delete")
+    );
+    if (confirm) {
+      try {
+        deleteTank(tankId);
+        setSnackMessage(t("common.mapPage.tempo_cistern.confirm_delete"));
+        setIsSnackOpen(true);
+      } catch (error) {
+        alert("Something went wrong");
+      }
+    }
+  };
+
   return (
     <div
       style={{
@@ -104,7 +134,7 @@ const MapTankBox = (props: mapTankBoxProps) => {
           )}
         </IconButton>
         <Typography
-          variant="h2"
+          variant="h3"
           color={
             lastPost
               ? customTheme.palette.background.defaultBlue
@@ -185,6 +215,27 @@ const MapTankBox = (props: mapTankBoxProps) => {
           )}
         </PostBottomBox>
       </PopUpMainElements>
+      {userData.id && tank.tankAgentId === userData.id && (
+        <PopUpBottom
+          style={{
+            backgroundColor: customTheme.palette.background.yellowExtraLight,
+          }}
+        >
+          <Button onClick={() => handleDeleteCistern(tank.id)} size="large">
+            <DeleteOutlineRoundedIcon
+              sx={{
+                color: customTheme.palette.background.red,
+                fontSize: "30px",
+              }}
+            />
+          </Button>
+        </PopUpBottom>
+      )}
+      <UseSnackBar
+        isSnackOpen={isSnackOpen}
+        setIsSnackOpen={setIsSnackOpen}
+        snackMessage={snackMessage}
+      />
     </div>
   );
 };
@@ -213,6 +264,13 @@ const PopUpTop = styled.div`
   align-items: flex-start;
   justify-content: space-between;
   width: 100%;
+`;
+const PopUpBottom = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  border-radius: 20px;
 `;
 const PopUpMainElements = styled(Button)`
   display: flex;

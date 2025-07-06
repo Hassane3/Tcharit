@@ -32,6 +32,7 @@ import {
 import { UserType } from "../models/utils/UsersType";
 import { useTranslation } from "react-i18next";
 import { deletePost } from "../firebase/operations";
+import UseSnackBar from "./components/UseSnackBar";
 
 const CheckPosts = (props: {
   tankData: tankDataProps;
@@ -44,7 +45,9 @@ const CheckPosts = (props: {
   const [lastCheckTime, setLastCheckTime] = useState<number>();
 
   const [clickedPost, setClickedPost] = useState<number | null>(null);
-  const [snackOpen, setSnackOpen] = useState<boolean>(false);
+  // MUI SnackBar
+  const [isSnackOpen, setIsSnackOpen] = useState<boolean>(false);
+  const [snackMessage, setSnackMessage] = useState<string>("");
 
   let today = new Date().toLocaleDateString();
   const lang = localStorage.getItem("language");
@@ -96,10 +99,11 @@ const CheckPosts = (props: {
   const handleDeletePost = (postId?: number) => {
     try {
       deletePost(tankData.id, postId);
-      setSnackOpen(true);
+      setSnackMessage(t("common.post.post_deleted"));
+      setIsSnackOpen(true);
       setClickedPost(null);
     } catch (error) {
-      alert("Something went wrong");
+      alert("Something went wrong while deleting post");
     }
   };
 
@@ -119,17 +123,6 @@ const CheckPosts = (props: {
       console.log("REMOVED");
     };
   }, []);
-
-  // MUI SnackBar
-  const handleClose = (
-    event: React.SyntheticEvent | Event,
-    reason?: SnackbarCloseReason
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setSnackOpen(false);
-  };
 
   return (
     <Container>
@@ -298,16 +291,10 @@ const CheckPosts = (props: {
                   </PostBox>
                 </Wrapper>
               }
-              <Snackbar
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "center",
-                }}
-                open={snackOpen}
-                onClose={handleClose}
-                message={t("common.post.post_deleted")}
-                autoHideDuration={3000}
-                key={index}
+              <UseSnackBar
+                isSnackOpen={isSnackOpen}
+                setIsSnackOpen={setIsSnackOpen}
+                snackMessage={snackMessage}
               />
             </MainContent>
           );

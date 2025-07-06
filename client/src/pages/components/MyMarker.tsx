@@ -7,10 +7,17 @@ import { SvgIconComponent } from "@mui/icons-material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import ReactDOMServer from "react-dom/server"; // To render React elements to static markup
 import { Container, Typography } from "@mui/material";
-import { customTheme } from "../../App";
+import { customTheme, UserData } from "../../App";
+import {
+  LocationCistern,
+  LocationTemporaryCistern,
+  TemporaryTank,
+} from "../../utils/constants/Icons";
+import TankType from "../../models/utils/TankType";
 
 interface MarkerProps {
   marker: tankDataProps;
+  userData: UserData;
   favorites: Array<string> | undefined;
   setVisitedTank: (visitedTank: tankDataProps) => void | undefined;
   handleTimeFormat: (arg: number) => [any, string?];
@@ -20,6 +27,7 @@ interface MarkerProps {
 export const MyMarker = (props: MarkerProps): JSX.Element => {
   const {
     marker,
+    userData,
     favorites,
     setVisitedTank,
     handleTimeFormat,
@@ -51,16 +59,16 @@ export const MyMarker = (props: MarkerProps): JSX.Element => {
             color: customTheme.palette.background.defaultBlue,
             fontSize: "2em",
             fontFamily: "Changa",
+            textWrap: "nowrap",
           }}
         >
           {tankName}
         </Typography>
-        <LocationOnIcon
-          style={{
-            fill: customTheme.palette.background.defaultBlue,
-            height: "40px",
-          }}
-        />
+        {marker.type === TankType.PERMANENT ? (
+          <LocationCistern />
+        ) : (
+          <LocationTemporaryCistern />
+        )}
       </div>
     );
     // Create a Leaflet divIcon using the rendered HTML
@@ -72,7 +80,7 @@ export const MyMarker = (props: MarkerProps): JSX.Element => {
   };
 
   const customIconn = createCustomIcon(
-    LocationOnIcon,
+    LocationCistern,
     lang === "ar" ? marker.arab_name : marker.latin_name
   );
 
@@ -99,6 +107,7 @@ export const MyMarker = (props: MarkerProps): JSX.Element => {
         >
           <MapTankBox
             tank={marker}
+            userData={userData}
             favorites={favorites}
             setVisitedTank={setVisitedTank}
             handleTimeFormat={handleTimeFormat}
