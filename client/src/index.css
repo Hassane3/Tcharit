@@ -49,6 +49,35 @@ p {
 #menuDrawer > .MuiPaper-root {
   width: 300px;
 }
+
+.geoLocationContainer::before{
+    content: "";
+    display: block;
+    position: absolute;
+    top: -220px;
+    left: -235px;
+    width: 500px;
+    height: 500px;
+    background-color: black;
+        border-radius: 50%;
+    opacity: 0.2;
+    animation: 2s circleScale ease 0.5s;
+  } 
+
+  @keyframes circleScale {
+    0% {
+      transform: scale(0);
+    }
+    40% {
+      transform: scale(1.5);
+    }
+    70% {
+      transform: scale(0.5);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
 /* PHONE */
 @media only screen and (max-width: 400px) {
   #menuDrawer > .MuiPaper-root {

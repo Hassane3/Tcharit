@@ -19,6 +19,7 @@ import { calculateDateDifference } from "./utils/methods/methods";
 import ResetPassword from "./pages/ResetPassword";
 
 export interface UserData {
+  id: string | null;
   name: string | null;
   email: string | null;
 }
@@ -72,12 +73,36 @@ export const customTheme = createTheme({
           backgroundColor: "#567F8A",
           color: "#EAFBFF",
         },
+        containedSizeMedium: {
+          textTransform: "none",
+          fontSize: "1.2em",
+          fontWeight: "600",
+          borderRadius: "40px",
+          toUpperCase: "none",
+          boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+          padding: "8px 34px",
+        },
         containedPrimary: {
           backgroundColor: "#567F8A",
           color: "#EAFBFF",
         },
         containedWarning: {
           borderRadius: "10px",
+        },
+        containedSuccess: {
+          textTransform: "none",
+          fontSize: "1.2em",
+          fontWeight: "600",
+          borderRadius: "40px",
+          toUpperCase: "none",
+          boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+          padding: "14px 50px",
+        },
+        text: {
+          fontSize: "1.4em",
+          fontWeight: "500",
+          margin: 0,
+          padding: 0,
         },
       },
     },
@@ -248,6 +273,7 @@ function App(): JSX.Element {
 
   const [user, setUser] = useState<{} | null>(null);
   const [userData, setUserData] = useState<UserData>({
+    id: null,
     name: null,
     email: null,
   });
@@ -262,12 +288,14 @@ function App(): JSX.Element {
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           setUserData({
+            id: user.uid,
             name: docSnap.get("name"),
             email: docSnap.get("email"),
           });
           setTankAgentData(docSnap.data());
         } else {
           setUserData({
+            id: null,
             name: null,
             email: null,
           });
