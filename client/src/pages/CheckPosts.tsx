@@ -111,16 +111,15 @@ const CheckPosts = (props: {
     function handleClickOutside(event: MouseEvent) {
       if (divRef.current && !divRef.current.contains(event.target as Node)) {
         // Undo action
-        console.log("EFFECT : ", clickedPost);
         setClickedPost(null);
       }
     }
-    console.log("EFFECTOOO");
 
     document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("pointerdown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
-      console.log("REMOVED");
+      document.removeEventListener("pointerdown", handleClickOutside);
     };
   }, []);
 
@@ -246,6 +245,9 @@ const CheckPosts = (props: {
                       <Button
                         onClick={() => handleDeletePost(post.id)}
                         size="large"
+                        sx={{
+                          padding: "0 40px",
+                        }}
                       >
                         <DeleteOutlineRoundedIcon
                           sx={{

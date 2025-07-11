@@ -15,14 +15,15 @@ import {
 import { Close, GeoLocation, TemporaryTank } from "../utils/constants/Icons";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import { DivIcon, LatLngExpression, map } from "leaflet";
-import { Marker, Popup, useMap } from "react-leaflet";
+// import { DivIcon, LatLngExpression, map } from "leaflet";
+// import { Marker, Popup, useMap } from "react-leaflet";
 import { randomInt, randomUUID } from "crypto";
 import { SvgIconComponent } from "@mui/icons-material";
 import ReactDOMServer from "react-dom/server";
 import { CustomMarker } from "./components/CustomMarker";
 import TankType from "../models/utils/TankType";
 import UseSnackBar from "./components/UseSnackBar";
+import { useMap } from "@vis.gl/react-google-maps";
 
 interface footerProps {
   id: number;
@@ -67,19 +68,15 @@ const Footer = (props: footerProps) => {
     checkAndRequestGeolocation()
       .then(() =>
         navigator.geolocation.getCurrentPosition((position) => {
-          if (position) {
-            // ANimate
-            map.setView(
-              [position.coords.latitude, position.coords.longitude],
-              map.getZoom(),
-              {
-                animate: true,
-                duration: 1,
-              }
-            );
-            setGeolocation(position);
-            setTempoCisternBox(TempoCisternBoxes.COORDINATES);
-          }
+          const userLatLng = new google.maps.LatLng(
+            position.coords.latitude,
+            position.coords.longitude
+          );
+          // ANimate
+          map?.setZoom(19);
+          map?.panTo(userLatLng);
+          setGeolocation(position);
+          setTempoCisternBox(TempoCisternBoxes.COORDINATES);
         })
       )
       .catch((error) => console.error(error))
@@ -140,45 +137,48 @@ const Footer = (props: footerProps) => {
       tankAgentId: userData.id,
     };
     setANewCistern(tankId, newCisternData);
-    map.setView(
-      [geolocation.coords.latitude, geolocation.coords.longitude],
-      map.getZoom(),
-      {
-        animate: true,
-      }
+
+    const userLatLng = new google.maps.LatLng(
+      geolocation.coords.latitude,
+      geolocation.coords.longitude
     );
+    map?.setZoom(19);
+    map?.panTo(userLatLng);
+    setGeolocation(geolocation);
+    setTempoCisternBox(TempoCisternBoxes.COORDINATES);
+
     setGeolocation(undefined);
     setSnackMessage(t("common.mapPage.tempo_cistern.confirm_add"));
     setIsSnackOpen(true);
   };
 
   // To be able to use mui icons in leaflet :
-  const createCustomIcon = (IconComponent: SvgIconComponent) => {
-    // Render Material-UI icon as a string (HTML/SVG)
-    const iconHTML = ReactDOMServer.renderToStaticMarkup(
-      <div
-        style={{
-          marginTop: "5px",
-          textAlign: "center",
-          display: "grid",
-          justifyContent: "center",
-          justifyItems: "center",
-          width: "100%",
-        }}
-        className="geoLocationContainer"
-      >
-        <GeoLocation />
-      </div>
-    );
-    // Create a Leaflet divIcon using the rendered HTML
-    return new DivIcon({
-      html: iconHTML,
-      iconSize: [34, 34],
-      className: "custom-icon-class",
-    });
-  };
+  // const createCustomIcon = (IconComponent: SvgIconComponent) => {
+  //   // Render Material-UI icon as a string (HTML/SVG)
+  //   const iconHTML = ReactDOMServer.renderToStaticMarkup(
+  //     <div
+  //       style={{
+  //         marginTop: "5px",
+  //         textAlign: "center",
+  //         display: "grid",
+  //         justifyContent: "center",
+  //         justifyItems: "center",
+  //         width: "100%",
+  //       }}
+  //       className="geoLocationContainer"
+  //     >
+  //       <GeoLocation />
+  //     </div>
+  //   );
+  //   // Create a Leaflet divIcon using the rendered HTML
+  //   return new DivIcon({
+  //     html: iconHTML,
+  //     iconSize: [34, 34],
+  //     className: "custom-icon-class",
+  //   });
+  // };
 
-  const customIconn = createCustomIcon(GeoLocation);
+  // const customIconn = createCustomIcon(GeoLocation);
 
   const lang = localStorage.getItem("language");
 
@@ -219,7 +219,6 @@ const Footer = (props: footerProps) => {
               geolocation.coords.latitude,
               geolocation.coords.longitude,
             ]}
-            icon={customIconn}
           ></CustomMarker>
         )
         // )

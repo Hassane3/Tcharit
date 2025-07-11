@@ -1,12 +1,13 @@
 import { Autocomplete, Box, IconButton, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { tankDataProps } from "../MapPage";
-import { useMap } from "react-leaflet";
+// import { useMap } from "react-leaflet";
 import SearchIcon from "@mui/icons-material/Search";
 import { customTheme } from "../../App";
 import StarOutlineRoundedIcon from "@mui/icons-material/StarOutlineRounded";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import { useTranslation } from "react-i18next";
+import { useMap } from "@vis.gl/react-google-maps";
 
 interface AutoCompleteProps {
   tanksData: Array<tankDataProps>;
@@ -41,28 +42,28 @@ const AutoComplete = (props: AutoCompleteProps) => {
     }
   }, [isCheckedFavorites, tanksData]);
 
-  // Disable map interaction when Autocomplete is focused
-  const handleFocus = () => {
-    if (map) {
-      map.dragging.disable();
-      map.scrollWheelZoom.disable();
-    }
-  };
+  // // Disable map interaction when Autocomplete is focused
+  // const handleFocus = () => {
+  //   if (map) {
+  //     map.dragging.disable();
+  //     map.scrollWheelZoom.disable();
+  //   }
+  // };
 
-  // Enable map interaction when clicking outside Autocomplete
-  const handleBlur = () => {
-    if (map) {
-      map.dragging.enable();
-      map.scrollWheelZoom.enable();
-    }
-  };
+  // // Enable map interaction when clicking outside Autocomplete
+  // const handleBlur = () => {
+  //   if (map) {
+  //     map.dragging.enable();
+  //     map.scrollWheelZoom.enable();
+  //   }
+  // };
 
   const lang = localStorage.getItem("language");
   return (
     <Autocomplete
       value={searchValue}
-      onFocus={handleFocus}
-      onBlur={handleBlur}
+      // onFocus={handleFocus}
+      // onBlur={handleBlur}
       onChange={(event: any, newValue: string) => {
         handleSetSearchValue(newValue);
         const tank = tanksData.find(
@@ -71,13 +72,9 @@ const AutoComplete = (props: AutoCompleteProps) => {
         );
 
         tank &&
-          map.setView(
-            // "-0.0007" to avoid having the marker hidden by the keyboard (on mobile)
-            { lat: tank.latLng.lat - 0.0007, lng: tank.latLng.lng },
-            map.getZoom(),
-            {
-              animate: true,
-            }
+          map?.setCenter(
+            // "-0.0002" to avoid having the marker hidden by the keyboard (on mobile)
+            { lat: tank.latLng.lat - 0.0002, lng: tank.latLng.lng }
           );
       }}
       inputValue={inputValue}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { HtmlHTMLAttributes, Ref, useEffect, useState } from "react";
 import { postsProps, tankDataProps } from "../MapPage";
 import TankStatus from "../../models/utils/TankStatus";
 import styled from "styled-components";

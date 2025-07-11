@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 // LIBS
-import { MapContainer, TileLayer } from "react-leaflet";
-import { Icon, LatLng, LatLngExpression } from "leaflet";
 // MODELS
 import TankStatus from "../models/utils/TankStatus";
 // import { DataSnapshot, onValue, ref } from "firebase/database";
@@ -10,7 +8,7 @@ import {
   checkAndRequestGeolocation,
   handleTimeFormat,
 } from "../utils/methods/methods";
-import { MyMarker } from "./components/MyMarker";
+// import { MyMarker } from "./components/MyMarker";
 import AutoComplete from "./components/AutoComplete";
 import {
   Button,
@@ -37,6 +35,9 @@ import { randomInt, randomUUID } from "crypto";
 import { setANewCistern } from "../firebase/operations";
 import Footer from "./Footer";
 import TankType from "../models/utils/TankType";
+import { AdvancedMarker, Map } from "@vis.gl/react-google-maps";
+import trees from "../utils/trees";
+import Markers from "./Markers";
 // Componenets
 
 export interface tanksDataProps {
@@ -109,7 +110,7 @@ function MapPage(props: mapPageProps) {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (success) => {
-          let latLng = new LatLng(
+          let latLng = new google.maps.LatLng(
             success.coords.latitude,
             success.coords.longitude
           );
@@ -194,101 +195,96 @@ function MapPage(props: mapPageProps) {
     i18n.changeLanguage(language);
   }, [language]);
   const [newCistern, setNewCistern] = useState<boolean>(false);
-  const [newCisternlatLng, setNewCisternlatLng] = useState<LatLngExpression>();
+  const [newCisternlatLng, setNewCisternlatLng] =
+    useState<google.maps.LatLng>();
+
+  const [markerLocation, setMarkerLocation] = useState({
+    lat: 51.509865,
+    lng: -0.118092,
+  });
+
+  // CLUSTER MARKER
+  // HERE
 
   return (
     <div id="map">
-      <MapContainer
-        center={
-          // If user return back to mapPage, the page will be focused on the tank that has been visited
-          visitedTank ? visitedTank.latLng : [43.300787, 5.37724]
-          // newCistern
-          //   ? newCisternlatLng
-          //   : visitedTank
-          //     ? visitedTank.latLng
-          //     : [43.300787, 5.37724]
+      <Map
+        style={{ borderRadius: "20px", position: "absolute" }}
+        defaultZoom={18}
+        defaultCenter={
+          visitedTank ? visitedTank.latLng : { lat: 43.300787, lng: 5.37724 }
         }
-        zoom={18}
-        scrollWheelZoom={true}
-        style={{ color: "blue" }}
-      >
-        <Header>
-          <TopSection onClick={(e) => e.stopPropagation()}>
-            <AutoComplete
-              tanksData={tanksData}
-              searchValue={searchValue}
-              inputValue={inputValue}
-              handleSetSearchValue={handleSetSearchValue}
-              handleSetInputValue={handleSetInputValue}
-            />
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
+        gestureHandling={"greedy"}
+        disableDefaultUI
+        mapId="1717228d98ca3c6c822573b5"
+        clickableIcons={false}
+      ></Map>
+      <Header>
+        <TopSection onClick={(e) => e.stopPropagation()}>
+          <AutoComplete
+            tanksData={tanksData}
+            searchValue={searchValue}
+            inputValue={inputValue}
+            handleSetSearchValue={handleSetSearchValue}
+            handleSetInputValue={handleSetInputValue}
+          />
 
-            {/* MENU BUTTON */}
-            <React.Fragment>
-              <IconButton
-                onClick={toggleDrawer(anchor, true)}
-                sx={{
-                  width: "fit-content",
-                  height: "fit-content",
-                  margin: "20px",
-                  zIndex: "1000",
-                  padding: "0",
-                  color: customTheme.palette.background.defaultBlue,
-                }}
-              >
-                <MenuIcon
-                  backgroundColor={customTheme.palette.background.defaultBlue}
-                />
-              </IconButton>
-              <Menu
-                userData={userData}
-                anchorState={anchorState}
-                user={user}
-                anchor={anchor}
-                toggleDrawer={toggleDrawer}
-                language={language}
-                setLanguage={setLanguage}
-              />
-            </React.Fragment>
-          </TopSection>
-          <Button
-            onClick={handleQrModalState(true)}
-            variant="text"
-            size="large"
-            sx={{ width: "fit-content", zIndex: "1000", p: 1 }}
-          >
-            <QrCode2RoundedIcon
+          {/* MENU BUTTON */}
+          <React.Fragment>
+            <IconButton
+              onClick={toggleDrawer(anchor, true)}
               sx={{
-                mr: 1,
-                fontSize: 50,
+                width: "fit-content",
+                height: "fit-content",
+                margin: "20px",
+                zIndex: "1000",
+                padding: "0",
                 color: customTheme.palette.background.defaultBlue,
               }}
+            >
+              <MenuIcon
+                backgroundColor={customTheme.palette.background.defaultBlue}
+              />
+            </IconButton>
+            <Menu
+              userData={userData}
+              anchorState={anchorState}
+              user={user}
+              anchor={anchor}
+              toggleDrawer={toggleDrawer}
+              language={language}
+              setLanguage={setLanguage}
             />
-          </Button>
-          <ModalPopUp
-            isQrModalOpen={isQrModalOpen}
-            qrModalStateHandler={handleQrModalState}
+          </React.Fragment>
+        </TopSection>
+        <Button
+          onClick={handleQrModalState(true)}
+          variant="text"
+          size="large"
+          sx={{ width: "fit-content", zIndex: "1000", p: 1 }}
+        >
+          <QrCode2RoundedIcon
+            sx={{
+              mr: 1,
+              fontSize: 50,
+              color: customTheme.palette.background.defaultBlue,
+            }}
           />
-        </Header>
-        {/* <MarkerClusterGroup> */}
-        {tanksData.map((marker: tankDataProps) => (
-          <MyMarker
-            key={marker.id}
-            marker={marker}
-            userData={userData}
-            favorites={favorites}
-            setVisitedTank={setVisitedTank}
-            handleTimeFormat={handleTimeFormat}
-            handleFavorites={handleFavorites}
-          />
-        ))}
+        </Button>
+        <ModalPopUp
+          isQrModalOpen={isQrModalOpen}
+          qrModalStateHandler={handleQrModalState}
+        />
+      </Header>
+      <Markers
+        tanksData={tanksData}
+        userData={userData}
+        favorites={favorites}
+        setVisitedTank={setVisitedTank}
+        handleFavorites={handleFavorites}
+      />
 
-        {/* </MarkerClusterGroup> */}
-        <Footer id={tanksData.length} userData={userData} />
-      </MapContainer>
+      <Footer id={tanksData.length} userData={userData} />
     </div>
   );
 }
