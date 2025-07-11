@@ -1,120 +1,136 @@
-import React, { JSX } from "react";
-import { Marker, Popup, useMap } from "react-leaflet";
-import { tankDataProps } from "../MapPage";
-import { DivIcon } from "leaflet";
-import MapTankBox from "./MapTankBox";
-import { SvgIconComponent } from "@mui/icons-material";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import ReactDOMServer from "react-dom/server"; // To render React elements to static markup
-import { Container, Typography } from "@mui/material";
-import { customTheme, UserData } from "../../App";
+import React, { JSX, useEffect, useRef, useState } from "react";
+import { Typography, Container } from "@mui/material";
+import {
+  AdvancedMarker,
+  InfoWindow,
+  useAdvancedMarkerRef,
+  useMap,
+  CollisionBehavior,
+} from "@vis.gl/react-google-maps";
+import type { Marker } from "@googlemaps/markerclusterer";
 import {
   LocationCistern,
   LocationTemporaryCistern,
-  TemporaryTank,
 } from "../../utils/constants/Icons";
+import MapTankBox from "./MapTankBox";
+import { tankDataProps } from "../MapPage";
+import { UserData, customTheme } from "../../App";
 import TankType from "../../models/utils/TankType";
 
 interface MarkerProps {
-  marker: tankDataProps;
+  cistern: tankDataProps;
   userData: UserData;
   favorites: Array<string> | undefined;
   setVisitedTank: (visitedTank: tankDataProps) => void | undefined;
   handleTimeFormat: (arg: number) => [any, string?];
   handleFavorites: (tankId: number) => void;
+  // CLUSTER
+  // setMarkerRef: (
+  //   marker: google.maps.marker.AdvancedMarkerElement | null,
+  //   cisternId: number
+  // ) => void;
 }
 
 export const MyMarker = (props: MarkerProps): JSX.Element => {
   const {
-    marker,
+    cistern,
     userData,
     favorites,
     setVisitedTank,
     handleTimeFormat,
     handleFavorites,
   } = props;
+
+  const [isInfoWindowOpen, setIsInfoWindowOpen] = useState(false);
+  const [myMarkerRef, myMarker] = useAdvancedMarkerRef();
   const map = useMap();
-
   const lang = localStorage.getItem("language");
-  // To be able to use mui icons in leaflet :
-  const createCustomIcon = (
-    IconComponent: SvgIconComponent,
-    tankName: string
-  ) => {
-    // Render Material-UI icon as a string (HTML/SVG)
-    const iconHTML = ReactDOMServer.renderToStaticMarkup(
-      <div
-        style={{
-          marginTop: "5px",
-          textAlign: "center",
-          display: "grid",
-          justifyContent: "center",
-          justifyItems: "center",
-          width: "100%",
-        }}
-      >
-        <Typography
-          variant="h2"
-          style={{
-            color: customTheme.palette.background.defaultBlue,
-            fontSize: "2em",
-            fontFamily: "Changa",
-            textWrap: "nowrap",
-          }}
-        >
-          {tankName}
-        </Typography>
-        {marker.type === TankType.PERMANENT ? (
-          <LocationCistern />
-        ) : (
-          <LocationTemporaryCistern />
-        )}
-      </div>
-    );
-    // Create a Leaflet divIcon using the rendered HTML
-    return new DivIcon({
-      html: iconHTML,
-      iconSize: [34, 34],
-      className: "custom-icon-class",
-    });
-  };
 
-  const customIconn = createCustomIcon(
-    LocationCistern,
-    lang === "ar" ? marker.arab_name : marker.latin_name
-  );
+  const hasClickedInsideRef = useRef(false);
+
+  useEffect(() => {
+    const handleDocumentClick = () => {
+      if (!hasClickedInsideRef.current) {
+        setIsInfoWindowOpen(false);
+      }
+      hasClickedInsideRef.current = false;
+    };
+
+    document.addEventListener("mousedown", handleDocumentClick);
+    return () => {
+      document.removeEventListener("mousedown", handleDocumentClick);
+    };
+  }, []);
+
+  const handleMarkerClick = () => {
+    map?.setZoom(19);
+    map?.panTo(cistern.latLng);
+    setIsInfoWindowOpen(true);
+  };
 
   return (
     <Container>
-      <Marker
-        key={marker.id}
-        position={marker.latLng}
-        icon={customIconn}
-        eventHandlers={{
-          click: (e) => {
-            map.setView(marker.latLng, map.getZoom(), {
-              animate: true,
-            });
-          },
-        }}
+      <AdvancedMarker
+        key={cistern.id}
+        position={cistern.latLng}
+        title={lang === "ar" ? cistern.arab_name : cistern.latin_name}
+        onClick={handleMarkerClick}
+        collisionBehavior={CollisionBehavior.OPTIONAL_AND_HIDES_LOWER_PRIORITY}
+        clickable
+        ref={myMarkerRef}
+        // CLUSTER
+        // ref={(marker: Marker | null) => {
+        //   setMarkerRef(marker, cistern.id);
+        // }}
       >
-        <Popup
-          className="popUp_container"
-          autoPan={false}
-          closeButton={false}
-          minWidth={200}
-          maxHeight={210}
+        <div
+          style={{
+            textAlign: "center",
+            display: "grid",
+            justifyItems: "center",
+          }}
         >
-          <MapTankBox
-            tank={marker}
-            userData={userData}
-            favorites={favorites}
-            setVisitedTank={setVisitedTank}
-            handleTimeFormat={handleTimeFormat}
-            handleFavorites={handleFavorites}
-          />
-        </Popup>
-      </Marker>
+          <Typography
+            variant="h2"
+            style={{
+              color: customTheme.palette.background.defaultBlue,
+              fontSize: "2em",
+              fontFamily: "Changa",
+              textWrap: "nowrap",
+            }}
+          >
+            {lang === "ar" ? cistern.arab_name : cistern.latin_name}
+          </Typography>
+          {cistern.type === TankType.PERMANENT ? (
+            <LocationCistern />
+          ) : (
+            <LocationTemporaryCistern />
+          )}
+        </div>
+
+        {isInfoWindowOpen && (
+          <div onMouseDown={() => (hasClickedInsideRef.current = true)}>
+            <InfoWindow
+              anchor={myMarker}
+              disableAutoPan
+              minWidth={200}
+              maxWidth={210}
+              className="popUp_container"
+              headerDisabled
+              shouldFocus
+            >
+              <MapTankBox
+                tank={cistern}
+                userData={userData}
+                favorites={favorites}
+                setVisitedTank={setVisitedTank}
+                handleTimeFormat={handleTimeFormat}
+                handleFavorites={handleFavorites}
+              />
+            </InfoWindow>
+          </div>
+        )}
+      </AdvancedMarker>
     </Container>
   );
 };

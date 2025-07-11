@@ -254,7 +254,7 @@ export const LocationTemporaryCistern: any = () => {
   return (
     <svg
       width="40"
-      height="84"
+      height="40"
       viewBox="0 0 63 84"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -610,6 +610,47 @@ export const Close = (props: iconProps) => {
         stroke={backgroundColor}
         strokeWidth="5"
         strokeLinecap="round"
+      />
+    </svg>
+  );
+};
+
+export const CloseNew = (props: iconProps) => {
+  const { backgroundColor, className, style } = props;
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 18 18"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M1.34466 4.76777C0.368349 3.79146 0.368349 2.20854 1.34466 1.23223C2.32097 0.255922 3.90388 0.255922 4.88019 1.23223L1.34466 4.76777ZM3.11243 3L4.88019 1.23223L7.66018 4.01222L5.89242 5.77999L4.12465 7.54776L1.34466 4.76777L3.11243 3ZM11.4524 11.34L13.2202 9.5722L16.0002 12.3522L14.2324 14.12L12.4646 15.8877L9.68463 13.1077L11.4524 11.34Z"
+        fill={backgroundColor}
+      />
+      <path
+        d="M14.12 3.1123L3.00004 14.2323"
+        stroke={backgroundColor}
+        strokeWidth="5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+};
+export const ArrowBack = (props: iconProps) => {
+  const { backgroundColor, className, style } = props;
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 19 29"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M0.646935 12.9599L13.1489 0.638707C14.013 -0.212902 15.4103 -0.212902 16.2652 0.638707L18.3427 2.68619C19.2068 3.5378 19.2068 4.91487 18.3427 5.75742L9.49024 14.5L18.3519 23.2335C19.216 24.0851 19.216 25.4622 18.3519 26.3047L16.2744 28.3613C15.4103 29.2129 14.013 29.2129 13.1581 28.3613L0.656128 16.0401C-0.217171 15.1885 -0.217171 13.8115 0.646935 12.9599Z"
+        fill={backgroundColor}
       />
     </svg>
   );

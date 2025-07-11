@@ -1,30 +1,28 @@
-import React, { useEffect, useRef, useState, Suspense, useMemo } from "react";
+import React, { useEffect, useState, Suspense, useMemo } from "react";
 //MODELS
 import TankStatus from "../models/utils/TankStatus";
-import { useNavigate, useNavigation, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 //DATA
 import { postsProps, tankDataProps } from "./MapPage";
-import CheckPosts from "./CheckPosts";
 import BottomNav from "./components/BottomNav";
 import PopUp from "./components/PopUp";
 import {
   setANewPost,
   updateLastCheck,
   updateLastPostTime,
-  updateTankStatus,
 } from "../firebase/operations";
 import { UserType } from "../models/utils/UsersType";
 import {
+  ArrowBack,
   EmptyTank,
   FullTank,
   HalfFullTank,
   Infos,
   UnsetTank,
 } from "../utils/constants/Icons";
-import { Box, Button, IconButton, Skeleton, Typography } from "@mui/material";
-import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
+import { Box, Button, IconButton, Typography } from "@mui/material";
 import CommentsDisabledRoundedIcon from "@mui/icons-material/CommentsDisabledRounded";
 import { customTheme, UserData } from "../App";
 import { Global } from "@emotion/react";
@@ -203,11 +201,8 @@ const Tank = (props: TankProps) => {
               onClick={() => navigateTo("/mapPage")}
               sx={{ padding: 0 }}
             >
-              <ChevronLeftRoundedIcon
-                sx={{
-                  color: customTheme.palette.background.defaultBlue,
-                  fontSize: "50px",
-                }}
+              <ArrowBack
+                backgroundColor={customTheme.palette.background.defaultBlue}
               />
             </Button>
           </div>

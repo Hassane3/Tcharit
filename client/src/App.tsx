@@ -13,10 +13,11 @@ import { auth, db, firestoreDb } from "./firebase/firebase";
 
 import { AppProvider } from "@toolpad/core/react-router-dom";
 import Login from "./pages/Login";
-import { createTheme } from "@mui/material";
+import { Button, createTheme, TextField } from "@mui/material";
 import { doc, getDoc } from "firebase/firestore";
 import { calculateDateDifference } from "./utils/methods/methods";
 import ResetPassword from "./pages/ResetPassword";
+import CustomMap from "./pages/CustomMap";
 
 export interface UserData {
   id: string | null;
@@ -267,6 +268,12 @@ export const customTheme = createTheme({
 });
 
 function App(): JSX.Element {
+  const [password, setPassword] = useState<string>("");
+  const [accessGranted, setAccessGranted] = useState<boolean>(false);
+  const handlePsw = (psw: string) => {
+    if (psw === "8800") setAccessGranted(true);
+  };
+
   const [tanksData, setTanksData] = useState<Array<tankDataProps>>([]);
   const [cookies, setCookie] = useCookies(["userId"]);
   const [visitedTank, setVisitedTank] = useState<tankDataProps>();
@@ -354,58 +361,82 @@ function App(): JSX.Element {
 
   return (
     <BrowserRouter>
-      <AppProvider theme={customTheme}>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <MapPage
-                tanksData={tanksData}
-                visitedTank={visitedTank}
-                setVisitedTank={setVisitedTank}
-                user={user}
-                userData={userData}
-                setUserData={setUserData}
-              />
-            }
+      {accessGranted ? (
+        <AppProvider theme={customTheme}>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <MapPage
+                  tanksData={tanksData}
+                  visitedTank={visitedTank}
+                  setVisitedTank={setVisitedTank}
+                  user={user}
+                  userData={userData}
+                  setUserData={setUserData}
+                />
+              }
+            />
+            <Route
+              path="/mapPage"
+              element={
+                <MapPage
+                  tanksData={tanksData}
+                  visitedTank={visitedTank}
+                  setVisitedTank={setVisitedTank}
+                  user={user}
+                  userData={userData}
+                  setUserData={setUserData}
+                />
+              }
+            />
+            <Route
+              path="/tank/:id"
+              element={
+                <Tank
+                  tanksData={tanksData}
+                  setCookie={setCookie}
+                  cookies={cookies}
+                  userData={userData}
+                  user={user}
+                />
+              }
+            />
+            <Route
+              path="/login"
+              element={<Login handleSetTankAgentData={setTankAgentData} />}
+            />
+            <Route path="/resetPassword" element={<ResetPassword />} />
+            <Route
+              path="/notifications"
+              // element={<Notifications />}
+            />
+            <Route path="*" element={<NoPage />} />
+          </Routes>
+        </AppProvider>
+      ) : (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <TextField
+            type="password"
+            required
+            onChange={(e: any) => setPassword(e.target.value)}
+            value={password}
           />
-          <Route
-            path="/mapPage"
-            element={
-              <MapPage
-                tanksData={tanksData}
-                visitedTank={visitedTank}
-                setVisitedTank={setVisitedTank}
-                user={user}
-                userData={userData}
-                setUserData={setUserData}
-              />
-            }
-          />
-          <Route
-            path="/tank/:id"
-            element={
-              <Tank
-                tanksData={tanksData}
-                setCookie={setCookie}
-                cookies={cookies}
-                userData={userData}
-                user={user}
-              />
-            }
-          />
-          <Route
-            path="/login"
-            element={<Login handleSetTankAgentData={setTankAgentData} />}
-          />
-          <Route path="/resetPassword" element={<ResetPassword />} />
-          <Route
-            path="/notifications"
-            // element={<Notifications />}
-          />
-          <Route path="*" element={<NoPage />} />
-        </Routes>
-      </AppProvider>
+          <Button
+            type="submit"
+            variant="contained"
+            onClick={() => handlePsw(password)}
+          >
+            Enter
+          </Button>
+        </div>
+      )}
     </BrowserRouter>
   );
 }
