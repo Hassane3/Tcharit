@@ -196,13 +196,17 @@ const MapTankBox = (props: mapTankBoxProps) => {
               lastCheckTime &&
               handleTimeFormat(lastCheckTime)
                 .reverse()
-                .map((time: string) => <span>{time}&nbsp;</span>)
+                .map((time: string, index: number) => (
+                  <span key={index}>{time}&nbsp;</span>
+                ))
             ) : (
               <span>
                 {lastCheckTime &&
-                  handleTimeFormat(lastCheckTime).map((time: string) => (
-                    <span>{time}&nbsp;</span>
-                  ))}
+                  handleTimeFormat(lastCheckTime).map(
+                    (time: string, index: number) => (
+                      <span key={index}>{time}&nbsp;</span>
+                    )
+                  )}
               </span>
             )}
           </span>
