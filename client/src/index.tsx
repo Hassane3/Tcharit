@@ -15,7 +15,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <I18nextProvider i18n={i18next}>
-      <APIProvider apiKey="AIzaSyCdW0AItVVH_bBkNgx5ec36E42zpkIGG5M">
+      <APIProvider apiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY || ""}>
         <App />
       </APIProvider>
     </I18nextProvider>
