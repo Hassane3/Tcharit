@@ -57,8 +57,10 @@ export const MyMarker = (props: MarkerProps): JSX.Element => {
     };
 
     document.addEventListener("mousedown", handleDocumentClick);
+    document.addEventListener("pointerdown", handleDocumentClick);
     return () => {
       document.removeEventListener("mousedown", handleDocumentClick);
+      document.removeEventListener("pointerdown", handleDocumentClick);
     };
   }, []);
 
