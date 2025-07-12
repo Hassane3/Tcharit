@@ -120,6 +120,7 @@ export const MyMarker = (props: MarkerProps): JSX.Element => {
               shouldFocus
             >
               <MapTankBox
+                key={cistern.id}
                 tank={cistern}
                 userData={userData}
                 favorites={favorites}
