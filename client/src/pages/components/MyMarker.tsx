@@ -56,10 +56,10 @@ export const MyMarker = (props: MarkerProps): JSX.Element => {
       hasClickedInsideRef.current = false;
     };
 
-    document.addEventListener("mousedown", handleDocumentClick);
+    // document.addEventListener("mousedown", handleDocumentClick);
     document.addEventListener("pointerdown", handleDocumentClick);
     return () => {
-      document.removeEventListener("mousedown", handleDocumentClick);
+      // document.removeEventListener("mousedown", handleDocumentClick);
       document.removeEventListener("pointerdown", handleDocumentClick);
     };
   }, []);
@@ -111,7 +111,10 @@ export const MyMarker = (props: MarkerProps): JSX.Element => {
         </div>
 
         {isInfoWindowOpen && (
-          <div onMouseDown={() => (hasClickedInsideRef.current = true)}>
+          <div
+            onMouseDown={() => (hasClickedInsideRef.current = true)}
+            onPointerDown={() => (hasClickedInsideRef.current = true)}
+          >
             <InfoWindow
               anchor={myMarker}
               disableAutoPan
