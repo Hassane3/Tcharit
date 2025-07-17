@@ -93,9 +93,7 @@ export const WaterIcon = () => {
 function MapPage(props: mapPageProps) {
   const { tanksData, visitedTank, user, userData, setVisitedTank } = props;
 
-  const [searchValue, setSearchValue] = useState<string | null>(
-    tanksData.at(0)?.latin_name || ""
-  );
+  const [searchValue, setSearchValue] = useState<string | null>(null);
   const [inputValue, setInputValue] = useState<string>("");
   const [favorites, setFavorites] = useState<Array<string> | undefined>(
     localStorage.getItem("favorites")?.split(",")
@@ -203,16 +201,19 @@ function MapPage(props: mapPageProps) {
     lng: -0.118092,
   });
 
-  // CLUSTER MARKER
-  // HERE
-
   return (
     <div id="map">
       <Map
         style={{ borderRadius: "20px", position: "absolute" }}
         defaultZoom={18}
         defaultCenter={
-          visitedTank ? visitedTank.latLng : { lat: 43.300787, lng: 5.37724 }
+          visitedTank
+            ? visitedTank.latLng
+            : {
+                lat: 32.470097,
+
+                lng: 3.689434,
+              }
         }
         gestureHandling={"greedy"}
         disableDefaultUI
@@ -284,7 +285,7 @@ function MapPage(props: mapPageProps) {
         handleFavorites={handleFavorites}
       />
 
-      <Footer id={tanksData.length} userData={userData} />
+      {user && <Footer id={tanksData.length} userData={userData} />}
     </div>
   );
 }

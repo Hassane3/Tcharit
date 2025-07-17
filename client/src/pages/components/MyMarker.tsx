@@ -93,7 +93,7 @@ export const MyMarker = (props: MarkerProps): JSX.Element => {
           }}
         >
           <Typography
-            variant="h2"
+            variant="h3"
             style={{
               color: customTheme.palette.background.defaultBlue,
               fontSize: "2em",

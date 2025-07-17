@@ -326,6 +326,7 @@ function App(): JSX.Element {
         snapshot.forEach((tank: any) => {
           tanks.push({ id: parseInt(tank.key), ...tank.val() });
 
+          //Delete old posts
           const dbPostRef = ref(db, "tanks/" + tank.key + "/posts");
           // database.ref("users").once("value").then((snapshot)
           const posts = onValue(
@@ -347,14 +348,16 @@ function App(): JSX.Element {
               });
             },
             (error: Error) => {
-              alert("Error while fetching datas from db : " + error.message);
+              console.log(
+                "Error while fetching datas from db : " + error.message
+              );
             }
           );
           setTanksData(tanks);
         });
       },
       (error: Error) => {
-        alert("Error while fetching datas from db : " + error.message);
+        console.log("Error while fetching datas from db : " + error.message);
       }
     );
   }, [cookies]);

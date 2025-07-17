@@ -111,7 +111,8 @@ const MapTankBox = (props: mapTankBoxProps) => {
       style={{
         display: "flex",
         flexDirection: "column",
-        width: "100%",
+        width: "inherit",
+        height: "inherit",
         padding: "4px",
       }}
     >
@@ -154,7 +155,7 @@ const MapTankBox = (props: mapTankBoxProps) => {
           style={{
             display: "flex",
             alignItems: "center",
-            margin: "0 4px 10px 4px",
+            margin: "10px",
           }}
         >
           {lastPost
@@ -167,10 +168,11 @@ const MapTankBox = (props: mapTankBoxProps) => {
           <p
             className="popUp_description"
             style={{
+              flex: 1,
               padding: "0 14px",
               maxWidth: "170px",
               textAlign: "left",
-              textTransform: "lowercase",
+              textTransform: "initial",
               color: lastPost
                 ? lastPost.status === TankStatus.EMPTY
                   ? customTheme.palette.background.red

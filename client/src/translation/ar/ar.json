@@ -9,21 +9,22 @@
       "tempo_cistern": {
         "tempo_cistern": "خزان مؤقت",
         "info": "لكي يتم إضافة خزان مؤقت يجب تحديد موقعه الجغرافي",
-        "get_geolocation": "احصل على موقعك الجغرافي",
+        "get_geolocation": "تحصل على موقعك الجغرافي",
         "name": "اسم الخزان",
         "coordinates": "الإحداثيات",
         "actual_coordonate": "الإحداثيات الحالية :",
         "confirm_delete": "هل أنت متأكد أنك تريد حذف هذا الخزان ؟",
-        "confirm_deletion": "تم حذف الصهريج",
-        "confirm_add": "تم إضافة الصهريج"
+        "confirm_deletion": "تم حذف الصهريج ✅",
+        "confirm_add": "تم إضافة الصهريج ✅",
+        "confirm_fail_add": "لقد فشلت عملية اضافة الصهريج ⚠️"
       }
     },
     "tank": {
       "tank_status": {
-        "tank_is_full": "الخزان ممتلئ",
-        "tank_is_halfFull": "الخزان نصف ممتلئ",
-        "tank_is_empty": "الخزان فارغ",
-        "tank_is_unset": " لم يسجل اية حالة لهذا الخزان"
+        "tank_is_full": "ممتلئ",
+        "tank_is_halfFull": "نصف ممتلئ",
+        "tank_is_empty": "فارغ",
+        "tank_is_unset": "لم يسجل اية انذار لهذا الخزان"
       },
       "tank_state": {
         "full": "ممتلئ",
@@ -48,7 +49,9 @@
       "select_cistern": "اختر الخزان"
     },
     "post": {
-      "post_deleted": "تم محو التقرير"
+      "confirm_deletion": "تم حذف التقرير ✅",
+      "confirm_add": "تم إضافة التقرير ✅",
+      "confirm_fail_add": "لقد فشلت عملية اضافة التقرير ❌"
     },
     "info": {
       "trusted": "موثوق"
@@ -131,5 +134,8 @@
     "week": "أسبوع",
     "month": "شهر",
     "months": "شهور"
+  },
+  "errors": {
+    "someting_went_wrong": "يبدو أن هنالك مشكلة، يرجى المحاولة"
   }
 }

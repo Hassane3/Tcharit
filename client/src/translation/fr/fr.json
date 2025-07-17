@@ -14,16 +14,17 @@
         "coordinates": "Coordonnés",
         "actual_coordonate": "Coordonnée actuelle ",
         "confirm_delete": "Êtes-vous sûr de vouloir supprimer cette citerne ?",
-        "confirm_deletion": "La citerne a bien été supprimée",
-        "confirm_add": "La citerne a bien été ajoutée"
+        "confirm_deletion": "✅ La citerne a bien été supprimée",
+        "confirm_add": "✅ La citerne a bien été ajoutée",
+        "confirm_fail_add": "⚠️ La création de la citerne a échoué..."
       }
     },
     "tank": {
       "tank_status": {
-        "tank_is_full": "Le réservoir est rempli",
-        "tank_is_halfFull": "Le réservoir est à moitié",
-        "tank_is_empty": "Le réservoir est vide",
-        "tank_is_unset": "Aucun information d'état signalée"
+        "tank_is_full": "Rempli",
+        "tank_is_halfFull": "Presque vide",
+        "tank_is_empty": "Vide",
+        "tank_is_unset": "Aucune information signalée"
       },
       "tank_state": {
         "full": "Rempli",
@@ -48,7 +49,9 @@
       "select_cistern": "Réservoirs"
     },
     "post": {
-      "post_deleted": "Le signal a été supprimé"
+      "confirm_deletion": "✅ Le post a été supprimé",
+      "confirm_add": "✅ Le post a été ajouté avec succès !",
+      "confirm_fail_add": "❌ L'ajout du post a échoué..."
     },
     "info": {
       "trusted": "Fiable"
@@ -131,5 +134,8 @@
     "week": "Semaine",
     "month": "Mois",
     "months": "Mois"
+  },
+  "errors": {
+    "someting_went_wrong": "Il semble qu'il y est un problème, merci de réessayer"
   }
 }

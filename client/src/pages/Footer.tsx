@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { checkAndRequestGeolocation } from "../utils/methods/methods";
 import { postsProps, tankDataProps } from "./MapPage";
 import TankStatus from "../models/utils/TankStatus";
@@ -105,52 +105,62 @@ const Footer = (props: footerProps) => {
 
   const map = useMap();
 
-  const handleAddTempoCistern = (geolocation: GeolocationPosition) => {
-    setIsTempoCisternOpen(false);
-    setIsFooterExpanded(false);
-    // addTempoCistern;
-    let date = new Date();
-    let newPost: postsProps = {
-      status: TankStatus.FULL,
-      userType: UserType.TANKAGENT,
-      userName: userData.name ? userData.name : null,
-      date: date.toLocaleDateString(),
-      time: date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-      weekDay: date.toLocaleDateString([], { weekday: "long" }),
-      postTime: date.getTime(),
-    };
-    let now = new Date().getTime();
-    let tankId = id;
-    let newCisternData: tankDataProps = {
-      id: tankId,
-      type: TankType.TEMPORARY,
-      latin_name: tempoCisternName,
-      arab_name: tempoCisternName,
-      lastPostTime: now,
-      lastCheckTime: 0,
-      latLng: {
-        lat: geolocation.coords.latitude,
-        lng: geolocation.coords.longitude,
-      },
-      status: TankStatus.FULL,
-      posts: [newPost],
-      tankAgentId: userData.id,
-    };
-    setANewCistern(tankId, newCisternData);
-
-    const userLatLng = new google.maps.LatLng(
-      geolocation.coords.latitude,
-      geolocation.coords.longitude
-    );
-    map?.setZoom(19);
-    map?.panTo(userLatLng);
-    setGeolocation(geolocation);
-    setTempoCisternBox(TempoCisternBoxes.COORDINATES);
-
-    setGeolocation(undefined);
-    setSnackMessage(t("common.mapPage.tempo_cistern.confirm_add"));
-    setIsSnackOpen(true);
-  };
+  const handleAddTempoCistern = useCallback(
+    async (geolocation: GeolocationPosition) => {
+      let date = new Date();
+      let newPost: postsProps = {
+        status: TankStatus.FULL,
+        userType: UserType.TANKAGENT,
+        userName: userData.name ? userData.name : null,
+        date: date.toLocaleDateString(),
+        time: date.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        weekDay: date.toLocaleDateString([], { weekday: "long" }),
+        postTime: date.getTime(),
+      };
+      let now = new Date().getTime();
+      let tankId = id;
+      let newCisternData: tankDataProps = {
+        id: tankId,
+        type: TankType.TEMPORARY,
+        latin_name: tempoCisternName,
+        arab_name: tempoCisternName,
+        lastPostTime: now,
+        lastCheckTime: 0,
+        latLng: {
+          lat: geolocation.coords.latitude,
+          lng: geolocation.coords.longitude,
+        },
+        status: TankStatus.FULL,
+        posts: [newPost],
+        tankAgentId: userData.id,
+      };
+      try {
+        await setANewCistern(tankId, newCisternData);
+        setIsFooterExpanded(false);
+        setIsTempoCisternOpen(false);
+        const userLatLng = new google.maps.LatLng(
+          geolocation.coords.latitude,
+          geolocation.coords.longitude
+        );
+        map?.setZoom(19);
+        map?.panTo(userLatLng);
+        setGeolocation(geolocation);
+        setTempoCisternBox(TempoCisternBoxes.COORDINATES);
+        setGeolocation(undefined);
+        setIsSnackOpen(true);
+        setSnackMessage(t("common.mapPage.tempo_cistern.confirm_add"));
+      } catch {
+        alert(t("errors.someting_went_wrong"));
+        setIsSnackOpen(true);
+        setSnackMessage(t("common.mapPage.tempo_cistern.confirm_fail_add"));
+        setTempoCisternBox(TempoCisternBoxes.INFOS);
+      }
+    },
+    [id, userData, tempoCisternName, map, t]
+  );
 
   // To be able to use mui icons in leaflet :
   // const createCustomIcon = (IconComponent: SvgIconComponent) => {
