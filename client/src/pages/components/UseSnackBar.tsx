@@ -25,6 +25,7 @@ const UseSnackBar = (props: useSnackBarProps) => {
         vertical: "bottom",
         horizontal: "center",
       }}
+      sx={{ div: { justifyContent: "center" } }}
       open={isSnackOpen}
       onClose={handleClose}
       message={snackMessage}

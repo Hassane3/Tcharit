@@ -1,0 +1,249 @@
+{
+  "tanks": {
+    "0": {
+      "latin_name": "Oukdach #1",
+      "arab_name": "1# أقداش",
+      "latLng": {
+        "lat": 32.470889,
+        "lng": 3.692139
+      },
+      "status": "EMPTY",
+      "lastPostTime": 0,
+      "lastCheckTime": 0
+    },
+    "1": {
+      "latin_name": "Chemin Dar Aarass",
+      "arab_name": "طريق دار الأعراس",
+      "latLng": {
+        "lat": 32.461694,
+        "lng": 3.691444
+      },
+      "status": "EMPTY",
+      "lastPostTime": 0,
+      "lastCheckTime": 0,
+
+      "posts": {}
+    },
+    "2": {
+      "latin_name": "EL-Haramein",
+      "arab_name": "الحرمين",
+      "latLng": {
+        "lat": 32.4773592,
+        "lng": 3.6950953
+      },
+      "status": "EMPTY",
+      "lastPostTime": 0,
+      "lastCheckTime": 0,
+
+      "posts": {}
+    },
+    "3": {
+      "latin_name": "Stade",
+      "arab_name": "الملعب",
+      "latLng": {
+        "lat": 32.471039,
+        "lng": 3.684783
+      },
+      "status": "EMPTY",
+      "lastPostTime": 0,
+      "lastCheckTime": 0,
+
+      "posts": {}
+    },
+    "4": {
+      "latin_name": "Souk I",
+      "arab_name": "I السوق",
+      "latLng": {
+        "lat": 32.462651,
+        "lng": 3.690656
+      },
+      "status": "EMPTY",
+      "lastPostTime": 0,
+      "lastCheckTime": 0,
+
+      "posts": {}
+    },
+    "5": {
+      "latin_name": "Blidi",
+      "arab_name": "بليدي",
+      "latLng": {
+        "lat": 32.475129,
+        "lng": 3.699154
+      },
+      "status": "EMPTY",
+      "lastPostTime": 0,
+      "lastCheckTime": 0,
+
+      "posts": {}
+    },
+    "6": {
+      "latin_name": "La nouvelle Tafilelt",
+      "arab_name": "تافيلالت تاجديت",
+      "latLng": {
+        "lat": 32.45968,
+        "lng": 3.693355
+      },
+      "status": "EMPTY",
+      "lastPostTime": 0,
+      "lastCheckTime": 0,
+
+      "posts": {}
+    },
+    "7": {
+      "latin_name": "El-Malik",
+      "arab_name": "المليك",
+      "latLng": {
+        "lat": 32.472574,
+        "lng": 3.690975
+      },
+      "status": "EMPTY",
+      "lastPostTime": 0,
+      "lastCheckTime": 0,
+
+      "posts": {}
+    },
+    "8": {
+      "latin_name": "Merkich",
+      "arab_name": "مركيش",
+      "latLng": {
+        "lat": 32.4668,
+        "lng": 3.682998
+      },
+      "status": "EMPTY",
+      "lastPostTime": 0,
+      "lastCheckTime": 0,
+
+      "posts": {}
+    },
+    "9": {
+      "latin_name": "ِChikh Abdellah Bouras",
+      "arab_name": "الشيخ عبد الله بوراس",
+      "latLng": {
+        "lat": 32.470462,
+        "lng": 3.684643
+      },
+      "status": "EMPTY",
+      "lastPostTime": 0,
+      "lastCheckTime": 0,
+
+      "posts": {}
+    },
+    "10": {
+      "latin_name": "ِMosque Oudjoujen",
+      "arab_name": "مسجد أدجوجن",
+      "latLng": {
+        "lat": 32.4694,
+        "lng": 3.684172
+      },
+      "status": "EMPTY",
+      "lastPostTime": 0,
+      "lastCheckTime": 0,
+
+      "posts": {}
+    },
+    "11": {
+      "latin_name": "ِElmawthik - Siroukan",
+      "arab_name": "الموثق سيروكان",
+      "latLng": {
+        "lat": 32.4793608,
+        "lng": 3.6962175
+      },
+      "status": "EMPTY",
+      "lastPostTime": 0,
+      "lastCheckTime": 0,
+
+      "posts": {}
+    },
+    "12": {
+      "latin_name": "ِBouras",
+      "arab_name": "الموثق سيروكان",
+      "latLng": {
+        "lat": 32.4789134,
+        "lng": 3.6971398
+      },
+      "status": "EMPTY",
+      "lastPostTime": 0,
+      "lastCheckTime": 0,
+
+      "posts": {}
+    },
+    "13": {
+      "latin_name": "Marghoub",
+      "arab_name": "مرغوب",
+      "latLng": {
+        "lat": 32.476763,
+        "lng": 3.697558
+      },
+      "status": "EMPTY",
+      "lastPostTime": 0,
+      "lastCheckTime": 0,
+
+      "posts": {}
+    },
+    "14": {
+      "latin_name": "El-Bordj",
+      "arab_name": "البرج",
+      "latLng": {
+        "lat": 32.460139,
+        "lng": 3.689694
+      },
+      "status": "EMPTY",
+      "lastPostTime": 0,
+      "lastCheckTime": 0,
+
+      "posts": {}
+    },
+    "15": {
+      "latin_name": "Bousrih",
+      "arab_name": "حي بوسريح",
+      "latLng": {
+        "lat": 32.4698353,
+        "lng": 3.6925764
+      },
+      "status": "EMPTY",
+      "lastPostTime": 0,
+      "lastCheckTime": 0,
+
+      "posts": {}
+    },
+    "16": {
+      "latin_name": "El-Akwass",
+      "arab_name": "الأقواس",
+      "latLng": {
+        "lat": 32.461278,
+        "lng": 3.690833
+      },
+      "status": "EMPTY",
+      "lastPostTime": 0,
+      "lastCheckTime": 0,
+
+      "posts": {}
+    },
+    "17": {
+      "latin_name": "El-Jabiriya",
+      "arab_name": "حي الجابرية",
+      "latLng": {
+        "lat": 32.4694393,
+        "lng": 3.6822415
+      },
+      "status": "EMPTY",
+      "lastPostTime": 0,
+      "lastCheckTime": 0,
+
+      "posts": {}
+    },
+    "18": {
+      "latin_name": "El-Mitiaf",
+      "arab_name": "المطياف",
+      "latLng": {
+        "lat": 32.470889,
+        "lng": 3.692444
+      },
+      "status": "EMPTY",
+      "lastPostTime": 0,
+      "lastCheckTime": 0,
+
+      "posts": {}
+    }
+  }
+}

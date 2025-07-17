@@ -31,6 +31,9 @@ import SwipeableBox from "./components/SwipeableBox";
 import { lazyWithDelay } from "../utils/ui/Skeleton";
 import { SkeletonCheckPosts } from "../utils/ui/Skeleton";
 import { useTranslation } from "react-i18next";
+import UseSnackBar from "./components/UseSnackBar";
+import { DataSnapshot, onValue, ref } from "firebase/database";
+import { db } from "../firebase/firebase";
 interface TankProps {
   tanksData: tankDataProps[];
   setCookie: (userIdTitle: any, userIdValue: any, option: any) => void;
@@ -53,7 +56,11 @@ const Tank = (props: TankProps) => {
 
   const [isAddPostAllowed, setIsAddPostAllowed] = useState<boolean>(false);
   const [openBottomNav, setOpenBottomNav] = useState<boolean>(false);
-  const [lastPost, setLastPost] = useState<postsProps | undefined>();
+  const [lastPost, setLastPost] = useState<postsProps | null>();
+
+  // MUI SnackBar
+  const [isSnackOpen, setIsSnackOpen] = useState<boolean>(false);
+  const [snackMessage, setSnackMessage] = useState<string>("");
   // const lastPost =
   //   selectedTankData &&
   //   selectedTankData.posts &&
@@ -82,6 +89,22 @@ const Tank = (props: TankProps) => {
     }
   }, [tankId, tanksData]);
 
+  const [postsData, setPostsData] = useState<Array<postsProps>>([]);
+  useEffect(() => {
+    let posts: Array<postsProps> = [];
+    if (selectedTankData) {
+      const dbRef = ref(db, "tanks/" + selectedTankData.id + "/posts");
+
+      return onValue(dbRef, (snapshot: DataSnapshot) => {
+        posts = [];
+        snapshot.forEach((post: any) => {
+          posts.push({ id: post.key, ...post.val() });
+        });
+        setPostsData(posts);
+      });
+    }
+  }, [selectedTankData]);
+
   // METHODS
   const handleConfirmationBox =
     (isConfirmBoxOpen: boolean, tankStatus?: TankStatus) =>
@@ -109,22 +132,30 @@ const Tank = (props: TankProps) => {
     };
     if (selectedTankData && newPostData) {
       // alert("tank id : " + selectedTankData.id);
-      setANewPost(selectedTankData?.id, newPostData);
-      // updateTankStatus(selectedTankData?.id, status);
+      try {
+        setANewPost(selectedTankData?.id, newPostData);
+        setIsConfirmBoxOpen(false);
+        //Create a Uuid (unique id)
+        let newUuid: string = crypto.randomUUID();
+        setIsAddPostAllowed(false);
+        // Add a cookie that contains the identifier of the user and the maxAge of his cookie (300s => 5min)
+        setCookie("userId", newUuid, { path: "/", maxAge: 300 });
+        let now = new Date().getTime();
+        updateLastPostTime(tankId, now);
+        let diffTime = Math.floor((now - selectedTankData.lastPostTime) / 1000);
+        updateLastCheck(selectedTankData.id, diffTime);
+        setOpenBottomNav(false);
+        setLastPost(newPostData);
+        setIsSnackOpen(true);
+        setSnackMessage(t("common.post.confirm_add"));
+      } catch (error) {
+        alert(t("errors.someting_went_wrong"));
+        setIsConfirmBoxOpen(false);
+        setIsSnackOpen(true);
+        setSnackMessage(t("common.post.confirm_fail_add"));
+      }
 
-      setIsConfirmBoxOpen(false);
-      //Create a Uuid (unique id)
-      let newUuid: string = crypto.randomUUID();
-      setIsAddPostAllowed(false);
-      // Add a cookie that contains the identifier of the user and the maxAge of his cookie (300s => 5min)
-      // setCookie("userId", newUuid, { path: "/", maxAge: 300 });
-      setCookie("userId", newUuid, { path: "/", maxAge: 100 });
-      let now = new Date().getTime();
-      updateLastPostTime(tankId, now);
-      let diffTime = Math.floor((now - selectedTankData.lastPostTime) / 1000);
-      updateLastCheck(selectedTankData.id, diffTime);
-      setOpenBottomNav(false);
-      setLastPost(newPostData);
+      // updateTankStatus(selectedTankData?.id, status);
     }
   };
 
@@ -149,20 +180,20 @@ const Tank = (props: TankProps) => {
     []
   );
   useEffect(() => {
-    if (selectedTankData?.posts) {
-      const latest = Object.values(selectedTankData.posts).at(-1);
+    if (postsData.length != 0) {
+      const latest = Object.values(postsData).at(-1);
       setLastPost(latest);
     } else {
-      setLastPost(undefined); // in case posts are removed or not available
+      setLastPost(null); // in case posts are removed or not available
     }
-  }, [selectedTankData?.posts]);
-  console.log("lastPost ==> ", lastPost);
+  }, [postsData]);
+
   return (
     <Page
       style={
         // We take the lastPost
-        selectedTankData && {
-          backgroundColor: selectedTankData.posts
+        {
+          backgroundColor: lastPost
             ? getTankStatusColor(lastPost, "extraLight")
             : customTheme.palette.background.defaultWhite,
 
@@ -219,6 +250,7 @@ const Tank = (props: TankProps) => {
                 variant="h2"
                 id="tank_name"
                 color={customTheme.palette.background.defaultBlue}
+                style={{ textWrap: "nowrap" }}
               >
                 {lang === "ar"
                   ? selectedTankData?.arab_name
@@ -229,14 +261,15 @@ const Tank = (props: TankProps) => {
                 id="tank_description"
                 style={
                   selectedTankData && {
-                    color: selectedTankData.posts
+                    color: lastPost
                       ? getTankStatusColor(lastPost, "basic")
-                      : customTheme.palette.background.blueExtraLight,
+                      : customTheme.palette.background.greyLight,
+                    textWrap: "nowrap",
                   }
                 }
               >
                 {headerHeight > headerTight &&
-                  (selectedTankData && selectedTankData.posts
+                  (lastPost
                     ? lastPost?.status === TankStatus.EMPTY
                       ? t("common.tank.tank_status.tank_is_empty")
                       : lastPost?.status === TankStatus.HALFFUll
@@ -245,13 +278,17 @@ const Tank = (props: TankProps) => {
                     : t("common.tank.tank_status.tank_is_unset"))}
               </Typography>
             </div>
-            {selectedTankData && selectedTankData.posts
-              ? lastPost?.status === TankStatus.EMPTY
-                ? EmptyTank()
-                : lastPost?.status === TankStatus.HALFFUll
-                  ? HalfFullTank()
-                  : FullTank()
-              : UnsetTank()}
+            {lastPost ? (
+              lastPost?.status === TankStatus.EMPTY ? (
+                <EmptyTank />
+              ) : lastPost?.status === TankStatus.HALFFUll ? (
+                <HalfFullTank />
+              ) : (
+                <FullTank />
+              )
+            ) : (
+              <UnsetTank />
+            )}
           </PopUpMainElements>
         </HeaderElements>
 
@@ -331,59 +368,15 @@ const Tank = (props: TankProps) => {
           </div>
         )}
       </Header>
-      {selectedTankData?.posts ? (
-        <Suspense fallback={<SkeletonCheckPosts />}>
-          <CheckPosts tankData={selectedTankData} user={user} />
-        </Suspense>
-      ) : (
-        <div
-          style={{
-            paddingBottom: "100px",
-            paddingTop: "50vh",
-            textAlign: "center",
-          }}
-        >
-          <CommentsDisabledRoundedIcon
-            style={{
-              fontSize: "50px",
-              color: customTheme.palette.background.blueDark,
-            }}
-          />
-          <Typography
-            variant="h3"
-            style={{ color: customTheme.palette.background.blueDark }}
-          >
-            {t("common.tank.tank_status.tank_is_unset")}
-          </Typography>
-        </div>
+
+      {selectedTankData && (
+        <CheckPosts
+          tankData={selectedTankData}
+          postsData={postsData}
+          user={user}
+        />
       )}
 
-      {/* {selectedTankData && selectedTankData.posts ? (
-        <div>
-          <CheckPosts tankData={selectedTankData} />
-        </div>
-      ) : (
-        <div
-          style={{
-            paddingBottom: "100px",
-            paddingTop: "50vh",
-            textAlign: "center",
-          }}
-        >
-          <CommentsDisabledRoundedIcon
-            style={{
-              fontSize: "50px",
-              color: customTheme.palette.background.blueDark,
-            }}
-          />
-          <Typography
-            variant="h3"
-            style={{ color: customTheme.palette.background.blueDark }}
-          >
-            No cistern state has been posted
-          </Typography>
-        </div>
-      )} */}
       {selectedTankData && (
         <SwipeableBox
           navLabel={t("common.tank.report_water_flow")}
@@ -426,13 +419,18 @@ const Tank = (props: TankProps) => {
           setConfirmationBox={handleConfirmationBox}
         />
       )}
+      <UseSnackBar
+        isSnackOpen={isSnackOpen}
+        setIsSnackOpen={setIsSnackOpen}
+        snackMessage={snackMessage}
+      />
     </Page>
   );
 };
 
 export const getTankStatusColor = (
   // tank: tankDataProps | undefined,
-  lastPost: postsProps | undefined,
+  lastPost: postsProps | null,
   mode: "dark" | "basic" | "light" | "extraLight"
 ) => {
   return lastPost

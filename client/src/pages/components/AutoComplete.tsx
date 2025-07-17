@@ -76,6 +76,7 @@ const AutoComplete = (props: AutoCompleteProps) => {
             // "-0.0002" to avoid having the marker hidden by the keyboard (on mobile)
             { lat: tank.latLng.lat - 0.0002, lng: tank.latLng.lng }
           );
+        map?.setZoom(16);
       }}
       inputValue={inputValue}
       onInputChange={(event, newInputValue) => {

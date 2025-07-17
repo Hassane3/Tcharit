@@ -1,18 +1,21 @@
-import React from 'react'
 import { postsProps, tankDataProps } from '../pages/MapPage';
 import TankStatus from '../models/utils/TankStatus';
-import { DataSnapshot, child, getDatabase, onValue, push, ref, remove, set, update } from "firebase/database";
+import { child, getDatabase, push, ref, remove, set, update } from "firebase/database";
 import {  getAuth, signInWithEmailAndPassword, signOut, UserCredential } from 'firebase/auth';
  
-export const setANewCistern = (tankId:number,tankData:tankDataProps) =>{
-    const db = getDatabase();
-    const updates = {
-        ['tanks/'+tankId]: tankData
-    };
-      return update(ref(db), updates)  
+
+
+export const setANewCistern = (tankId:number,tankData:tankDataProps) :Promise<void>=>{
+    
+        const db = getDatabase();
+        const updates = {
+            ['tanks/'+tankId]: tankData
+        };
+      return update(ref(db), updates)
 }
 
-export const setANewPost = (tankId: number, postData: postsProps) => {
+export const setANewPost = (tankId: number, postData: postsProps) :Promise<void>=> {
+
         const db = getDatabase();
 
         // Get a key for the new post
@@ -21,7 +24,6 @@ export const setANewPost = (tankId: number, postData: postsProps) => {
         const updates = {
             ['/tanks/' + tankId + '/posts/' + newPostKey] : postData
         };
-        
 
         return update(ref(db), updates)
     }

@@ -14,21 +14,22 @@
         "coordinates": "Coordinates",
         "actual_coordonate": "Actual coordonate : ",
         "confirm_delete": "Are you sure you want to delete this tank ?",
-        "confirm_deletion": "The cistern has been deleted successfully",
-        "confirm_add": "The cistern has been added successfully"
+        "confirm_deletion": "✅ The cistern has been deleted successfully",
+        "confirm_add": "✅ The cistern has been added successfully",
+        "confirm_fail_add": "⚠️ The creation of the cistern has failed"
       }
     },
     "tank": {
       "tank_status": {
-        "tank_is_full": "The water tank is full",
-        "tank_is_halfFull": "The water tank is half-full",
-        "tank_is_empty": "The water tank is emtpy",
+        "tank_is_full": "Full",
+        "tank_is_halfFull": "Half-full",
+        "tank_is_empty": "Emtpy",
         "tank_is_unset": "No reports have been posted"
       },
       "tank_state": {
-        "full": "full",
-        "half_full": "half-full",
-        "empty": "empty"
+        "full": "Full",
+        "half_full": "Half-full",
+        "empty": "Empty"
       },
       "water_flow": {
         "high": "High",
@@ -49,7 +50,9 @@
       "select_cistern": "Select cistern"
     },
     "post": {
-      "post_deleted": "The post has been deleted"
+      "confirm_deletion": "✅ The post has been deleted",
+      "confirm_add": "✅ The post has been added successfully !",
+      "confirm_fail_add": "❌ The post creation has failed..."
     },
     "info": {
       "trusted": "Trusted"
@@ -133,5 +136,8 @@
     "week": "Week",
     "month": "Month",
     "months": "Months"
+  },
+  "errors": {
+    "someting_went_wrong": "Something went wrong... Please try again"
   }
 }

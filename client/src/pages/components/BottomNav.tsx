@@ -110,8 +110,9 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
     setIsLoading(true);
     if (user) {
       setIsAddPostAllowed(true);
+      setIsLoading(false);
     } else {
-      checkAndRequestGeolocation()
+      await checkAndRequestGeolocation()
         .then(() =>
           navigator.geolocation.getCurrentPosition((position) => {
             if (position) {
