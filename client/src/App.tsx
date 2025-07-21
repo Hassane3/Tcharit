@@ -188,6 +188,12 @@ export const customTheme = createTheme({
       fontWeight: "400",
       lineHeight: "1.1em",
     },
+    h6: {
+      fontFamily: "changa",
+      fontSize: "14px",
+      fontWeight: "600",
+      lineHeight: "1.1em",
+    },
     button: {
       fontSize: "1.4em",
       fontWeight: "600",

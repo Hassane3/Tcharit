@@ -16,9 +16,12 @@ import MapTankBox from "./MapTankBox";
 import { tankDataProps } from "../MapPage";
 import { UserData, customTheme } from "../../App";
 import TankType from "../../models/utils/TankType";
+import styled from "styled-components";
+import { getDiffTime } from "../../utils/methods/methods";
 
 interface MarkerProps {
   cistern: tankDataProps;
+  user: {} | null;
   userData: UserData;
   favorites: Array<string> | undefined;
   setVisitedTank: (visitedTank: tankDataProps) => void | undefined;
@@ -34,6 +37,7 @@ interface MarkerProps {
 export const MyMarker = (props: MarkerProps): JSX.Element => {
   const {
     cistern,
+    user,
     userData,
     favorites,
     setVisitedTank,
@@ -127,6 +131,7 @@ export const MyMarker = (props: MarkerProps): JSX.Element => {
               <MapTankBox
                 key={cistern.id}
                 tank={cistern}
+                user={user}
                 userData={userData}
                 favorites={favorites}
                 setVisitedTank={setVisitedTank}

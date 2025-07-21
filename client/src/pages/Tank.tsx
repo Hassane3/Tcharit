@@ -16,13 +16,14 @@ import {
 import { UserType } from "../models/utils/UsersType";
 import {
   ArrowBack,
+  Close,
   EmptyTank,
   FullTank,
   HalfFullTank,
   Infos,
   UnsetTank,
 } from "../utils/constants/Icons";
-import { Box, Button, IconButton, Typography } from "@mui/material";
+import { Box, Button, IconButton, Modal, Typography } from "@mui/material";
 import CommentsDisabledRoundedIcon from "@mui/icons-material/CommentsDisabledRounded";
 import { customTheme, UserData } from "../App";
 import { Global } from "@emotion/react";
@@ -34,6 +35,8 @@ import { useTranslation } from "react-i18next";
 import UseSnackBar from "./components/UseSnackBar";
 import { DataSnapshot, onValue, ref } from "firebase/database";
 import { db } from "../firebase/firebase";
+import CheckPosts from "./CheckPosts";
+import { getDiffTime } from "../utils/methods/methods";
 interface TankProps {
   tanksData: tankDataProps[];
   setCookie: (userIdTitle: any, userIdValue: any, option: any) => void;
@@ -57,6 +60,7 @@ const Tank = (props: TankProps) => {
   const [isAddPostAllowed, setIsAddPostAllowed] = useState<boolean>(false);
   const [openBottomNav, setOpenBottomNav] = useState<boolean>(false);
   const [lastPost, setLastPost] = useState<postsProps | null>();
+  const [isTankInfosOpen, setIsTankInfosOpen] = useState<boolean>(false);
 
   // MUI SnackBar
   const [isSnackOpen, setIsSnackOpen] = useState<boolean>(false);
@@ -175,10 +179,6 @@ const Tank = (props: TankProps) => {
     return () => window.removeEventListener("scroll", handleScroll); // Cleanup
   }, []);
 
-  const CheckPosts = useMemo(
-    () => lazyWithDelay(() => import("./CheckPosts"), 1000),
-    []
-  );
   useEffect(() => {
     if (postsData.length != 0) {
       const latest = Object.values(postsData).at(-1);
@@ -187,6 +187,11 @@ const Tank = (props: TankProps) => {
       setLastPost(null); // in case posts are removed or not available
     }
   }, [postsData]);
+
+  const CheckPosts = useMemo(
+    () => lazyWithDelay(() => import("./CheckPosts"), 1000),
+    []
+  );
 
   return (
     <Page
@@ -212,88 +217,121 @@ const Tank = (props: TankProps) => {
         }}
       />
       <Header headerHeight={headerHeight}>
-        <HeaderElements
-          headerHeight={headerHeight}
-          backgroundColor={customTheme.palette.background.defaultWhite}
+        <div
+          className={
+            selectedTankData &&
+            getDiffTime(selectedTankData.lastTimeFilled) < 110000
+              ? "glowOn"
+              : ""
+          }
           style={{
-            transition: "height 0.2s ease-in-out",
+            // backgroundColor: customTheme.palette.background.blue,
+            boxShadow: "rgba(0, 0, 0, 0.2) 0 1px 10px 0px",
+            borderRadius: "0 0 30px 30px",
+            overflow: "hidden",
+            position: "relative",
           }}
         >
-          <div
+          <HeaderElements
+            headerHeight={headerHeight}
+            backgroundColor={customTheme.palette.background.defaultWhite}
             style={{
-              // If lang === arabic flex : 1 else 0
-              flex: 0,
-              justifyContent: "left",
-              alignItems: "flex-start",
+              transition: "height 0.2s ease-in-out",
             }}
           >
-            <Button
-              size="large"
-              onClick={() => navigateTo("/mapPage")}
-              sx={{ padding: 0 }}
+            <div
+              style={{
+                // If lang === arabic flex : 1 else 0
+                flex: 0,
+                justifyContent: "left",
+                alignItems: "flex-start",
+              }}
             >
-              <ArrowBack
-                backgroundColor={customTheme.palette.background.defaultBlue}
-              />
-            </Button>
-          </div>
-          <PopUpMainElements
-            sx={{
-              "& svg": {
-                height: headerHeight > headerTight ? "70px" : "50px",
-                transition: "ease 0.2s",
-              },
-            }}
-          >
-            <div id="tank_texts">
-              <Typography
-                variant="h2"
-                id="tank_name"
-                color={customTheme.palette.background.defaultBlue}
-                style={{ textWrap: "nowrap" }}
+              <Button
+                size="large"
+                onClick={() => navigateTo(-1)}
+                sx={{ padding: 0 }}
               >
-                {lang === "ar"
-                  ? selectedTankData?.arab_name
-                  : selectedTankData?.latin_name}
-              </Typography>
-              <Typography
-                variant="h3"
-                id="tank_description"
-                style={
-                  selectedTankData && {
-                    color: lastPost
-                      ? getTankStatusColor(lastPost, "basic")
-                      : customTheme.palette.background.greyLight,
-                    textWrap: "nowrap",
-                  }
-                }
-              >
-                {headerHeight > headerTight &&
-                  (lastPost
-                    ? lastPost?.status === TankStatus.EMPTY
-                      ? t("common.tank.tank_status.tank_is_empty")
-                      : lastPost?.status === TankStatus.HALFFUll
-                        ? t("common.tank.tank_status.tank_is_halfFull")
-                        : t("common.tank.tank_status.tank_is_full")
-                    : t("common.tank.tank_status.tank_is_unset"))}
-              </Typography>
+                <ArrowBack
+                  backgroundColor={customTheme.palette.background.defaultBlue}
+                />
+              </Button>
             </div>
-            {lastPost ? (
-              lastPost?.status === TankStatus.EMPTY ? (
-                <EmptyTank />
-              ) : lastPost?.status === TankStatus.HALFFUll ? (
-                <HalfFullTank />
+            <PopUpMainElements
+              sx={{
+                "& svg": {
+                  height: headerHeight > headerTight ? "70px" : "50px",
+                  transition: "ease 0.2s",
+                },
+              }}
+            >
+              <div id="tank_texts">
+                <Typography
+                  variant="h2"
+                  id="tank_name"
+                  color={customTheme.palette.background.defaultBlue}
+                  style={{ textWrap: "nowrap" }}
+                >
+                  {lang === "ar"
+                    ? selectedTankData?.arab_name
+                    : selectedTankData?.latin_name}
+                </Typography>
+                {headerHeight > headerTight && (
+                  <Typography
+                    variant="h4"
+                    id="tank_description"
+                    style={
+                      selectedTankData && {
+                        color: lastPost
+                          ? getTankStatusColor(lastPost, "basic")
+                          : customTheme.palette.background.greyLight,
+                        textWrap: "nowrap",
+                      }
+                    }
+                  >
+                    {lastPost
+                      ? lastPost?.status === TankStatus.EMPTY
+                        ? t("common.tank.tank_status.tank_is_empty")
+                        : lastPost?.status === TankStatus.HALFFUll
+                          ? t("common.tank.tank_status.tank_is_halfFull")
+                          : t("common.tank.tank_status.tank_is_full")
+                      : t("common.tank.tank_status.tank_is_unset")}
+                  </Typography>
+                )}
+              </div>
+              {lastPost ? (
+                lastPost?.status === TankStatus.EMPTY ? (
+                  <EmptyTank />
+                ) : lastPost?.status === TankStatus.HALFFUll ? (
+                  <HalfFullTank />
+                ) : (
+                  <FullTank />
+                )
               ) : (
-                <FullTank />
-              )
-            ) : (
-              <UnsetTank />
-            )}
-          </PopUpMainElements>
-        </HeaderElements>
+                <UnsetTank />
+              )}
+            </PopUpMainElements>
+          </HeaderElements>
 
+          {headerHeight > headerTight &&
+            selectedTankData &&
+            getDiffTime(selectedTankData.lastTimeFilled) < 110000 && (
+              <HeaderBottomBox
+                style={{
+                  zIndex: 2,
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  color={customTheme.palette.background.defaultWhite}
+                >
+                  ملئ قبل 25 دقيقة
+                </Typography>
+              </HeaderBottomBox>
+            )}
+        </div>
         {/* WAVES */}
-        <div
+        {/* <div
           style={{
             position: "absolute",
             bottom: 0,
@@ -307,8 +345,8 @@ const Tank = (props: TankProps) => {
             style={{
               display: "flex",
             }}
-          >
-            {/* <div
+          > */}
+        {/* <div
               style={{
                 position: "absolute",
                 left: 0,
@@ -339,8 +377,9 @@ const Tank = (props: TankProps) => {
             >
               <Wave backgroundColor={getTankStatusColor(lastPost, "basic")} />
             </div> */}
-          </div>
-        </div>
+        {/* </div>
+        </div> */}
+
         {headerHeight > headerTight && (
           <div
             style={{
@@ -350,7 +389,7 @@ const Tank = (props: TankProps) => {
               margin: "0 8px",
             }}
           >
-            <IconButton>
+            <IconButton onClick={() => setIsTankInfosOpen(true)}>
               <Infos
                 backgroundColor={customTheme.palette.background.defaultBlue}
               />
@@ -369,12 +408,83 @@ const Tank = (props: TankProps) => {
         )}
       </Header>
 
-      {selectedTankData && (
-        <CheckPosts
-          tankData={selectedTankData}
-          postsData={postsData}
-          user={user}
-        />
+      {/* Informations */}
+      <ModalContainer
+        open={isTankInfosOpen}
+        onClose={() => setIsTankInfosOpen(false)}
+      >
+        <BoxContainer
+          backgroundColor={customTheme.palette.background.defaultWhite}
+        >
+          <Button
+            onClick={() => setIsTankInfosOpen(false)}
+            sx={{
+              minWidth: "unset",
+              position: "absolute",
+              top: 20,
+              right: 20,
+              padding: 0,
+              color: customTheme.palette.background.defaultBlue,
+            }}
+          >
+            <Close
+              backgroundColor={customTheme.palette.background.defaultBlue}
+            />
+            {/* <CloseRoundedIcon fontSize="large" /> */}
+          </Button>
+          <div>
+            <Infos
+              backgroundColor={customTheme.palette.background.defaultBlue}
+              width={40}
+              height={40}
+            />
+            <Typography
+              variant="body2"
+              style={{ textAlign: lang === "ar" ? "end" : "start" }}
+            >
+              {t("common.tank.tank_page_infos#1")}
+            </Typography>
+            <Typography
+              variant="body2"
+              style={{ textAlign: lang === "ar" ? "end" : "start" }}
+            >
+              {t("common.tank.tank_page_infos#2")}
+            </Typography>
+          </div>
+        </BoxContainer>
+      </ModalContainer>
+
+      {postsData.length === 0 ? (
+        <div
+          style={{
+            paddingBottom: "100px",
+            paddingTop: "50vh",
+            textAlign: "center",
+          }}
+        >
+          <CommentsDisabledRoundedIcon
+            style={{
+              fontSize: "50px",
+              color: customTheme.palette.background.blueDark,
+            }}
+          />
+          <Typography
+            variant="h3"
+            style={{ color: customTheme.palette.background.blueDark }}
+          >
+            {t("common.tank.tank_status.tank_is_unset")}
+          </Typography>
+        </div>
+      ) : (
+        selectedTankData && (
+          <Suspense fallback={<SkeletonCheckPosts />}>
+            <CheckPosts
+              postsData={postsData}
+              tankData={selectedTankData}
+              user={user}
+            />
+          </Suspense>
+        )
       )}
 
       {selectedTankData && (
@@ -483,16 +593,42 @@ const Page = styled.div`
   min-height: 100vh;
 `;
 const Header = styled(Box)<{ headerHeight: number }>`
-  /* display: flex column;
-  justify-content: space-between; */
-
   position: fixed;
   z-index: 10;
   width: 100%;
   height: ${(props) => props.headerHeight + "px"};
-
   #checkPosts_title {
     color: ${() => customTheme.palette.background.defaultWhite};
+  }
+
+  .glowOn:before {
+    z-index: 1;
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: linear-gradient(45deg, #64ede4, #c8bea7, #64ede4);
+    animation: glowing 10s linear infinite;
+    background-size: 400%;
+    transition: opacity 0.3s ease-in-out;
+    align-self: center;
+    justify-self: center;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+  }
+  @keyframes glowing {
+    0% {
+      background-position: 0 0;
+    }
+    50% {
+      background-position: 400% 0;
+    }
+    100% {
+      background-position: 0 0;
+    }
   }
 
   @keyframes waveAnim {
@@ -509,7 +645,9 @@ const HeaderElements = styled.div<{
   backgroundColor: string;
 }>`
   display: flex;
+  position: relative;
   justify-content: space-between;
+  align-items: ${(props) => (props.headerHeight < 170 ? "center" : "unset")};
   flex-direction: ${(props) => (props.headerHeight < 170 ? "row" : "column")};
   background-color: ${(props) => props.backgroundColor};
   box-shadow: rgba(0, 0, 0, 0.2) 0 1px 10px 0px;
@@ -517,13 +655,14 @@ const HeaderElements = styled.div<{
   padding: 10px;
   border-radius: 0 0 30px 30px;
   overflow: hidden;
+  z-index: 2;
 `;
 const PopUpMainElements = styled(Box)`
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
-  margin: 0 20px;
+  margin: 0 10px;
 
   #tank_texts {
     margin: 0 20px;
@@ -538,6 +677,46 @@ const PopUpMainElements = styled(Box)`
   #tank_description {
     font-family: "changa";
     font-weight: 600;
+  }
+`;
+
+const HeaderBottomBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 6px;
+  position: relative;
+`;
+
+export const ModalContainer = styled(Modal)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+export const BoxContainer = styled(Box)<{
+  backgroundColor?: string;
+}>`
+  margin: 40px;
+  padding: 20px;
+  border-radius: 30px;
+  width: 90%;
+  height: 80%;
+  background-color: ${(props) => props.backgroundColor};
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  position: relative;
+
+  > div {
+    display: grid;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+    align-content: center;
+  }
+  div > * {
+    margin: 10px;
   }
 `;
 

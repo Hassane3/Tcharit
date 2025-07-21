@@ -43,7 +43,7 @@
       "tank_report_confirmation": "Êtes-vous sure de vouloir indiquer que le réservoir est {{tankStatusLng}}",
       "tank_far_from_tank": "Il parait que votre position est loin de la citerne, veuillez vous rapprocher de celle-ci",
       "tank_page_infos#0": "État du débit d'eau selon les utilisateurs",
-      "tank_page_infos#1": "Ici, vous trouvez les indications laissée par les utilisateurs.",
+      "tank_page_infos#1": "Ici, vous trouvez les indications laissées par les utilisateurs.",
       "tank_page_infos#2": "Le temps indiqué sur chaque indication doit être prit en considération et il est important également de s'assurer qu'une indication est fiable en estimant son degrée de cohérence avec le reste des indications.",
       "favorite": "Favoris",
       "select_cistern": "Réservoirs"
