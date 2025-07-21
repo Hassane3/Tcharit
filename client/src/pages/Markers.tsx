@@ -9,6 +9,7 @@ import { MyMarker } from "./components/MyMarker";
 
 type MarkersProps = {
   tanksData: tankDataProps[];
+  user: {} | null;
   userData: UserData;
   favorites: Array<string> | undefined;
   setVisitedTank: (visitedTank: tankDataProps) => void;
@@ -17,6 +18,7 @@ type MarkersProps = {
 
 const Markers = ({
   tanksData,
+  user,
   userData,
   favorites,
   setVisitedTank,
@@ -66,6 +68,7 @@ const Markers = ({
         <MyMarker
           key={cistern.id}
           cistern={cistern}
+          user={user}
           userData={userData}
           favorites={favorites}
           setVisitedTank={setVisitedTank}

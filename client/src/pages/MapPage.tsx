@@ -1,42 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 // LIBS
 // MODELS
 import TankStatus from "../models/utils/TankStatus";
 // import { DataSnapshot, onValue, ref } from "firebase/database";
 import { UserType } from "../models/utils/UsersType";
-import {
-  checkAndRequestGeolocation,
-  handleTimeFormat,
-} from "../utils/methods/methods";
 // import { MyMarker } from "./components/MyMarker";
 import AutoComplete from "./components/AutoComplete";
-import {
-  Button,
-  DrawerProps,
-  IconButton,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Button, DrawerProps, IconButton } from "@mui/material";
 
 import QrCode2RoundedIcon from "@mui/icons-material/QrCode2Rounded";
-import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import styled from "styled-components";
 import ModalPopUp from "./components/ModalPopUp";
 import { useNavigate, useLocation } from "react-router-dom";
 
 import { customTheme, UserData } from "../App";
 import WaterDropIcon from "@mui/icons-material/WaterDrop";
-import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import Menu from "./components/Menu";
-import { MenuIcon, TemporaryTank } from "../utils/constants/Icons";
-import { Translation, useTranslation } from "react-i18next";
-import { Close } from "../utils/constants/Icons";
-import { randomInt, randomUUID } from "crypto";
-import { setANewCistern } from "../firebase/operations";
+import { MenuIcon } from "../utils/constants/Icons";
+import { useTranslation } from "react-i18next";
 import Footer from "./Footer";
 import TankType from "../models/utils/TankType";
-import { AdvancedMarker, Map } from "@vis.gl/react-google-maps";
-import trees from "../utils/trees";
+import { Map } from "@vis.gl/react-google-maps";
 import Markers from "./Markers";
 // Componenets
 
@@ -49,13 +33,13 @@ export interface tankDataProps {
   latin_name: string;
   arab_name: string;
   // description: string;
-  // latLng: [number, number]
   latLng: latLngProps;
   status: TankStatus;
   lastPostTime: number;
   lastCheckTime: number;
   posts: [postsProps];
   tankAgentId?: string | null;
+  lastTimeFilled: number; // concerns filling cistern by cistern agent : it represents date (if less than 1 hour, we display it)
 }
 
 export interface latLngProps {
@@ -95,9 +79,8 @@ function MapPage(props: mapPageProps) {
 
   const [searchValue, setSearchValue] = useState<string | null>(null);
   const [inputValue, setInputValue] = useState<string>("");
-  const [favorites, setFavorites] = useState<Array<string> | undefined>(
-    localStorage.getItem("favorites")?.split(",")
-  );
+  const [favorites, setFavorites] = useState<Array<string> | undefined>();
+  // localStorage.getItem("favorites")?.split(",")
 
   const options = {
     enableHighAccuracy: true,
@@ -136,7 +119,7 @@ function MapPage(props: mapPageProps) {
   const [anchorState, setAnchorState] = useState<boolean>(menuOpen);
 
   const [language, setLanguage] = useState<string>(
-    () => localStorage.getItem("lang") || "en"
+    () => localStorage.getItem("language") || "en"
   );
 
   const { t, i18n } = useTranslation();
@@ -152,9 +135,6 @@ function MapPage(props: mapPageProps) {
       }
       setAnchorState(open);
     };
-
-  //Menu list
-  const navigateTo = useNavigate();
 
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
 
@@ -178,9 +158,8 @@ function MapPage(props: mapPageProps) {
       }
       setFavorites(newArray);
     } else {
-      // We add it
       if (getFavorites !== undefined && getFavorites.length > 0) {
-        newArray = [getFavorites + "," + tankId.toString()];
+        newArray = [...getFavorites, tankId.toString()];
       } else {
         newArray = [tankId.toString()];
       }
@@ -192,9 +171,6 @@ function MapPage(props: mapPageProps) {
   useEffect(() => {
     i18n.changeLanguage(language);
   }, [language]);
-  const [newCistern, setNewCistern] = useState<boolean>(false);
-  const [newCisternlatLng, setNewCisternlatLng] =
-    useState<google.maps.LatLng>();
 
   const [markerLocation, setMarkerLocation] = useState({
     lat: 51.509865,
@@ -217,7 +193,7 @@ function MapPage(props: mapPageProps) {
         }
         gestureHandling={"greedy"}
         disableDefaultUI
-        mapId="1717228d98ca3c6c822573b5"
+        mapId="1717228d98ca3c6c466620c3"
         clickableIcons={false}
       ></Map>
       <Header>
@@ -258,6 +234,7 @@ function MapPage(props: mapPageProps) {
             />
           </React.Fragment>
         </TopSection>
+        {/* QR CODE BUTTON */}
         <Button
           onClick={handleQrModalState(true)}
           variant="text"
@@ -279,6 +256,7 @@ function MapPage(props: mapPageProps) {
       </Header>
       <Markers
         tanksData={tanksData}
+        user={user}
         userData={userData}
         favorites={favorites}
         setVisitedTank={setVisitedTank}

@@ -136,6 +136,8 @@ const Footer = (props: footerProps) => {
         status: TankStatus.FULL,
         posts: [newPost],
         tankAgentId: userData.id,
+        // Correct the following !!!
+        lastTimeFilled: 0,
       };
       try {
         await setANewCistern(tankId, newCisternData);

@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Changa:wght@200;300;400;500;600;700;800&family=Lalezar&family=Rubik:wght@300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap');
 *{
   margin: 0;
   padding: 0;
@@ -88,7 +89,40 @@ p {
   height: inherit;
   width:inherit;
 }
+.gm-style-iw-tc {
+  display:none;
+}
 
+.glowOn:before {
+    z-index: 1;
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: linear-gradient(45deg, #64ede4, #c8bea7, #64ede4);
+    animation: glowing 10s linear infinite;
+    background-size: 400%;
+    transition: opacity 0.3s ease-in-out;
+    align-self: center;
+    justify-self: center;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+  }
+  @keyframes glowing {
+    0% {
+      background-position: 0 0;
+    }
+    50% {
+      background-position: 400% 0;
+    }
+    100% {
+      background-position: 0 0;
+    }
+  }
+  
   @keyframes circleScale {
     0% {
       transform: scale(0);
