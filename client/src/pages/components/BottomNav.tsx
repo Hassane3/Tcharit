@@ -106,7 +106,7 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
               ) {
                 // If user cookie exist, that means he has posted recently
                 if (cookies.userId) {
-                  setAlertPostedRecently;
+                  setAlertPostedRecently(true);
                 } else {
                   setIsAddPostAllowed(true);
                 }

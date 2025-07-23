@@ -260,6 +260,7 @@ const MapTankBox = (props: mapTankBoxProps) => {
         <PopUpSide
           style={{
             backgroundColor: customTheme.palette.background.yellowExtraLight,
+            zIndex: 1,
           }}
         >
           <Button onClick={() => handleDeleteCistern(tank.id)} size="large">
