@@ -5,14 +5,14 @@ import {getFirestore} from "firebase/firestore"
 // import { getAnalytics } from "firebase/analytics";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCxpSn9MzF0CJZsfR_7s42S8_a52dskQX4",
-  authDomain: "tchari.firebaseapp.com",
-  databaseURL: "https://tchari-default-rtdb.firebaseio.com",
-  projectId: "tchari",
-  storageBucket: "tchari.appspot.com",
-  messagingSenderId: "294891691900",
-  appId: "1:294891691900:web:c11d262e460c9407ee8ef9",
-  measurementId: "G-M7T6TYNY74"
+  apiKey: "AIzaSyBWwVWPWYVoDn8ZcSvs7yYDtVCwD4vgPcE",
+  authDomain: "tcharit-47.firebaseapp.com",
+  databaseURL: "https://tcharit-47-default-rtdb.firebaseio.com",
+  projectId: "tcharit-47",
+  storageBucket: "tcharit-47.firebasestorage.app",
+  messagingSenderId: "12214304458",
+  appId: "1:12214304458:web:3777a953b2ecd1cdbb7e33",
+  measurementId: "G-GSK7RXVRFB"
 };
 
 // Initialize Firebase

@@ -1,5 +1,5 @@
 import { Snackbar, SnackbarCloseReason } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 
 interface useSnackBarProps {
   isSnackOpen: boolean;

@@ -1,17 +1,15 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 // LIBS
 // MODELS
 import TankStatus from "../models/utils/TankStatus";
-// import { DataSnapshot, onValue, ref } from "firebase/database";
 import { UserType } from "../models/utils/UsersType";
-// import { MyMarker } from "./components/MyMarker";
 import AutoComplete from "./components/AutoComplete";
 import { Button, DrawerProps, IconButton } from "@mui/material";
 
 import QrCode2RoundedIcon from "@mui/icons-material/QrCode2Rounded";
 import styled from "styled-components";
 import ModalPopUp from "./components/ModalPopUp";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import { customTheme, UserData } from "../App";
 import WaterDropIcon from "@mui/icons-material/WaterDrop";
@@ -22,7 +20,6 @@ import Footer from "./Footer";
 import TankType from "../models/utils/TankType";
 import { Map } from "@vis.gl/react-google-maps";
 import Markers from "./Markers";
-// Componenets
 
 export interface tanksDataProps {
   data: tankDataProps[];
@@ -47,7 +44,6 @@ export interface latLngProps {
   lng: number;
 }
 export interface postsProps {
-  // date: Date;
   id?: number;
   date: string;
   postTime: number;
@@ -80,32 +76,31 @@ function MapPage(props: mapPageProps) {
   const [searchValue, setSearchValue] = useState<string | null>(null);
   const [inputValue, setInputValue] = useState<string>("");
   const [favorites, setFavorites] = useState<Array<string> | undefined>();
-  // localStorage.getItem("favorites")?.split(",")
 
   const options = {
     enableHighAccuracy: true,
     timeout: 5000,
     maximumAge: 0,
   };
-  const getLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (success) => {
-          let latLng = new google.maps.LatLng(
-            success.coords.latitude,
-            success.coords.longitude
-          );
-        },
-        (error) => {
-          console.log("ERROR => ", error);
-          alert("Unable to get your location");
-        },
-        options
-      );
-    } else {
-      alert("Geolocation not supported");
-    }
-  };
+  // const getLocation = () => {
+  //   if (navigator.geolocation) {
+  //     navigator.geolocation.getCurrentPosition(
+  //       (success) => {
+  //         let latLng = new google.maps.LatLng(
+  //           success.coords.latitude,
+  //           success.coords.longitude
+  //         );
+  //       },
+  //       (error) => {
+  //         console.log("ERROR => ", error);
+  //         alert("Unable to get your location");
+  //       },
+  //       options
+  //     );
+  //   } else {
+  //     alert("Geolocation not supported");
+  //   }
+  // };
 
   const handleSetSearchValue = (newValue: string | null) => {
     setSearchValue(newValue);
@@ -172,11 +167,6 @@ function MapPage(props: mapPageProps) {
     i18n.changeLanguage(language);
   }, [language]);
 
-  const [markerLocation, setMarkerLocation] = useState({
-    lat: 51.509865,
-    lng: -0.118092,
-  });
-
   return (
     <div id="map">
       <Map
@@ -224,7 +214,6 @@ function MapPage(props: mapPageProps) {
               />
             </IconButton>
             <Menu
-              userData={userData}
               anchorState={anchorState}
               user={user}
               anchor={anchor}

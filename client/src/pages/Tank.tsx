@@ -35,7 +35,6 @@ import { useTranslation } from "react-i18next";
 import UseSnackBar from "./components/UseSnackBar";
 import { DataSnapshot, onValue, ref } from "firebase/database";
 import { db } from "../firebase/firebase";
-import CheckPosts from "./CheckPosts";
 import { getDiffTime } from "../utils/methods/methods";
 interface TankProps {
   tanksData: tankDataProps[];
@@ -53,7 +52,6 @@ const Tank = (props: TankProps) => {
   const [selectedTankData, setSelectedTankData] = useState<tankDataProps>();
   const tankId: number = parseInt(useParams().id as string);
   const [tankStatus, setTankStatus] = useState<TankStatus>(TankStatus.UNKNOWN);
-  // const idTank: Readonly<Params<string>> = useParams();
 
   const [isConfirmBoxOpen, setIsConfirmBoxOpen] = useState<boolean>(false);
 
@@ -65,20 +63,16 @@ const Tank = (props: TankProps) => {
   // MUI SnackBar
   const [isSnackOpen, setIsSnackOpen] = useState<boolean>(false);
   const [snackMessage, setSnackMessage] = useState<string>("");
-  // const lastPost =
-  //   selectedTankData &&
-  //   selectedTankData.posts &&
-  //   Object.values(selectedTankData.posts).at(-1);
 
   const headerLarge = 170;
   const headerTight = 70;
   const [headerHeight, setHeaderHeight] = useState<number>(headerLarge);
-  const waveHeight =
-    lastPost?.status === "EMPTY"
-      ? -100
-      : lastPost?.status === "HALF_FULL"
-        ? -headerHeight * 0.5
-        : -headerHeight * 0.1;
+  // const waveHeight =
+  //   lastPost?.status === "EMPTY"
+  //     ? -100
+  //     : lastPost?.status === "HALF_FULL"
+  //       ? -headerHeight * 0.5
+  //       : -headerHeight * 0.1;
 
   const { t } = useTranslation();
   const lang = localStorage.getItem("language");
@@ -109,6 +103,18 @@ const Tank = (props: TankProps) => {
     }
   }, [selectedTankData]);
 
+  // Track lastTimeFilled
+  const [lastTimeFilled, setLastTimeFilled] = useState<number>();
+  useEffect(() => {
+    if (selectedTankData) {
+      const dbRef = ref(db, "tanks/" + selectedTankData.id + "/lastTimeFilled");
+
+      return onValue(dbRef, (snapshot: DataSnapshot) => {
+        setLastTimeFilled(snapshot.val());
+      });
+    }
+  }, [selectedTankData]);
+
   // METHODS
   const handleConfirmationBox =
     (isConfirmBoxOpen: boolean, tankStatus?: TankStatus) =>
@@ -126,7 +132,7 @@ const Tank = (props: TankProps) => {
     // Add a new post on db :
     let date = new Date();
     let newPostData: postsProps = {
-      status: tankStatus,
+      status: status,
       userType: userData.name ? UserType.TANKAGENT : UserType.RANDOM,
       userName: userData.name ? userData.name : null,
       date: date.toLocaleDateString(),
@@ -143,7 +149,7 @@ const Tank = (props: TankProps) => {
         let newUuid: string = crypto.randomUUID();
         setIsAddPostAllowed(false);
         // Add a cookie that contains the identifier of the user and the maxAge of his cookie (300s => 5min)
-        setCookie("userId", newUuid, { path: "/", maxAge: 300 });
+        !user && setCookie("userId", newUuid, { path: "/", maxAge: 300 });
         let now = new Date().getTime();
         updateLastPostTime(tankId, now);
         let diffTime = Math.floor((now - selectedTankData.lastPostTime) / 1000);
@@ -158,8 +164,6 @@ const Tank = (props: TankProps) => {
         setIsSnackOpen(true);
         setSnackMessage(t("common.post.confirm_fail_add"));
       }
-
-      // updateTankStatus(selectedTankData?.id, status);
     }
   };
 
@@ -220,7 +224,8 @@ const Tank = (props: TankProps) => {
         <div
           className={
             selectedTankData &&
-            getDiffTime(selectedTankData.lastTimeFilled) < 110000
+            lastTimeFilled &&
+            getDiffTime(lastTimeFilled) < 3600
               ? "glowOn"
               : ""
           }
@@ -315,7 +320,8 @@ const Tank = (props: TankProps) => {
 
           {headerHeight > headerTight &&
             selectedTankData &&
-            getDiffTime(selectedTankData.lastTimeFilled) < 110000 && (
+            lastTimeFilled &&
+            getDiffTime(lastTimeFilled) < 3600 && (
               <HeaderBottomBox
                 style={{
                   zIndex: 2,
@@ -325,7 +331,7 @@ const Tank = (props: TankProps) => {
                   variant="h6"
                   color={customTheme.palette.background.defaultWhite}
                 >
-                  ملئ قبل 25 دقيقة
+                  {t("common.tank.filled_since")}
                 </Typography>
               </HeaderBottomBox>
             )}
@@ -430,7 +436,6 @@ const Tank = (props: TankProps) => {
             <Close
               backgroundColor={customTheme.palette.background.defaultBlue}
             />
-            {/* <CloseRoundedIcon fontSize="large" /> */}
           </Button>
           <div>
             <Infos
@@ -497,13 +502,13 @@ const Tank = (props: TankProps) => {
             selectedTankData={selectedTankData}
             setConfirmationBox={handleConfirmationBox}
             tankLatLng={selectedTankData.latLng}
-            openBottomNav={openBottomNav}
-            setOpenBottomNav={setOpenBottomNav}
-            // setTankStatus={handleTankStatus}
             cookies={cookies}
             isAddPostAllowed={isAddPostAllowed}
             setIsAddPostAllowed={setIsAddPostAllowed}
             userData={userData}
+            user={user}
+            tankId={tankId}
+            handleAddPost={handleAddPost}
           />
         </SwipeableBox>
       )}
@@ -539,7 +544,6 @@ const Tank = (props: TankProps) => {
 };
 
 export const getTankStatusColor = (
-  // tank: tankDataProps | undefined,
   lastPost: postsProps | null,
   mode: "dark" | "basic" | "light" | "extraLight"
 ) => {

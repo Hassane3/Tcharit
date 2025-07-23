@@ -1,12 +1,9 @@
-import zIndex from "@mui/material/styles/zIndex";
-import { width } from "@mui/system";
-import React, { ReactElement, useEffect, useRef, useState } from "react";
-import { OnResultFunction, QrReader } from "react-qr-reader";
+import { useEffect } from "react";
+import { QrReader } from "react-qr-reader";
 import styled from "styled-components";
 import { checkAndRequestCamera } from "../../utils/methods/methods";
 
 export interface QrScannerProps {
-  // setIsStartScan: (i: boolean) => void;
   handleQrRedirection: (qrLink: string) => void;
 }
 
@@ -113,9 +110,6 @@ const QrScanner = (props: QrScannerProps) => {
         onResult={(result, error) => {
           if (!!result) {
             animateQrBorder(result);
-            // setTimeout(() => {
-            //   handleQrRedirection(result.toString());
-            // }, 2000);
           }
           if (!!error) {
             console.log("error => ", error);
@@ -137,7 +131,7 @@ const StyledQrReader = styled(QrReader)`
     justify-content: center;
   }
   > div > video {
-    height: 100%;
+    min-height: 300px;
     width: 100%;
     position: relative !important;
   }

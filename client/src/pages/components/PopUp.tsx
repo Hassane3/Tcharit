@@ -2,8 +2,6 @@ import React, { JSX } from "react";
 import styled from "styled-components";
 import TankStatus from "../../models/utils/TankStatus";
 import { Box, Button, Modal, Typography } from "@mui/material";
-import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
-import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import { customTheme } from "../../App";
 import { Close, Infos } from "../../utils/constants/Icons";
 import { useTranslation } from "react-i18next";
@@ -11,7 +9,6 @@ import { useTranslation } from "react-i18next";
 interface PopUpProps {
   tankStatus: TankStatus;
   isConfirmBoxOpen: boolean;
-  // handleClose: () => void;
   addPost: (status: TankStatus) => void;
   setConfirmationBox: (
     state: boolean
@@ -56,7 +53,6 @@ const PopUp = (props: PopUpProps): JSX.Element => {
           }}
         >
           <Close backgroundColor={customTheme.palette.background.defaultBlue} />
-          {/* <CloseRoundedIcon fontSize="large" /> */}
         </Button>
         <div>
           <Infos
@@ -68,13 +64,8 @@ const PopUp = (props: PopUpProps): JSX.Element => {
             variant="h3"
             color={customTheme.palette.background.defaultBlue}
           >
-            {/* Are you sure you want to prevent that the cistern is {tankStatus} */}
             {t("common.tank.tank_report_confirmation", { tankStatusLng })}
           </Typography>
-          {/* <span style={{ color: customTheme.palette.background.defaultBlue }}>
-            (After you add a post, you cannot delete it and you will not able to
-            add a new post until few minutes)
-          </span> */}
           <Button
             variant="contained"
             size="large"

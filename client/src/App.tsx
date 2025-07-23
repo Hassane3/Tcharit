@@ -1,4 +1,4 @@
-import React, { JSX, useEffect, useState } from "react";
+import { JSX, useEffect, useState } from "react";
 // LIBS
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
@@ -17,7 +17,6 @@ import { Button, createTheme, TextField } from "@mui/material";
 import { doc, getDoc } from "firebase/firestore";
 import { calculateDateDifference } from "./utils/methods/methods";
 import ResetPassword from "./pages/ResetPassword";
-import CustomMap from "./pages/CustomMap";
 
 export interface UserData {
   id: string | null;

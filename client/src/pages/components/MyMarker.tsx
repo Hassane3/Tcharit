@@ -1,4 +1,4 @@
-import React, { JSX, useEffect, useRef, useState } from "react";
+import { JSX, useEffect, useRef, useState } from "react";
 import { Typography, Container } from "@mui/material";
 import {
   AdvancedMarker,
@@ -7,7 +7,7 @@ import {
   useMap,
   CollisionBehavior,
 } from "@vis.gl/react-google-maps";
-import type { Marker } from "@googlemaps/markerclusterer";
+
 import {
   LocationCistern,
   LocationTemporaryCistern,
@@ -16,8 +16,6 @@ import MapTankBox from "./MapTankBox";
 import { tankDataProps } from "../MapPage";
 import { UserData, customTheme } from "../../App";
 import TankType from "../../models/utils/TankType";
-import styled from "styled-components";
-import { getDiffTime } from "../../utils/methods/methods";
 
 interface MarkerProps {
   cistern: tankDataProps;
@@ -60,10 +58,8 @@ export const MyMarker = (props: MarkerProps): JSX.Element => {
       hasClickedInsideRef.current = false;
     };
 
-    // document.addEventListener("mousedown", handleDocumentClick);
     document.addEventListener("pointerdown", handleDocumentClick);
     return () => {
-      // document.removeEventListener("mousedown", handleDocumentClick);
       document.removeEventListener("pointerdown", handleDocumentClick);
     };
   }, []);

@@ -1,15 +1,6 @@
-import React, {
-  HtmlHTMLAttributes,
-  JSX,
-  Suspense,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { JSX, useEffect, useRef, useState } from "react";
 import { postsProps, tankDataProps } from "./MapPage";
 import styled from "styled-components";
-import { DataSnapshot, onValue, ref, remove } from "firebase/database";
-import { db } from "../firebase/firebase";
 import {
   dateToArab,
   getDiffTime,
@@ -23,20 +14,12 @@ import FaceIcon from "@mui/icons-material/Face";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import CheckIcon from "@mui/icons-material/Check";
 import DeleteOutlineRoundedIcon from "@mui/icons-material/DeleteOutlineRounded";
-import CommentsDisabledRoundedIcon from "@mui/icons-material/CommentsDisabledRounded";
-import {
-  Button,
-  Chip,
-  Divider,
-  Snackbar,
-  SnackbarCloseReason,
-  Typography,
-} from "@mui/material";
+import { Button, Divider } from "@mui/material";
 import { UserType } from "../models/utils/UsersType";
 import { useTranslation } from "react-i18next";
 import { deletePost } from "../firebase/operations";
 import UseSnackBar from "./components/UseSnackBar";
-import { SkeletonCheckPosts } from "../utils/ui/Skeleton";
+import { TankAgent } from "../utils/constants/Icons";
 
 const CheckPosts = (props: {
   tankData: tankDataProps;
@@ -45,7 +28,6 @@ const CheckPosts = (props: {
 }): JSX.Element => {
   const { tankData, user, postsData } = props;
 
-  // const [postsData, setPostsData] = useState<Array<postsProps>>([]);
   let date = "";
   const [lastCheckTime, setLastCheckTime] = useState<number>();
 
@@ -57,19 +39,6 @@ const CheckPosts = (props: {
   let today = new Date().toLocaleDateString();
   const lang = localStorage.getItem("language");
   const { t } = useTranslation();
-
-  // useEffect(() => {
-  //   let posts: Array<postsProps> = [];
-  //   const dbRef = ref(db, "tanks/" + tankData.id + "/posts");
-
-  //   return onValue(dbRef, (snapshot: DataSnapshot) => {
-  //     posts = [];
-  //     snapshot.forEach((post: any) => {
-  //       posts.push({ id: post.key, ...post.val() });
-  //     });
-  //     setPostsData(posts);
-  //   });
-  // }, [tankData]);
 
   useEffect(() => {
     // Get the last post
@@ -95,7 +64,6 @@ const CheckPosts = (props: {
   }, [postsData]);
 
   const postEdit = (post: number) => {
-    console.log(post);
     setClickedPost(post);
   };
 
@@ -108,7 +76,7 @@ const CheckPosts = (props: {
       setIsSnackOpen(true);
       setClickedPost(null);
     } catch (error) {
-      alert("Something went wrong while deleting post");
+      alert(t("errors.someting_went_wrong"));
     }
   };
 
@@ -160,8 +128,7 @@ const CheckPosts = (props: {
                       >
                         {post.date === today
                           ? t("days.today")
-                          : // : post.date + " " + post.weekDay}
-                            lang === "ar"
+                          : lang === "ar"
                             ? t(`days.${post.weekDay}` as any) +
                               " " +
                               dateToArab(post.date)
@@ -181,12 +148,6 @@ const CheckPosts = (props: {
                           onClick={() => user && postEdit(index)}
                           key={index}
                           style={{
-                            // backgroundColor:{getPostsStatusColor(
-                            //   post,
-                            //   post.date !== new Date().toLocaleDateString()
-                            //     ? "light"
-                            //     : "basic"
-                            // )},
                             position: "relative",
                             zIndex: 0,
                             backgroundColor: getPostsStatusColor(
@@ -203,20 +164,13 @@ const CheckPosts = (props: {
                         >
                           <div style={{ justifyContent: "flex-start" }}>
                             {post.userType === UserType.TANKAGENT ? (
+                              <TankAgent />
+                            ) : (
                               <FaceIcon
-                                color="secondary"
                                 fontSize="large"
                                 style={{
                                   color:
                                     customTheme.palette.background.defaultBlue,
-                                }}
-                              />
-                            ) : (
-                              <AccountCircleIcon
-                                fontSize="large"
-                                style={{
-                                  color:
-                                    customTheme.palette.background.defaultWhite,
                                 }}
                               />
                             )}
@@ -246,9 +200,6 @@ const CheckPosts = (props: {
                               )}
                             </span>
                           </div>
-                          {/* <div>
-                          <span>{post.date}</span> <span>{post.weekDay}</span>
-                        </div> */}
                         </PostContainer>
                         <Button
                           onClick={() => handleDeletePost(post.id)}
@@ -269,10 +220,10 @@ const CheckPosts = (props: {
                         (index === 0 ||
                           post.userType === UserType.TANKAGENT) && (
                           <PostBottomBox
+                            key={index}
                             textColor={customTheme.palette.background.blueDark}
                           >
                             <span>
-                              {/* {lastCheckTime && handleTimeFormat(lastCheckTime)} */}
                               {lang === "ar" ? (
                                 handleTimeFormat(getDiffTime(post.postTime))
                                   .reverse()
@@ -370,12 +321,9 @@ const PostContainer = styled.div`
     justify-content: center;
     align-items: center;
     width: 30%;
-    /* justify-content: center; */
-    /* flex: 0.5; */
   }
   span {
     color: ${GLOBAL_STYLE.colorBlackLight};
-    /* width: 20%; */
     display: flex;
     justify-content: center;
   }

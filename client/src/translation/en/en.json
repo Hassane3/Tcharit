@@ -41,18 +41,22 @@
       "trusted_info": "trusted",
       "since_datetime": "since {{datetime}} {{datetime}}",
       "geolocation_user_position": "To be sure that cistern reports are truthful, you must be beside of the concerned cistern",
-      "tank_report_confirmation": "Are you sure you want to prevent that the cistern is {{tankStatusLng}}",
+      "tank_report_confirmation": "Are you sure you want to prevent that the cistern is {{tankStatusLng}} ?",
       "tank_far_from_tank": "Apparently, your position is far from the cistern, please try to come closer",
       "tank_page_infos#0": "Water flow state according to users reports",
       "tank_page_infos#1": "Here you can see the reports left by users.",
       "tank_page_infos#2": "The time shown for each report should be taken into account and it is important to ensure that a report is truthful by estimating its degree of consistency with the rest of the reports.",
       "favorite": "favorite",
-      "select_cistern": "Select cistern"
+      "select_cistern": "Select cistern",
+      "filled_since": "Recently filled",
+      "report_cistern_fill": "The cistern is filled",
+      "confirm_cistern_filled": "Are you sure you want to prevent cistern filled ?"
     },
     "post": {
       "confirm_deletion": "✅ The post has been deleted",
       "confirm_add": "✅ The post has been added successfully !",
-      "confirm_fail_add": "❌ The post creation has failed..."
+      "confirm_fail_add": "❌ The post creation has failed...",
+      "alert_posted_recently": "It seems that you have already added a post recently, \nPlease wait before you can add another post."
     },
     "info": {
       "trusted": "Trusted"
@@ -138,6 +142,7 @@
     "months": "Months"
   },
   "errors": {
-    "someting_went_wrong": "Something went wrong... Please try again"
+    "someting_went_wrong": "Something went wrong... Please try again",
+    "wrong_page": "Ooops, the page you requested could not be found"
   }
 }

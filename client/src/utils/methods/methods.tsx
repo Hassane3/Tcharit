@@ -115,3 +115,21 @@ export const checkAndRequestCamera = async (): Promise<any> => {
     alert("Unable to get access to the camera");
   }
 };
+
+// determines if the user is within a distance of less than given meters from the tank
+export function isUserWithinRadius(
+  userLat: number,
+  userLng: number,
+  tankLat: number,
+  tankLng: number,
+  radiusMeters: number = 10
+): boolean {
+  const R = 6371000; // Rayon de la Terre en mètres
+  const toRad = (deg: number) => (deg * Math.PI) / 180;
+
+  const x = toRad(tankLng - userLng) * Math.cos(toRad((userLat + tankLat) / 2));
+  const y = toRad(tankLat - userLat);
+  const distance = Math.sqrt(x * x + y * y) * R;
+
+  return distance <= radiusMeters;
+}

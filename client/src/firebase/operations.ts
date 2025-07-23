@@ -46,6 +46,7 @@ export const updateLastCheck = (tankId: number, lastCheckTime : number) => {
     return update(ref(db), updates)
 } 
 
+
 export const updateLastPostTime = (tankId: number, now : number) => {
     const db = getDatabase();
     const updates = {
@@ -62,6 +63,13 @@ export const updateTankStatus = (tankId: number, status: TankStatus) => {
     };
     return update(ref(db), updates)
 }
+export const updateCisternlastTimeFilled = (tankId: number, lastTimeFilled : number) => {
+    const db = getDatabase();
+    const updates = {
+        ["/tanks/"+tankId+"/lastTimeFilled"]: lastTimeFilled
+    };
+    return update(ref(db), updates)
+} 
 
 export const tankAgentSignInn = (email: string, password: string) => {
     const db = getDatabase()

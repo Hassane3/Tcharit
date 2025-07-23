@@ -1,4 +1,4 @@
-import React, { HtmlHTMLAttributes, Ref, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { postsProps, tankDataProps } from "../MapPage";
 import TankStatus from "../../models/utils/TankStatus";
 import styled from "styled-components";
@@ -6,7 +6,6 @@ import { Button, IconButton, Typography } from "@mui/material";
 import StarOutlineRoundedIcon from "@mui/icons-material/StarOutlineRounded";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import DeleteOutlineRoundedIcon from "@mui/icons-material/DeleteOutlineRounded";
-import ModeEditRoundedIcon from "@mui/icons-material/ModeEditRounded";
 import CheckIcon from "@mui/icons-material/Check";
 import { useNavigate } from "react-router-dom";
 import { getDiffTime } from "../../utils/methods/methods";
@@ -66,7 +65,6 @@ const MapTankBox = (props: mapTankBoxProps) => {
 
   useEffect(() => {
     if (tank.posts) {
-      console.log("last post >", Object.values(tank.posts).at(-1));
       // We get the last post of the tank and retrieve its postTime
       let lastPost: any = Object.values(tank.posts).at(-1);
       setLastPost(lastPost);
@@ -118,7 +116,7 @@ const MapTankBox = (props: mapTankBoxProps) => {
       }}
     >
       <div
-        className={getDiffTime(tank.lastTimeFilled) < 110000 ? "glowOn" : ""}
+        className={getDiffTime(tank.lastTimeFilled) < 3600 ? "glowOn" : ""}
         style={{
           display: "flex",
           flexDirection: "column",
@@ -245,13 +243,14 @@ const MapTankBox = (props: mapTankBoxProps) => {
             </PostBottomBox>
           </PopUpMainElements>
         </div>
-        {getDiffTime(tank.lastTimeFilled) < 110000 && (
+        {getDiffTime(tank.lastTimeFilled) < 3600 && (
           <PopUpBottom>
             <Typography
               variant="h6"
               color={customTheme.palette.background.defaultWhite}
+              style={{ textWrap: "nowrap" }}
             >
-              ملئ قبل 25 دقيقة
+              {t("common.tank.filled_since")}
             </Typography>
           </PopUpBottom>
         )}

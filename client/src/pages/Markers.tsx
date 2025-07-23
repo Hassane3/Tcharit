@@ -1,7 +1,4 @@
-import { MarkerClusterer } from "@googlemaps/markerclusterer";
-import { AdvancedMarker, useMap } from "@vis.gl/react-google-maps";
-import React, { useEffect, useRef, useState } from "react";
-import type { Marker } from "@googlemaps/markerclusterer";
+import { useMap } from "@vis.gl/react-google-maps";
 import { tankDataProps } from "./MapPage";
 import { UserData } from "../App";
 import { handleTimeFormat } from "../utils/methods/methods";
@@ -24,8 +21,6 @@ const Markers = ({
   setVisitedTank,
   handleFavorites,
 }: MarkersProps) => {
-  const map = useMap();
-
   // CLUSTER
   // const [markers, setMarkers] = useState<{ [key: string]: Marker }>({});
   // const clusterer = useRef<MarkerClusterer | null>(null);
@@ -75,13 +70,6 @@ const Markers = ({
           handleTimeFormat={handleTimeFormat}
           handleFavorites={handleFavorites}
         />
-        // <AdvancedMarker
-        //   position={cistern.latLng}
-        //   key={cistern.id}
-        //   ref={(marker) => setMarkerRef(marker, cistern.id)}
-        // >
-        //   <span style={{ fontSize: "2rem" }}>🌳</span>
-        // </AdvancedMarker>
       ))}
     </>
   );

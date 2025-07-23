@@ -1,25 +1,14 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { checkAndRequestGeolocation } from "../utils/methods/methods";
 import { postsProps, tankDataProps } from "./MapPage";
 import TankStatus from "../models/utils/TankStatus";
 import { UserType } from "../models/utils/UsersType";
 import { customTheme, UserData } from "../App";
 import { setANewCistern } from "../firebase/operations";
-import {
-  Button,
-  Snackbar,
-  SnackbarCloseReason,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { Close, GeoLocation, TemporaryTank } from "../utils/constants/Icons";
+import { Button, TextField, Typography } from "@mui/material";
+import { Close, TemporaryTank } from "../utils/constants/Icons";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-// import { DivIcon, LatLngExpression, map } from "leaflet";
-// import { Marker, Popup, useMap } from "react-leaflet";
-import { randomInt, randomUUID } from "crypto";
-import { SvgIconComponent } from "@mui/icons-material";
-import ReactDOMServer from "react-dom/server";
 import { CustomMarker } from "./components/CustomMarker";
 import TankType from "../models/utils/TankType";
 import UseSnackBar from "./components/UseSnackBar";
@@ -33,7 +22,7 @@ interface footerProps {
 const Footer = (props: footerProps) => {
   const { id, userData } = props;
 
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const [isFooterExpanded, setIsFooterExpanded] = useState(false);
   const [isTempoCisternOpen, setIsTempoCisternOpen] = useState<boolean>(false);
@@ -224,8 +213,6 @@ const Footer = (props: footerProps) => {
     >
       {
         geolocation && (
-          // (tempoCisternBox === TempoCisternBoxes.COORDINATES ||
-          //   tempoCisternBox === TempoCisternBoxes.GLOBAL) && (
           <CustomMarker
             position={[
               geolocation.coords.latitude,
@@ -262,7 +249,6 @@ const Footer = (props: footerProps) => {
             <Close
               backgroundColor={customTheme.palette.background.defaultBlue}
             />
-            {/* <CloseRoundedIcon fontSize="large" /> */}
           </Button>
           <div>
             <TemporaryTank
@@ -327,7 +313,6 @@ const Footer = (props: footerProps) => {
             <Close
               backgroundColor={customTheme.palette.background.defaultBlue}
             />
-            {/* <CloseRoundedIcon fontSize="large" /> */}
           </Button>
           <Typography
             variant="h4"
@@ -411,7 +396,6 @@ const Footer = (props: footerProps) => {
               <Close
                 backgroundColor={customTheme.palette.background.defaultBlue}
               />
-              {/* <CloseRoundedIcon fontSize="large" /> */}
             </Button>
             <Typography
               variant="h4"

@@ -1,7 +1,6 @@
 import { Autocomplete, Box, IconButton, TextField } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { tankDataProps } from "../MapPage";
-// import { useMap } from "react-leaflet";
 import SearchIcon from "@mui/icons-material/Search";
 import { customTheme } from "../../App";
 import StarOutlineRoundedIcon from "@mui/icons-material/StarOutlineRounded";

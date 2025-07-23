@@ -1,14 +1,12 @@
-import React, { MouseEventHandler } from "react";
+import React from "react";
 import { Box, Button, Modal, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import QrScanner from "./QrScanner";
-import { StyledEngineProvider } from "@mui/styled-engine-sc";
-import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import { customTheme } from "../../App";
 import { useTranslation } from "react-i18next";
 import { Close } from "../../utils/constants/Icons";
-import { BoxContainer, ModalContainer } from "./PopUp";
+import { ModalContainer } from "./PopUp";
 
 interface ModalPopUpProps {
   isQrModalOpen: boolean;
@@ -23,7 +21,6 @@ const ModalPopUp = (props: ModalPopUpProps) => {
   const { t } = useTranslation();
 
   const qrRedirection = (link: string) => {
-    // setVisitedTank(tank);
     console.log("MapPage>qr link " + link);
     //Retrieve the last url character to get the number of the tank
     try {
@@ -34,9 +31,7 @@ const ModalPopUp = (props: ModalPopUpProps) => {
         throw new Error("Not valide qr-code link");
       }
     } catch (error) {
-      alert(
-        "it seems that the qr-code isn't related to the cistern \n" + error
-      );
+      alert("it seems that the qr-code isn't related to the cistern \n");
     }
   };
   return (
@@ -61,21 +56,17 @@ const ModalPopUp = (props: ModalPopUpProps) => {
           }}
         >
           <Close backgroundColor={customTheme.palette.background.defaultBlue} />
-          {/* <CloseRoundedIcon fontSize="large" /> */}
         </Button>
         <div>
           <Typography
             id="modal-modal-title"
             variant="h4"
             color={customTheme.palette.text.primary}
-            style={{ textAlign: "center", margin: "4px" }}
+            style={{ textAlign: "center", margin: "16px" }}
           >
             {t("common.qrCode.scan_info")}
           </Typography>
-          <QrScanner
-            // setIsStartScan={setIsStartScan}
-            handleQrRedirection={qrRedirection}
-          />
+          <QrScanner handleQrRedirection={qrRedirection} />
         </div>
       </QrModalStyle>
     </ModalContainer>
@@ -92,9 +83,6 @@ const QrModalStyle = styled(Box)<{ backgroundColor: string }>`
   margin: 10px;
   padding-top: 60px;
   overflow: hidden;
-  > * {
-    /* margin-bottom: 2px; */
-  }
 `;
 
 export default ModalPopUp;

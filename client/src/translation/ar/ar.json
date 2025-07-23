@@ -22,13 +22,13 @@
     "tank": {
       "tank_status": {
         "tank_is_full": "ممتلئ",
-        "tank_is_halfFull": "نصف ممتلئ",
+        "tank_is_halfFull": "شبه ممتلئ",
         "tank_is_empty": "فارغ",
         "tank_is_unset": "لم يسجل اية انذار لهذا الخزان"
       },
       "tank_state": {
         "full": "ممتلئ",
-        "half_full": "نصف ممتلئ",
+        "half_full": "شبه ممتلئ",
         "empty": "فارغ"
       },
       "water_flow": {
@@ -37,16 +37,19 @@
         "weak": "منعدم"
       },
       "tank_status_according_to_users ": "نسبة الخزان حسب المستخدمين",
-      "report_water_flow": "تنبيه عن كمية تدفق المياه",
+      "report_water_flow": "تنبيه كمية تدفق المياه",
       "since_datetime": " {{datetime}} {{datetime}}منذ ",
       "geolocation_user_position": "من اجل التأكد من ان التنبيهات موثوقة, يجب على المنبه بان يكون بجانب الخزان",
-      "tank_report_confirmation": "هل انت واثق بانك تريد ان  تشير بان الخزان {{tankStatusLng}}",
+      "tank_report_confirmation": "هل انت واثق بأنك تريد ان  تشير بان الخزان {{tankStatusLng}}  ؟",
       "tank_far_from_tank": "يبدو أن موقعك بعيد عن الخزان، يرجى التقرب اكثر",
-      "tank_page_infos#0": "حالة تدفق المياه وفقًا لتقارير المستخدمين",
-      "tank_page_infos#1": "هنا يمكن رؤية الإشارات التي تركها المستخدمين",
-      "tank_page_infos#2": "يجب الاخذ بعين الاعتبار الوقت الظاهر عند كل إشارة و التأكد بصحة المعلومة لحالة الخزان و هذا بتكرار رأي واحد أو عند اثبات الكلمة 'موثوقة'",
+      "tank_page_infos#0": "حالة نسبة المياه وفقًا لتقارير المستخدمين",
+      "tank_page_infos#1": "هنا يمكن رؤية الإنذارات التي تركها المستخدمين",
+      "tank_page_infos#2": "يجب الأخذ بعين الاعتبار الوقت الظاهر عند كل إشارة و التأكد بصحة المعلومة لحالة الخزان و هذا بتكرار رأي واحد أو عند اثبات كلمة *موثوق",
       "favorite": "favorite",
-      "select_cistern": "اختر الخزان"
+      "select_cistern": "اختر الخزان",
+      "filled_since": "مـُلئ منذ أقل من ساعة",
+      "report_cistern_fill": "تم ملء الخزان",
+      "confirm_cistern_filled": "هل انت واثق بأنك تريد ان  تشير بأنه تم ملء الخزان ؟ "
     },
     "post": {
       "confirm_deletion": "تم حذف التقرير ✅",
@@ -58,7 +61,7 @@
     },
     "qrCode": {
       "qr_code": "Code QR",
-      "scan_info": "امسح الرمزالموجود على الخزان"
+      "scan_info": "امسح الرمز الموجود على الخزان"
     }
   },
   "languages": {
@@ -68,7 +71,7 @@
   },
   "navigation": {
     "confirm": "تطبيق",
-    "connect": "دخول",
+    "connect": "تسجيل الدخول",
     "disconnect": "خروج",
     "cancel": "إلغاء",
     "back": "ارجع",
@@ -83,7 +86,7 @@
     "modify": "تغيير"
   },
   "Login": {
-    "title": "دخول",
+    "title": "تسجيل الدخول",
     "subtitle": "مالئ خزان ؟ يرجى تسجيل الدخول",
     "email": "البريد إلكتروني",
     "password": "كلمة السر",
@@ -136,6 +139,7 @@
     "months": "شهور"
   },
   "errors": {
-    "someting_went_wrong": "يبدو أن هنالك مشكلة، يرجى المحاولة"
+    "someting_went_wrong": "يبدو أن هنالك مشكلة، يرجى المحاولة",
+    "wrong_link": "...آيايآي، لم يتم العثور على الصفحة التي طلبتها"
   }
 }

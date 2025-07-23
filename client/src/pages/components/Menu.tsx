@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 // VARIABLES
 import { customTheme, UserData } from "../../App";
@@ -6,7 +6,6 @@ import { customTheme, UserData } from "../../App";
 import {
   Box,
   Button,
-  Divider,
   Drawer,
   DrawerProps,
   IconButton,
@@ -15,11 +14,8 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Modal,
   Typography,
 } from "@mui/material";
-import AccountBoxIcon from "@mui/icons-material/AccountBox";
-import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 
 import {
   Close,
@@ -33,14 +29,13 @@ import {
 // DB
 import { logoutUser } from "../../firebase/operations";
 //COMPONENTS
-import { Header, TopSection } from "../MapPage";
+import { TopSection } from "../MapPage";
 import { styled } from "styled-components";
 import { useTranslation } from "react-i18next";
 import { BoxContainer, ModalContainer } from "./PopUp";
 import { languages } from "../../translation/i18n";
 
 interface menuProps {
-  userData: UserData;
   anchorState: boolean;
   user: {} | null;
   anchor: DrawerProps["anchor"];
@@ -53,15 +48,8 @@ interface menuProps {
 }
 
 const Menu = (props: menuProps) => {
-  const {
-    userData,
-    anchorState,
-    user,
-    anchor,
-    language,
-    toggleDrawer,
-    setLanguage,
-  } = props;
+  const { anchorState, user, anchor, language, toggleDrawer, setLanguage } =
+    props;
 
   const [isAccountVisible, setIsAccountVisible] = useState<boolean>(false);
   const [isLangModalVis, setIsLangModalVis] = useState<boolean>(false);
@@ -85,6 +73,7 @@ const Menu = (props: menuProps) => {
     try {
       logoutUser();
     } catch (error) {
+      alert(t("errors.someting_went_wrong"));
       console.error("Error when login out : ", error);
     }
   };
@@ -109,7 +98,6 @@ const Menu = (props: menuProps) => {
         sx: { backgroundColor: customTheme.palette.background.blueFade },
       }}
     >
-      {/* {user ? listUserLoggedIn() : list()} */}
       <MenuContainer
         backgroundcolor={customTheme.palette.background.defaultWhite}
         role="presentation"
@@ -250,7 +238,6 @@ const Menu = (props: menuProps) => {
                           justifyContent: "center",
                         }}
                       >
-                        {/* {subList.name === "Connect" && <AccountBoxIcon />} */}
                         {subList.icon}
                       </ListItemIcon>
                     </Box>
@@ -283,7 +270,6 @@ const Menu = (props: menuProps) => {
           <ListItem disablePadding>
             <ListItemButton
               sx={{
-                // flexDirection: "",
                 alignItems: "center",
                 justifyContent: "space-between",
               }}
@@ -428,6 +414,5 @@ const AccountContainer = styled.div`
   flex-direction: column;
   align-items: flex-end;
   padding: 16px;
-  /* height: 100%; */
 `;
 export default Menu;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { customTheme } from "../../App";
-import { Button, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 
 type SwipeableBoxProps = {
   navLabel: string;
@@ -19,9 +19,6 @@ const SwipeableBox: React.FC<SwipeableBoxProps> = ({
   const navMaxHeight = 400;
   const navBottom = 10;
   const [isDragging, setIsDragging] = useState(false);
-  const [mousePos, setMousePos] = useState<{ y: number }>({
-    y: 600,
-  });
   const [navHeight, setNavHeight] = useState<number>(navMinHeight);
 
   useEffect(() => {
@@ -52,14 +49,12 @@ const SwipeableBox: React.FC<SwipeableBoxProps> = ({
 
   const handleTouchMove = (event: React.TouchEvent<HTMLDivElement>) => {
     const touch = event.touches[0];
-    console.log("ScreenY : ", window.visualViewport?.height);
 
     window.visualViewport &&
       setNavHeight(window.visualViewport?.height - touch.clientY - navBottom);
   };
 
   const handleTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
-    console.log("End >", event.touches);
     setIsDragging(true);
     if (navHeight > navMaxHeight / 2) {
       setNavHeight(navMaxHeight);
@@ -77,11 +72,9 @@ const SwipeableBox: React.FC<SwipeableBoxProps> = ({
       style={{
         position: "fixed",
         zIndex: 20,
-        // height: navHeight,
         width: "-webkit-fill-available",
         margin: "10px",
         textAlign: "center",
-        // top: mousePos.y,
         height: navHeight,
         minHeight: navMinHeight,
         maxHeight: navMaxHeight,

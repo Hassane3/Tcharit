@@ -1,4 +1,4 @@
-import { AdvancedMarker, Marker, useMap } from "@vis.gl/react-google-maps";
+import { AdvancedMarker, useMap } from "@vis.gl/react-google-maps";
 import { memo } from "react";
 import { GeoLocation } from "../../utils/constants/Icons";
 
@@ -8,7 +8,6 @@ interface MarkerProps {
 
 export const CustomMarker = memo(
   ({ position }: MarkerProps) => {
-    const map = useMap();
     return (
       <AdvancedMarker position={{ lat: position[0], lng: position[1] }}>
         <div
@@ -25,17 +24,6 @@ export const CustomMarker = memo(
           <GeoLocation />
         </div>
       </AdvancedMarker>
-      // <Marker
-      //   position={{lat:position[0], lng:position[1] }}
-      //   icon={icon}
-      //   eventHandlers={{
-      //     click: (e: any) => {
-      //       map.setView([position[0], position[1]], map.getZoom(), {
-      //         animate: true,
-      //       });
-      //     },
-      //   }}
-      // />
     );
   },
   (prev, next) => {

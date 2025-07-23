@@ -1,19 +1,12 @@
-import {
-  TextField,
-  Button,
-  Alert,
-  Typography,
-  InputAdornment,
-} from "@mui/material";
+import { TextField, Button, Alert, Typography } from "@mui/material";
 import { useState } from "react";
 import { customTheme } from "../App";
 import { useNavigate } from "react-router-dom";
-import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../firebase/firebase";
 import { AuthProvider, SignInPage, type SignInPageProps } from "@toolpad/core";
-import { AccountCircle } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
+import { ArrowBack } from "../utils/constants/Icons";
 
 export default function ResetPassword() {
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
@@ -87,7 +80,6 @@ export default function ResetPassword() {
       setIsLoading(true);
       try {
         setIsLoading(true);
-        alert(email);
         await sendPasswordResetEmail(auth, email ? email : "").then(() =>
           setIsLoading(false)
         );
@@ -136,15 +128,15 @@ export default function ResetPassword() {
     >
       <div
         style={{
+          flex: 0,
+          justifyContent: "left",
           alignItems: "flex-start",
+          margin: "10px",
         }}
       >
         <Button size="large" onClick={() => navigateTo(-1)} sx={{ padding: 0 }}>
-          <ChevronLeftRoundedIcon
-            sx={{
-              color: customTheme.palette.background.defaultBlue,
-              fontSize: "50px",
-            }}
+          <ArrowBack
+            backgroundColor={customTheme.palette.background.defaultBlue}
           />
         </Button>
       </div>

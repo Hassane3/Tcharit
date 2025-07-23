@@ -17,18 +17,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import {
-  AccountCircle,
-  RememberMe,
-  Visibility,
-  VisibilityOff,
-} from "@mui/icons-material";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
+import { AccountCircle, Visibility, VisibilityOff } from "@mui/icons-material";
 
 import { useNavigate } from "react-router-dom";
 import { customTheme } from "../App";
 import { useTranslation } from "react-i18next";
+import { ArrowBack } from "../utils/constants/Icons";
 
 interface loginProps {
   handleSetTankAgentData: ({}) => void;
@@ -38,13 +32,8 @@ const Login = (props: loginProps) => {
   const providers = [{ id: "credentials", name: "Email and Password" }];
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
-  function handleClick() {
-    setIsLoading(true);
-  }
-  // ...
-  // const [tankAgentData, setTankAgentData] = useState<{}>();
   const navigateTo = useNavigate();
   let lang = localStorage.getItem("language");
 
@@ -65,7 +54,7 @@ const Login = (props: loginProps) => {
               handleSetTankAgentData(response.user);
               navigateTo("/");
             } else {
-              console.log("error authentication");
+              console.log(t("errors.someting_went_wrong"));
             }
             setIsLoading(false);
           }
@@ -222,19 +211,15 @@ const Login = (props: loginProps) => {
     >
       <div
         style={{
-          alignSelf: "flex-start",
+          flex: 0,
+          justifyContent: "left",
+          alignItems: "flex-start",
+          margin: "10px",
         }}
       >
-        <Button
-          size="large"
-          onClick={() => navigateTo("/", { state: { anchorState: true } })}
-          sx={{ padding: 0 }}
-        >
-          <ChevronLeftRoundedIcon
-            sx={{
-              color: customTheme.palette.background.defaultBlue,
-              fontSize: "50px",
-            }}
+        <Button size="large" onClick={() => navigateTo(-1)} sx={{ padding: 0 }}>
+          <ArrowBack
+            backgroundColor={customTheme.palette.background.defaultBlue}
           />
         </Button>
       </div>
