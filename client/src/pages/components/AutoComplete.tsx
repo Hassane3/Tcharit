@@ -188,6 +188,7 @@ const AutoComplete = (props: AutoCompleteProps) => {
               "& .MuiInputBase-input": {
                 color: customTheme.palette.text.primary,
               },
+              "& .MuiPopper-root": {},
             }}
           />
         </Box>
