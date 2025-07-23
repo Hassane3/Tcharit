@@ -72,7 +72,8 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
   function handleClick() {
     setIsLoading(true);
   }
-
+  const [alertPostedRecently, setAlertPostedRecently] =
+    useState<boolean>(false);
   const handleCheckTank = async () => {
     // If user is a random person we check his position else if its cistern agent, we do not:
     let user = auth.currentUser;
@@ -105,7 +106,7 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
               ) {
                 // If user cookie exist, that means he has posted recently
                 if (cookies.userId) {
-                  alert(t("common.post.alert_posted_recently"));
+                  setAlertPostedRecently;
                 } else {
                   setIsAddPostAllowed(true);
                 }
@@ -172,9 +173,6 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
                 sx={{
                   background: customTheme.palette.background.blueDark,
                   color: customTheme.palette.background.defaultWhite,
-                  "& .MuiCircularProgress-root": {
-                    color: customTheme.palette.background.blueDark,
-                  },
                 }}
               >
                 <span>{t("navigation.continu")}</span>
@@ -191,9 +189,6 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
                 sx={{
                   background: customTheme.palette.background.blue,
                   color: customTheme.palette.background.defaultWhite,
-                  "& .MuiCircularProgress-root": {
-                    color: customTheme.palette.background.blueDark,
-                  },
                 }}
               >
                 <span>{t("common.tank.report_cistern_fill")}</span>
@@ -216,10 +211,6 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
                 sx={{
                   background: customTheme.palette.background.blueDark,
                   color: customTheme.palette.background.defaultWhite,
-                  // "& .MuiCircularProgress-root": {
-                  "& .MuiCircularProgress-root": {
-                    color: customTheme.palette.background.blueDark,
-                  },
                 }}
               >
                 <span>{t("common.tank.report_water_flow")}</span>
@@ -417,6 +408,49 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
               }}
             >
               <span>{t("navigation.yes")}</span>
+            </Button>
+          </div>
+        </BoxContainer>
+      </ModalContainer>
+      {/* Message --> Alert posted recently */}
+      <ModalContainer
+        open={alertPostedRecently}
+        onClose={() => setAlertPostedRecently(false)}
+      >
+        <BoxContainer
+          sx={{ backgroundColor: customTheme.palette.background.defaultWhite }}
+        >
+          <Button
+            onClick={() => setAlertPostedRecently(false)}
+            sx={{
+              minWidth: "unset",
+              position: "absolute",
+              top: 20,
+              right: 20,
+              padding: 0,
+              color: customTheme.palette.background.defaultBlue,
+            }}
+          >
+            <Close
+              backgroundColor={customTheme.palette.background.defaultBlue}
+            />
+          </Button>
+          <div>
+            <Typography variant="h3">
+              {t("common.post.alert_posted_recently")}
+            </Typography>
+            <Button
+              variant="contained"
+              size="large"
+              onClick={() => {
+                handlePreventFilledCistern(tankId);
+              }}
+              sx={{
+                backgroundColor: customTheme.palette.background.greyLight,
+                color: customTheme.palette.background.defaultWhite,
+              }}
+            >
+              <span>{t("navigation.ok")}</span>
             </Button>
           </div>
         </BoxContainer>
