@@ -152,12 +152,14 @@ const Tank = (props: TankProps) => {
         !user && setCookie("userId", newUuid, { path: "/", maxAge: 300 });
         let now = new Date().getTime();
         updateLastPostTime(tankId, now);
-        let diffTime = Math.floor((now - selectedTankData.lastPostTime) / 1000);
-        updateLastCheck(selectedTankData.id, diffTime);
+        // let diffTime = Math.floor((now - selectedTankData.lastPostTime) / 1000);
+        // updateLastCheck(selectedTankData.id, diffTime);
         setOpenBottomNav(false);
         setLastPost(newPostData);
+        console.log("G");
         setIsSnackOpen(true);
         setSnackMessage(t("common.post.confirm_add"));
+        console.log("H");
       } catch (error) {
         alert(t("errors.someting_went_wrong"));
         setIsConfirmBoxOpen(false);

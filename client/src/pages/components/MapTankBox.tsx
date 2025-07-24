@@ -166,6 +166,15 @@ const MapTankBox = (props: mapTankBoxProps) => {
               {lang === "ar" ? tank.arab_name : tank.latin_name}
             </Typography>
           </PopUpTop>
+          <div style={{}}>
+            <Typography
+              variant="h5"
+              color={customTheme.palette.background.greyLight}
+              style={{ justifySelf: "flex-end" }}
+            >
+              {tank.description}
+            </Typography>
+          </div>
           <PopUpMainElements
             onClick={(e) => {
               setVisitedTank(tank);

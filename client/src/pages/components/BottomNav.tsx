@@ -72,12 +72,13 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
   function handleClick() {
     setIsLoading(true);
   }
+
   const [alertPostedRecently, setAlertPostedRecently] =
     useState<boolean>(false);
+
   const handleCheckTank = async () => {
     // If user is a random person we check his position else if its cistern agent, we do not:
     let user = auth.currentUser;
-    console.log("user ==>", user);
     setIsLoading(true);
     if (user) {
       setIsAddPostAllowed(true);
@@ -129,15 +130,17 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
   };
 
   const handlePreventFilledCistern = async (tankId: number) => {
-    let now = new Date().getTime();
-    await updateCisternlastTimeFilled(tankId, now)
-      .then(() => {
-        handleAddPost(TankStatus.FULL);
-        setIsConfirmFillCistVisisble(false);
-      })
-      .catch((error) => {
-        alert(t("errors.someting_went_wrong"));
-      });
+    if (user) {
+      let now = new Date().getTime();
+      await updateCisternlastTimeFilled(tankId, now)
+        .then(() => {
+          handleAddPost(TankStatus.FULL);
+          setIsConfirmFillCistVisisble(false);
+        })
+        .catch((error) => {
+          alert(t("errors.someting_went_wrong"));
+        });
+    }
   };
   return (
     <div style={{ height: "100%" }}>
@@ -443,10 +446,10 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
               variant="contained"
               size="large"
               onClick={() => {
-                handlePreventFilledCistern(tankId);
+                setAlertPostedRecently(false);
               }}
               sx={{
-                backgroundColor: customTheme.palette.background.greyLight,
+                backgroundColor: customTheme.palette.background.defaultBlue,
                 color: customTheme.palette.background.defaultWhite,
               }}
             >

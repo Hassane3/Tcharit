@@ -54,6 +54,7 @@ const Menu = (props: menuProps) => {
   const [isAccountVisible, setIsAccountVisible] = useState<boolean>(false);
   const [isLangModalVis, setIsLangModalVis] = useState<boolean>(false);
   const [newLanguage, setNewLanguage] = useState<string>(language);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const navigateTo = useNavigate();
   const { t, i18n } = useTranslation();
@@ -83,9 +84,11 @@ const Menu = (props: menuProps) => {
   };
 
   const handleSetLanguage = (lng: string) => {
+    setIsLoading(true);
     setIsLangModalVis(false);
     setLanguage(lng);
     i18n.changeLanguage(lng);
+    setIsLoading(false);
   };
 
   return (
@@ -186,6 +189,7 @@ const Menu = (props: menuProps) => {
                   <Button
                     variant="contained"
                     size="large"
+                    loading={isLoading}
                     onClick={() => {
                       newLanguage !== language &&
                         handleSetLanguage(newLanguage);

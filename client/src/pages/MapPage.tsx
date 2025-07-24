@@ -20,6 +20,7 @@ import Footer from "./Footer";
 import TankType from "../models/utils/TankType";
 import { Map } from "@vis.gl/react-google-maps";
 import Markers from "./Markers";
+import UseSnackBar from "./components/UseSnackBar";
 
 export interface tanksDataProps {
   data: tankDataProps[];
@@ -29,11 +30,11 @@ export interface tankDataProps {
   type: TankType;
   latin_name: string;
   arab_name: string;
-  // description: string;
+  description?: string;
   latLng: latLngProps;
   status: TankStatus;
   lastPostTime: number;
-  lastCheckTime: number;
+  // lastCheckTime: number;
   posts: [postsProps];
   tankAgentId?: string | null;
   lastTimeFilled: number; // concerns filling cistern by cistern agent : it represents date (if less than 1 hour, we display it)
@@ -139,6 +140,9 @@ function MapPage(props: mapPageProps) {
 
   const anchor: DrawerProps["anchor"] = "left";
 
+  const [isSnackOpen, setIsSnackOpen] = useState<boolean>(false);
+  const [snackMessage, setSnackMessage] = useState<string>("");
+
   const handleFavorites = (tankId: number) => {
     let newArray: Array<string> = [];
     let getFavorites = localStorage.getItem("favorites")?.split(",");
@@ -152,6 +156,8 @@ function MapPage(props: mapPageProps) {
         localStorage.setItem("favorites", newArray.toString());
       }
       setFavorites(newArray);
+      setSnackMessage(t("common.tank.added_to_favorite"));
+      setIsSnackOpen(true);
     } else {
       if (getFavorites !== undefined && getFavorites.length > 0) {
         newArray = [...getFavorites, tankId.toString()];
@@ -160,6 +166,8 @@ function MapPage(props: mapPageProps) {
       }
       localStorage.setItem("favorites", newArray.toString());
       setFavorites(newArray);
+      setSnackMessage(t("common.tank.removed_from_favorite"));
+      setIsSnackOpen(true);
     }
   };
 
@@ -253,6 +261,12 @@ function MapPage(props: mapPageProps) {
       />
 
       {user && <Footer id={tanksData.length} userData={userData} />}
+
+      <UseSnackBar
+        isSnackOpen={isSnackOpen}
+        setIsSnackOpen={setIsSnackOpen}
+        snackMessage={snackMessage}
+      />
     </div>
   );
 }
