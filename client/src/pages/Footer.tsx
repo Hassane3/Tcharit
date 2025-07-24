@@ -117,7 +117,7 @@ const Footer = (props: footerProps) => {
         latin_name: tempoCisternName,
         arab_name: tempoCisternName,
         lastPostTime: now,
-        lastCheckTime: 0,
+        // lastCheckTime: 0,
         latLng: {
           lat: geolocation.coords.latitude,
           lng: geolocation.coords.longitude,

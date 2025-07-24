@@ -40,6 +40,10 @@
       "report_water_flow": "Signaler le débit d'eau",
       "since_datetime": "Depuis {{datetime}} {{datetime}}",
       "geolocation_user_position": "Vous devez être proche du réservoir pour pouvoir signaler le débit d'eau",
+      "unable_get_geolocation": "❌Impossible d'obtenir votre position📍",
+      "please_verify": "Veuillez :",
+      "verify_geolocation_turned_on": "1️⃣ Activer la geolocalisation",
+      "verify_geolocation_activated": "2️⃣ Vérifier que la geolocalisation est activée dans les paramètres de l'application",
       "tank_report_confirmation": "Êtes-vous sure de vouloir indiquer que le réservoir est {{tankStatusLng}} ?",
       "tank_far_from_tank": "Il parait que votre position est loin de la citerne, veuillez vous rapprocher de celle-ci",
       "tank_page_infos#0": "État du débit d'eau selon les utilisateurs",
@@ -49,7 +53,9 @@
       "select_cistern": "Réservoirs",
       "filled_since": "Remplie recemment",
       "report_cistern_fill": "La citerne est remplie",
-      "confirm_cistern_filled": "Êtes-vous sûr de vouloir signaler la citerne comme remplie ?"
+      "confirm_cistern_filled": "Êtes-vous sûr de vouloir signaler la citerne comme remplie ?",
+      "added_to_favorite": "La citerne a été ajoutée au favoris",
+      "removed_from_favorite": "La citerne a été retirée des favoris"
     },
     "post": {
       "confirm_deletion": "✅ Le post a été supprimé",

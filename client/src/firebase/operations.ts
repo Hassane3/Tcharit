@@ -41,7 +41,7 @@ export const deleteTank = (tankId: number) => {
 export const updateLastCheck = (tankId: number, lastCheckTime : number) => {
     const db = getDatabase();
     const updates = {
-        ["/tanks/"+tankId+"/lastCheckTime"]: lastCheckTime
+        ["/tanks/"+tankId+"/lastCheckTime"]:lastCheckTime
     };
     return update(ref(db), updates)
 } 

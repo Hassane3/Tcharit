@@ -32,7 +32,6 @@ const useLanguageStorage: LanguageDetectorAsyncModule = {
   
   detect: async (callback) => {
     const lang = localStorage.getItem("language") || defaultLanguage;
-    console.log("locStorage language > ", lang)
 
     if (callback) {
       callback(lang);
@@ -43,7 +42,6 @@ const useLanguageStorage: LanguageDetectorAsyncModule = {
   // init: () => null,
   init: () => {},
   cacheUserLanguage: async (language: string) => {
-    localStorage.setItem("language", language)
   },
 }
 
@@ -65,9 +63,9 @@ i18n
               loadPath: "/translation/{{lng}}/{{lng}}.json", // Path to translation files
             },
   })
-  .then(() => {
-    console.log("i18n initialized with language:", i18n.language);
-  });
+  // .then(() => {
+  //   console.log("i18n initialized with language:", i18n.language);
+  // });
 
 export default i18n
 

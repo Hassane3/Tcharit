@@ -41,6 +41,10 @@
       "trusted_info": "trusted",
       "since_datetime": "since {{datetime}} {{datetime}}",
       "geolocation_user_position": "To be sure that cistern reports are truthful, you must be beside of the concerned cistern",
+      "unable_get_geolocation": "❌Unable to get your location📍",
+      "please_verify": "Please :",
+      "verify_geolocation_turned_on": "1️⃣ Turn on geolocation",
+      "verify_geolocation_activated": "2️⃣ Make sure geolocation is activated in app parameters",
       "tank_report_confirmation": "Are you sure you want to prevent that the cistern is {{tankStatusLng}} ?",
       "tank_far_from_tank": "Apparently, your position is far from the cistern, please try to come closer",
       "tank_page_infos#0": "Water flow state according to users reports",
@@ -50,7 +54,9 @@
       "select_cistern": "Select cistern",
       "filled_since": "Recently filled",
       "report_cistern_fill": "The cistern is filled",
-      "confirm_cistern_filled": "Are you sure you want to prevent cistern filled ?"
+      "confirm_cistern_filled": "Are you sure you want to prevent cistern filled ?",
+      "added_to_favorite": "Cistern has been added to favorites",
+      "removed_from_favorite": "Cistern has been removed from favorites"
     },
     "post": {
       "confirm_deletion": "✅ The post has been deleted",

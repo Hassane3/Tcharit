@@ -123,21 +123,21 @@ const AutoComplete = (props: AutoCompleteProps) => {
                   setIsFavLabelActive(false);
                 }, 1000);
               }}
-              sx={{
-                ".favActive :active ": {
-                  ":after": {
-                    content: "'favoris'",
-                    display: "block",
-                    position: "absolute",
-                    zIndex: "20",
-                    top: "10px",
-                    left: "10px",
-                    width: "100px",
-                    height: "100px",
-                    border: "solid blue 2px",
-                  },
-                },
-              }}
+              // sx={{
+              //   ".favActive :active ": {
+              //     ":after": {
+              //       content: "'favoris'",
+              //       display: "block",
+              //       position: "absolute",
+              //       zIndex: "20",
+              //       top: "10px",
+              //       left: "10px",
+              //       width: "100px",
+              //       height: "100px",
+              //       border: "solid blue 2px",
+              //     },
+              //   },
+              // }}
             >
               {isCheckedFavorites ? (
                 <StarRoundedIcon

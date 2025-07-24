@@ -369,82 +369,82 @@ function App(): JSX.Element {
 
   return (
     <BrowserRouter>
-      {accessGranted ? (
-        <AppProvider theme={customTheme}>
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <MapPage
-                  tanksData={tanksData}
-                  visitedTank={visitedTank}
-                  setVisitedTank={setVisitedTank}
-                  user={user}
-                  userData={userData}
-                  setUserData={setUserData}
-                />
-              }
-            />
-            <Route
-              path="/mapPage"
-              element={
-                <MapPage
-                  tanksData={tanksData}
-                  visitedTank={visitedTank}
-                  setVisitedTank={setVisitedTank}
-                  user={user}
-                  userData={userData}
-                  setUserData={setUserData}
-                />
-              }
-            />
-            <Route
-              path="/tank/:id"
-              element={
-                <Tank
-                  tanksData={tanksData}
-                  setCookie={setCookie}
-                  cookies={cookies}
-                  userData={userData}
-                  user={user}
-                />
-              }
-            />
-            <Route
-              path="/login"
-              element={<Login handleSetTankAgentData={setTankAgentData} />}
-            />
-            <Route path="/resetPassword" element={<ResetPassword />} />
-            <Route
-              path="/notifications"
-              // element={<Notifications />}
-            />
-            <Route path="*" element={<NoPage />} />
-          </Routes>
-        </AppProvider>
-      ) : (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <TextField
-            type="password"
-            required
-            onChange={(e: any) => setPassword(e.target.value)}
-            value={password}
+      {/* {accessGranted ? ( */}
+      <AppProvider theme={customTheme}>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <MapPage
+                tanksData={tanksData}
+                visitedTank={visitedTank}
+                setVisitedTank={setVisitedTank}
+                user={user}
+                userData={userData}
+                setUserData={setUserData}
+              />
+            }
           />
-          <Button
-            type="submit"
-            variant="contained"
-            onClick={() => handlePsw(password)}
-          >
-            Enter
-          </Button>
-        </div>
-      )}
+          <Route
+            path="/mapPage"
+            element={
+              <MapPage
+                tanksData={tanksData}
+                visitedTank={visitedTank}
+                setVisitedTank={setVisitedTank}
+                user={user}
+                userData={userData}
+                setUserData={setUserData}
+              />
+            }
+          />
+          <Route
+            path="/tank/:id"
+            element={
+              <Tank
+                tanksData={tanksData}
+                setCookie={setCookie}
+                cookies={cookies}
+                userData={userData}
+                user={user}
+              />
+            }
+          />
+          <Route
+            path="/login"
+            element={<Login handleSetTankAgentData={setTankAgentData} />}
+          />
+          <Route path="/resetPassword" element={<ResetPassword />} />
+          <Route
+            path="/notifications"
+            // element={<Notifications />}
+          />
+          <Route path="*" element={<NoPage />} />
+        </Routes>
+      </AppProvider>
+      {/* ) : ( */}
+      {/* <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <TextField
+          type="password"
+          required
+          onChange={(e: any) => setPassword(e.target.value)}
+          value={password}
+        />
+        <Button
+          type="submit"
+          variant="contained"
+          onClick={() => handlePsw(password)}
+        >
+          Enter
+        </Button>
+      </div> */}
+      {/* )} */}
     </BrowserRouter>
   );
 }

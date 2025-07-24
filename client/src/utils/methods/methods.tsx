@@ -80,19 +80,27 @@ export const checkAndRequestGeolocation = async (): Promise<any> => {
     } else if (permission.state === "prompt") {
       return true;
     } else {
-      alert("❌ Denied geolocation \nPlease verify geolocation is activated");
-      if (navigator.userAgent.includes("Chrome")) {
-        window.open("chrome://settings/content/location", "_blank");
-      } else if (navigator.userAgent.includes("Firefox")) {
-        window.open("about:preferences#privacy", "_blank");
-      } else if (navigator.userAgent.includes("Opera")) {
-        window.open("about:preferences#privacy", "_blank");
-      } else {
-        alert("Please activate geolocation in parameters.");
-      }
+      alert(
+        t("common.tank.unable_get_geolocation") +
+          "\n" +
+          t("common.tank.please_verify") +
+          "\n" +
+          t("common.tank.verify_geolocation_turned_on") +
+          "\n" +
+          t("common.tank.verify_geolocation_activated")
+      );
+      // if (navigator.userAgent.includes("Chrome")) {
+      //   window.open("chrome://settings/content/location", "_blank");
+      //   } else if (navigator.userAgent.includes("Firefox")) {
+      //     window.open("about:preferences#privacy", "_blank");
+      //   } else if (navigator.userAgent.includes("Opera")) {
+      //     window.open("about:preferences#privacy", "_blank");
+      // } else {
+      //   alert("Please activate geolocation in parameters.");
+      // }
     }
   } catch (error) {
-    alert("Unable to get your location");
+    alert(t("common.tank.unable_get_geolocation"));
   }
 };
 
