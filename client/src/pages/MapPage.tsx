@@ -76,7 +76,9 @@ function MapPage(props: mapPageProps) {
 
   const [searchValue, setSearchValue] = useState<string | null>(null);
   const [inputValue, setInputValue] = useState<string>("");
-  const [favorites, setFavorites] = useState<Array<string> | undefined>();
+  const [favorites, setFavorites] = useState<Array<number> | undefined>(
+    localStorage.getItem("favorites")?.split(",").map(Number)
+  );
 
   const options = {
     enableHighAccuracy: true,
@@ -144,11 +146,11 @@ function MapPage(props: mapPageProps) {
   const [snackMessage, setSnackMessage] = useState<string>("");
 
   const handleFavorites = (tankId: number) => {
-    let newArray: Array<string> = [];
-    let getFavorites = localStorage.getItem("favorites")?.split(",");
-    if (getFavorites && getFavorites.includes(tankId.toString())) {
+    let newArray: Array<number> = [];
+    // let getFavorites = localStorage.getItem("favorites")?.split(",");
+    if (favorites && favorites.includes(tankId)) {
       // Remove the tank from favorite (return an array that doesn't contain the tankId value)
-      newArray = getFavorites.filter((value) => value !== tankId.toString());
+      newArray = favorites.filter((value) => value !== tankId);
 
       if (newArray.length === 0) {
         localStorage.removeItem("favorites");
@@ -156,17 +158,17 @@ function MapPage(props: mapPageProps) {
         localStorage.setItem("favorites", newArray.toString());
       }
       setFavorites(newArray);
-      setSnackMessage(t("common.tank.added_to_favorite"));
+      setSnackMessage(t("common.tank.removed_from_favorite"));
       setIsSnackOpen(true);
     } else {
-      if (getFavorites !== undefined && getFavorites.length > 0) {
-        newArray = [...getFavorites, tankId.toString()];
+      if (favorites !== undefined && favorites.length > 0) {
+        newArray = [...favorites, tankId];
       } else {
-        newArray = [tankId.toString()];
+        newArray = [tankId];
       }
       localStorage.setItem("favorites", newArray.toString());
       setFavorites(newArray);
-      setSnackMessage(t("common.tank.removed_from_favorite"));
+      setSnackMessage(t("common.tank.added_to_favorite"));
       setIsSnackOpen(true);
     }
   };
@@ -200,6 +202,7 @@ function MapPage(props: mapPageProps) {
             tanksData={tanksData}
             searchValue={searchValue}
             inputValue={inputValue}
+            favorites={favorites}
             handleSetSearchValue={handleSetSearchValue}
             handleSetInputValue={handleSetInputValue}
           />
@@ -212,7 +215,7 @@ function MapPage(props: mapPageProps) {
                 width: "fit-content",
                 height: "fit-content",
                 margin: "20px",
-                zIndex: "1000",
+                zIndex: "200",
                 padding: "0",
                 color: customTheme.palette.background.defaultBlue,
               }}
@@ -236,7 +239,7 @@ function MapPage(props: mapPageProps) {
           onClick={handleQrModalState(true)}
           variant="text"
           size="large"
-          sx={{ width: "fit-content", zIndex: "1000", p: 1 }}
+          sx={{ width: "fit-content", zIndex: "100", p: 1 }}
         >
           <QrCode2RoundedIcon
             sx={{

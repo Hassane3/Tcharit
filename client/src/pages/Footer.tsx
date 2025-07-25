@@ -185,7 +185,7 @@ const Footer = (props: footerProps) => {
   return (
     <FooterContainer
       style={{
-        zIndex: "1000",
+        zIndex: "30",
         height: isTempoCisternOpen
           ? tempoCisternBox === TempoCisternBoxes.INFOS ||
             tempoCisternBox === TempoCisternBoxes.GLOBAL

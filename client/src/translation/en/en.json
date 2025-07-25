@@ -62,7 +62,7 @@
       "confirm_deletion": "✅ The post has been deleted",
       "confirm_add": "✅ The post has been added successfully !",
       "confirm_fail_add": "❌ The post creation has failed...",
-      "alert_posted_recently": "It seems that you have already added a post recently, \nPlease wait before you can add another post."
+      "alert_posted_recently": "It seems that you have already added a post recently, \nPlease wait before you can add another post and than refresh the page."
     },
     "info": {
       "trusted": "Trusted"
@@ -149,6 +149,7 @@
   },
   "errors": {
     "someting_went_wrong": "Something went wrong... Please try again",
-    "wrong_page": "Ooops, the page you requested could not be found"
+    "wrong_page": "Ooops, the page you requested could not be found",
+    "no_network": " ⚠️ Connection lost. Verify your network."
   }
 }

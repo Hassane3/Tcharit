@@ -12,6 +12,7 @@ interface AutoCompleteProps {
   tanksData: Array<tankDataProps>;
   searchValue: string | null;
   inputValue: string;
+  favorites: Array<number> | undefined;
   handleSetSearchValue: (searchValue: string | null) => void;
   handleSetInputValue: (inputSearchValue: string) => void;
 }
@@ -21,6 +22,7 @@ const AutoComplete = (props: AutoCompleteProps) => {
     tanksData,
     searchValue,
     inputValue,
+    favorites,
     handleSetSearchValue,
     handleSetInputValue,
   } = props;
@@ -32,14 +34,13 @@ const AutoComplete = (props: AutoCompleteProps) => {
   const [isFavLabelActive, setIsFavLabelActive] = useState<boolean>(false);
 
   useEffect(() => {
-    // transform localStorage value to array of number values
-    let favTanks = localStorage.getItem("favorites")?.split(",").map(Number);
+    // transform localStorage value to array of number values;
     if (!isCheckedFavorites) {
       setTankList(tanksData);
     } else {
-      setTankList(tanksData.filter((tank) => favTanks?.includes(tank.id)));
+      setTankList(tanksData.filter((tank) => favorites?.includes(tank.id)));
     }
-  }, [isCheckedFavorites, tanksData]);
+  }, [tanksData, favorites, isCheckedFavorites]);
 
   // // Disable map interaction when Autocomplete is focused
   // const handleFocus = () => {
@@ -92,6 +93,15 @@ const AutoComplete = (props: AutoCompleteProps) => {
         overflow: "hidden",
         borderRadius: "10px",
         boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+      }}
+      slotProps={{
+        paper: {
+          sx: {
+            "& .MuiAutocomplete-listbox > *": {
+              flexDirection: lang === "ar" ? "row-reverse" : "row",
+            },
+          },
+        },
       }}
       loading
       renderInput={(params) => (
@@ -188,7 +198,6 @@ const AutoComplete = (props: AutoCompleteProps) => {
               "& .MuiInputBase-input": {
                 color: customTheme.palette.text.primary,
               },
-              "& .MuiPopper-root": {},
             }}
           />
         </Box>

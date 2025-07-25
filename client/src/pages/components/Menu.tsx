@@ -87,7 +87,7 @@ const Menu = (props: menuProps) => {
     setIsLoading(true);
     setIsLangModalVis(false);
     setLanguage(lng);
-    i18n.changeLanguage(lng);
+    localStorage.setItem("language", lng);
     setIsLoading(false);
   };
 
@@ -215,7 +215,7 @@ const Menu = (props: menuProps) => {
               width: "fit-content",
               height: "fit-content",
               margin: "6px",
-              zIndex: "1000",
+              zIndex: "500",
               padding: "0",
               color: customTheme.palette.background.defaultBlue,
             }}

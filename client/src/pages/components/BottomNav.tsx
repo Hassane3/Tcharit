@@ -200,7 +200,7 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
                 style={{
                   height: "1px",
                   width: "70%",
-                  backgroundColor: "#bdbdbd",
+                  backgroundColor: "#d9d9d9",
                 }}
               />
               <Button

@@ -8,7 +8,7 @@ type MarkersProps = {
   tanksData: tankDataProps[];
   user: {} | null;
   userData: UserData;
-  favorites: Array<string> | undefined;
+  favorites: Array<number> | undefined;
   setVisitedTank: (visitedTank: tankDataProps) => void;
   handleFavorites: (tankId: number) => void;
 };
