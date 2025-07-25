@@ -26,7 +26,7 @@ interface mapTankBoxProps {
   tank: tankDataProps;
   user: {} | null;
   userData: UserData;
-  favorites: Array<string> | undefined;
+  favorites: Array<number> | undefined;
   setVisitedTank: (arg: tankDataProps) => void;
   handleTimeFormat: (arg: number) => [any, string?];
   handleFavorites: (tankId: number) => void;
@@ -49,9 +49,9 @@ const MapTankBox = (props: mapTankBoxProps) => {
   const [lastCheckTime, setLastCheckTime] = useState<number | null>();
   const [lastPost, setLastPost] = useState<postsProps | null>();
   const [isFavorite, setIsFavorite] = useState<boolean>(
-    favorites?.includes(tank.id.toString()) ? true : false
+    favorites?.includes(tank.id) ? true : false
   );
-
+  console.log("favorite " + favorites);
   // MUI SnackBar
   const [isSnackOpen, setIsSnackOpen] = useState<boolean>(false);
   const [snackMessage, setSnackMessage] = useState<string>("");

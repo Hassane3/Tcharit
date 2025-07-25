@@ -17,6 +17,7 @@ import { Button, createTheme, TextField } from "@mui/material";
 import { doc, getDoc } from "firebase/firestore";
 import { calculateDateDifference } from "./utils/methods/methods";
 import ResetPassword from "./pages/ResetPassword";
+import NetworkStatusAlert from "./pages/components/NetworkStatusAlert";
 
 export interface UserData {
   id: string | null;
@@ -171,9 +172,9 @@ export const customTheme = createTheme({
     },
     h3: {
       fontFamily: "Changa",
-      fontSize: "1.2em",
+      fontSize: "20px",
       fontWeight: "700",
-      lineHeight: "1.3em",
+      lineHeight: "1.3",
     },
     h4: {
       fontFamily: "Changa",
@@ -370,6 +371,7 @@ function App(): JSX.Element {
   return (
     <BrowserRouter>
       {/* {accessGranted ? ( */}
+      <NetworkStatusAlert />
       <AppProvider theme={customTheme}>
         <Routes>
           <Route
@@ -386,7 +388,7 @@ function App(): JSX.Element {
             }
           />
           <Route
-            path="/mapPage"
+            path="/map"
             element={
               <MapPage
                 tanksData={tanksData}
@@ -414,7 +416,7 @@ function App(): JSX.Element {
             path="/login"
             element={<Login handleSetTankAgentData={setTankAgentData} />}
           />
-          <Route path="/resetPassword" element={<ResetPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route
             path="/notifications"
             // element={<Notifications />}

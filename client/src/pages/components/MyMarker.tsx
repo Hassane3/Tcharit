@@ -21,7 +21,7 @@ interface MarkerProps {
   cistern: tankDataProps;
   user: {} | null;
   userData: UserData;
-  favorites: Array<string> | undefined;
+  favorites: Array<number> | undefined;
   setVisitedTank: (visitedTank: tankDataProps) => void | undefined;
   handleTimeFormat: (arg: number) => [any, string?];
   handleFavorites: (tankId: number) => void;
@@ -51,16 +51,36 @@ export const MyMarker = (props: MarkerProps): JSX.Element => {
   const hasClickedInsideRef = useRef(false);
 
   useEffect(() => {
+    let isDragging = false;
+    const dragging = () => {
+      // console.log("isDragging > ", isDragging);
+      isDragging = true;
+    };
     const handleDocumentClick = () => {
       if (!hasClickedInsideRef.current) {
-        setIsInfoWindowOpen(false);
+        document.addEventListener("pointermove", dragging);
+        setTimeout(() => {
+          if (!isDragging) {
+            // console.log("clicked outside ", hasClickedInsideRef.current);
+            setIsInfoWindowOpen(false);
+          }
+        }, 100);
+        isDragging = false;
+      } else {
       }
       hasClickedInsideRef.current = false;
     };
 
+    const endDragging = () => {
+      document.removeEventListener("pointermove", dragging);
+    };
+
     document.addEventListener("pointerdown", handleDocumentClick);
+    document.addEventListener("pointerup", endDragging);
     return () => {
       document.removeEventListener("pointerdown", handleDocumentClick);
+      document.removeEventListener("pointermove", dragging);
+      document.removeEventListener("pointerup", endDragging);
     };
   }, []);
 
@@ -86,57 +106,62 @@ export const MyMarker = (props: MarkerProps): JSX.Element => {
         // }}
       >
         <div
-          style={{
-            textAlign: "center",
-            display: "grid",
-            justifyItems: "center",
-          }}
+          onMouseDown={() => (hasClickedInsideRef.current = true)}
+          onPointerDown={() => (hasClickedInsideRef.current = true)}
         >
-          <Typography
-            variant="h3"
+          <div
             style={{
-              color: customTheme.palette.background.defaultBlue,
-              fontSize: "2em",
-              fontFamily: "Changa",
-              textWrap: "nowrap",
+              textAlign: "center",
+              display: "grid",
+              justifyItems: "center",
             }}
           >
-            {lang === "ar" ? cistern.arab_name : cistern.latin_name}
-          </Typography>
-          {cistern.type === TankType.PERMANENT ? (
-            <LocationCistern />
-          ) : (
-            <LocationTemporaryCistern />
+            {!isInfoWindowOpen && (
+              <Typography
+                variant="h3"
+                style={{
+                  color: customTheme.palette.background.defaultBlue,
+                  textWrap: "nowrap",
+                }}
+              >
+                {lang === "ar" ? cistern.arab_name : cistern.latin_name}
+              </Typography>
+            )}
+            {cistern.type === TankType.PERMANENT ? (
+              <LocationCistern />
+            ) : (
+              <LocationTemporaryCistern />
+            )}
+          </div>
+
+          {isInfoWindowOpen && (
+            <div
+              onMouseDown={() => (hasClickedInsideRef.current = true)}
+              onPointerDown={() => (hasClickedInsideRef.current = true)}
+            >
+              <InfoWindow
+                anchor={myMarker}
+                disableAutoPan
+                minWidth={200}
+                maxWidth={210}
+                className="popUp_container"
+                headerDisabled
+                shouldFocus
+              >
+                <MapTankBox
+                  key={cistern.id}
+                  tank={cistern}
+                  user={user}
+                  userData={userData}
+                  favorites={favorites}
+                  setVisitedTank={setVisitedTank}
+                  handleTimeFormat={handleTimeFormat}
+                  handleFavorites={handleFavorites}
+                />
+              </InfoWindow>
+            </div>
           )}
         </div>
-
-        {isInfoWindowOpen && (
-          <div
-            onMouseDown={() => (hasClickedInsideRef.current = true)}
-            onPointerDown={() => (hasClickedInsideRef.current = true)}
-          >
-            <InfoWindow
-              anchor={myMarker}
-              disableAutoPan
-              minWidth={200}
-              maxWidth={210}
-              className="popUp_container"
-              headerDisabled
-              shouldFocus
-            >
-              <MapTankBox
-                key={cistern.id}
-                tank={cistern}
-                user={user}
-                userData={userData}
-                favorites={favorites}
-                setVisitedTank={setVisitedTank}
-                handleTimeFormat={handleTimeFormat}
-                handleFavorites={handleFavorites}
-              />
-            </InfoWindow>
-          </div>
-        )}
       </AdvancedMarker>
     </Container>
   );

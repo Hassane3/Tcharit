@@ -61,7 +61,7 @@
       "confirm_deletion": "✅ Le post a été supprimé",
       "confirm_add": "✅ Le post a été ajouté avec succès !",
       "confirm_fail_add": "❌ L'ajout du post a échoué...",
-      "alert_posted_recently": "Il parait que vous avez ajouté un post il y a peu, \nMerci d'attendre avant de pouvoir ajouter un autre post."
+      "alert_posted_recently": "Il semble que vous avez ajouté un post il y a peu, \nMerci d'attendre avant de réessayer puis rafraichissez la page"
     },
     "info": {
       "trusted": "Fiable"
@@ -147,6 +147,7 @@
   },
   "errors": {
     "someting_went_wrong": "Il semble qu'il y est un problème, merci de réessayer",
-    "wrong_page": "Ooops, La page recherchée n'est pas trouvable"
+    "wrong_page": "Ooops, La page recherchée n'est pas trouvable",
+    "no_network": " ⚠️ Connexion perdue. Vérifiez votre réseau."
   }
 }

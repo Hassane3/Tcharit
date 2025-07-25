@@ -133,8 +133,8 @@ const Tank = (props: TankProps) => {
     let date = new Date();
     let newPostData: postsProps = {
       status: status,
-      userType: userData.name ? UserType.TANKAGENT : UserType.RANDOM,
-      userName: userData.name ? userData.name : null,
+      userType: user && userData.name ? UserType.TANKAGENT : UserType.RANDOM,
+      userName: user && userData.name ? userData.name : null,
       date: date.toLocaleDateString(),
       time: date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       weekDay: date.toLocaleDateString([], { weekday: "long" }),
@@ -149,7 +149,7 @@ const Tank = (props: TankProps) => {
         let newUuid: string = crypto.randomUUID();
         setIsAddPostAllowed(false);
         // Add a cookie that contains the identifier of the user and the maxAge of his cookie (300s => 5min)
-        !user && setCookie("userId", newUuid, { path: "/", maxAge: 300 });
+        !user && setCookie("userId", newUuid, { path: "/", maxAge: 20 });
         let now = new Date().getTime();
         updateLastPostTime(tankId, now);
         // let diffTime = Math.floor((now - selectedTankData.lastPostTime) / 1000);
