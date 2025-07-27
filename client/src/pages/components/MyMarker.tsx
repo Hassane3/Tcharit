@@ -51,36 +51,30 @@ export const MyMarker = (props: MarkerProps): JSX.Element => {
   const hasClickedInsideRef = useRef(false);
 
   useEffect(() => {
-    let isDragging = false;
-    const dragging = () => {
-      // console.log("isDragging > ", isDragging);
-      isDragging = true;
+    let startX = 0;
+    let startY = 0;
+    const handleDocumentClick = (e: PointerEvent) => {
+      startX = e.clientX;
+      startY = e.clientY;
     };
-    const handleDocumentClick = () => {
+
+    const endDragging = (e: PointerEvent) => {
+      let endX = e.clientX;
+      let endY = e.clientY;
       if (!hasClickedInsideRef.current) {
-        document.addEventListener("touchmove", dragging);
-        setTimeout(() => {
-          if (!isDragging) {
-            // console.log("clicked outside ", hasClickedInsideRef.current);
-            setIsInfoWindowOpen(false);
-          }
-        }, 100);
-        isDragging = false;
-      } else {
+        // We get the difference between two pointerPoints to know if its a dragging or a click
+        if (Math.abs(startY - endY) < 20 && Math.abs(startX - endX) < 20) {
+          setIsInfoWindowOpen(false);
+        }
       }
       hasClickedInsideRef.current = false;
     };
 
-    const endDragging = () => {
-      document.removeEventListener("touchmove", dragging);
-    };
-
-    document.addEventListener("touchstart", handleDocumentClick);
-    document.addEventListener("touchend", endDragging);
+    document.addEventListener("pointerdown", handleDocumentClick);
+    document.addEventListener("pointerup", endDragging);
     return () => {
-      document.removeEventListener("touchstart", handleDocumentClick);
-      document.removeEventListener("touchmove", dragging);
-      document.removeEventListener("touchend", endDragging);
+      document.removeEventListener("pointerdown", handleDocumentClick);
+      document.removeEventListener("pointerup", endDragging);
     };
   }, []);
 
@@ -135,10 +129,7 @@ export const MyMarker = (props: MarkerProps): JSX.Element => {
           </div>
 
           {isInfoWindowOpen && (
-            <div
-              onMouseDown={() => (hasClickedInsideRef.current = true)}
-              onPointerDown={() => (hasClickedInsideRef.current = true)}
-            >
+            <div>
               <InfoWindow
                 anchor={myMarker}
                 disableAutoPan
