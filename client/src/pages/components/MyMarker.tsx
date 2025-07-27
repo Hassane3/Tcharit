@@ -50,35 +50,66 @@ export const MyMarker = (props: MarkerProps): JSX.Element => {
 
   const hasClickedInsideRef = useRef(false);
 
+  //   let isDragging = false;
+  //   const dragging = () => {
+  //     console.log("isDragging > ", isDragging);
+  //     isDragging = true;
+  //   };
+  //   const handleDocumentClick = () => {
+  //     if (!hasClickedInsideRef.current) {
+  //       document.addEventListener("pointermove", dragging);
+  //       setTimeout(() => {
+  //         if (!isDragging) {
+  //           console.log("clicked outside ", hasClickedInsideRef.current);
+  //           setIsInfoWindowOpen(false);
+  //         }
+  //       }, 100);
+  //       isDragging = false;
+  //     }
+  //     hasClickedInsideRef.current = false;
+  //   };
+
+  //   const endDragging = () => {
+  //     document.removeEventListener("pointermove", dragging);
+  //     console.log("End dragging");
+  //   };
+
+  //   document.addEventListener("pointerdown", handleDocumentClick);
+  //   document.addEventListener("pointerup", endDragging);
+  //   document.addEventListener("pointerover", endDragging);
+  //   document.addEventListener("pointerout", endDragging);
+  //   return () => {
+  //     document.removeEventListener("pointerdown", handleDocumentClick);
+  //     document.removeEventListener("pointermove", dragging);
+  //     document.removeEventListener("pointerup", endDragging);
+  //     document.removeEventListener("pointerover", endDragging);
+  //     document.removeEventListener("pointerout", endDragging);
+  //   };
+  // }, []);
   useEffect(() => {
-    let isDragging = false;
-    const dragging = () => {
-      console.log("isDragging > ", isDragging);
-      isDragging = true;
-    };
-    const handleDocumentClick = () => {
-      if (!hasClickedInsideRef.current) {
-        document.addEventListener("pointermove", dragging);
-        setTimeout(() => {
-          if (!isDragging) {
-            console.log("clicked outside ", hasClickedInsideRef.current);
-            setIsInfoWindowOpen(false);
-          }
-        }, 100);
-        isDragging = false;
-      }
-      hasClickedInsideRef.current = false;
+    let startX = 0;
+    let startY = 0;
+    const handleDocumentClick = (e: PointerEvent) => {
+      startX = e.clientX;
+      startY = e.clientY;
     };
 
-    const endDragging = () => {
-      document.removeEventListener("pointermove", dragging);
+    const endDragging = (e: PointerEvent) => {
+      let endX = e.clientX;
+      let endY = e.clientY;
+      if (!hasClickedInsideRef.current) {
+        // We get the difference between two pointerPoints to know if its a dragging or a click
+        if (Math.abs(startY - endY) < 20 && Math.abs(startX - endX) < 20) {
+          setIsInfoWindowOpen(false);
+        }
+      }
+      hasClickedInsideRef.current = false;
     };
 
     document.addEventListener("pointerdown", handleDocumentClick);
     document.addEventListener("pointerup", endDragging);
     return () => {
       document.removeEventListener("pointerdown", handleDocumentClick);
-      document.removeEventListener("pointermove", dragging);
       document.removeEventListener("pointerup", endDragging);
     };
   }, []);
@@ -134,10 +165,7 @@ export const MyMarker = (props: MarkerProps): JSX.Element => {
           </div>
 
           {isInfoWindowOpen && (
-            <div
-            // onMouseDown={() => (hasClickedInsideRef.current = true)}
-            // onPointerDown={() => (hasClickedInsideRef.current = true)}
-            >
+            <div>
               <InfoWindow
                 anchor={myMarker}
                 disableAutoPan
