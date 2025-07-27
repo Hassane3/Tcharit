@@ -64,9 +64,8 @@ export const MyMarker = (props: MarkerProps): JSX.Element => {
             console.log("clicked outside ", hasClickedInsideRef.current);
             setIsInfoWindowOpen(false);
           }
-        }, 500);
+        }, 100);
         isDragging = false;
-      } else {
       }
       hasClickedInsideRef.current = false;
     };
@@ -136,8 +135,8 @@ export const MyMarker = (props: MarkerProps): JSX.Element => {
 
           {isInfoWindowOpen && (
             <div
-              onMouseDown={() => (hasClickedInsideRef.current = true)}
-              onPointerDown={() => (hasClickedInsideRef.current = true)}
+            // onMouseDown={() => (hasClickedInsideRef.current = true)}
+            // onPointerDown={() => (hasClickedInsideRef.current = true)}
             >
               <InfoWindow
                 anchor={myMarker}
