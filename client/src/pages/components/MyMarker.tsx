@@ -58,7 +58,7 @@ export const MyMarker = (props: MarkerProps): JSX.Element => {
     };
     const handleDocumentClick = () => {
       if (!hasClickedInsideRef.current) {
-        document.addEventListener("pointermove", dragging);
+        document.addEventListener("touchmove", dragging);
         setTimeout(() => {
           if (!isDragging) {
             // console.log("clicked outside ", hasClickedInsideRef.current);
@@ -72,15 +72,15 @@ export const MyMarker = (props: MarkerProps): JSX.Element => {
     };
 
     const endDragging = () => {
-      document.removeEventListener("pointermove", dragging);
+      document.removeEventListener("touchmove", dragging);
     };
 
-    document.addEventListener("pointerdown", handleDocumentClick);
-    document.addEventListener("pointerup", endDragging);
+    document.addEventListener("touchstart", handleDocumentClick);
+    document.addEventListener("touchend", endDragging);
     return () => {
-      document.removeEventListener("pointerdown", handleDocumentClick);
-      document.removeEventListener("pointermove", dragging);
-      document.removeEventListener("pointerup", endDragging);
+      document.removeEventListener("touchstart", handleDocumentClick);
+      document.removeEventListener("touchmove", dragging);
+      document.removeEventListener("touchend", endDragging);
     };
   }, []);
 
