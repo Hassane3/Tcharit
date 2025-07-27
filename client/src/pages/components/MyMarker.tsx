@@ -53,18 +53,18 @@ export const MyMarker = (props: MarkerProps): JSX.Element => {
   useEffect(() => {
     let isDragging = false;
     const dragging = () => {
-      // console.log("isDragging > ", isDragging);
+      console.log("isDragging > ", isDragging);
       isDragging = true;
     };
     const handleDocumentClick = () => {
       if (!hasClickedInsideRef.current) {
-        document.addEventListener("touchmove", dragging);
+        document.addEventListener("pointermove", dragging);
         setTimeout(() => {
           if (!isDragging) {
-            // console.log("clicked outside ", hasClickedInsideRef.current);
+            console.log("clicked outside ", hasClickedInsideRef.current);
             setIsInfoWindowOpen(false);
           }
-        }, 100);
+        }, 500);
         isDragging = false;
       } else {
       }
@@ -72,15 +72,15 @@ export const MyMarker = (props: MarkerProps): JSX.Element => {
     };
 
     const endDragging = () => {
-      document.removeEventListener("touchmove", dragging);
+      document.removeEventListener("pointermove", dragging);
     };
 
-    document.addEventListener("touchstart", handleDocumentClick);
-    document.addEventListener("touchend", endDragging);
+    document.addEventListener("pointerdown", handleDocumentClick);
+    document.addEventListener("pointerup", endDragging);
     return () => {
-      document.removeEventListener("touchstart", handleDocumentClick);
-      document.removeEventListener("touchmove", dragging);
-      document.removeEventListener("touchend", endDragging);
+      document.removeEventListener("pointerdown", handleDocumentClick);
+      document.removeEventListener("pointermove", dragging);
+      document.removeEventListener("pointerup", endDragging);
     };
   }, []);
 
