@@ -5,7 +5,7 @@ export const handleTimeFormat = (diffInSnds: number): [any, string?] => {
   // if less then a minute
   if (diffInSnds < 60) {
     // return t("time.now");
-    return ["now"];
+    return [t("time.now")];
     // if less then an hour (3600s in an hour)
   } else if (diffInSnds < 3600) {
     let time = Math.floor(diffInSnds / 60);

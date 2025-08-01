@@ -21,10 +21,8 @@ const ModalPopUp = (props: ModalPopUpProps) => {
   const { t } = useTranslation();
 
   const qrRedirection = (link: string) => {
-    console.log("MapPage>qr link " + link);
     //Retrieve the last url character to get the number of the tank
     try {
-      console.log(link);
       if (link.startsWith("http://q-r.to/tank")) {
         navigateTo("/tank/" + link.at(-1));
       } else {

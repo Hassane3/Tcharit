@@ -80,46 +80,48 @@ const BottomNav = (props: BottomNavProps): JSX.Element => {
     // If user is a random person we check his position else if its cistern agent, we do not:
     let user = auth.currentUser;
     setIsLoading(true);
-    if (user) {
-      setIsAddPostAllowed(true);
-      setIsLoading(false);
-    } else {
-      await checkAndRequestGeolocation()
-        .then(() =>
-          navigator.geolocation.getCurrentPosition((position) => {
-            if (position) {
-              let userLatLng = new LatLng(
-                position.coords.latitude,
-                position.coords.longitude
-              );
-              // We test if the actual position is near the tank position (the value 0.01 is for test, 0.0001 for high precision) :
-              if (
-                // userLatLng.lat > tankLatLng.lat - 0.0001 &&
-                // userLatLng.lat < tankLatLng.lat + 0.0001 &&
-                // userLatLng.lng > tankLatLng.lng - 0.0001 &&
-                // userLatLng.lng < tankLatLng.lng + 0.0001
-                isUserWithinRadius(
-                  userLatLng.lat,
-                  userLatLng.lng,
-                  tankLatLng.lat,
-                  tankLatLng.lng
-                )
-              ) {
-                // If user cookie exist, that means he has posted recently
-                if (cookies.userId) {
-                  setAlertPostedRecently(true);
+    setTimeout(() => {
+      if (user) {
+        setIsAddPostAllowed(true);
+        setIsLoading(false);
+      } else {
+        checkAndRequestGeolocation()
+          .then(() =>
+            navigator.geolocation.getCurrentPosition((position) => {
+              if (position) {
+                let userLatLng = new LatLng(
+                  position.coords.latitude,
+                  position.coords.longitude
+                );
+                // We test if the actual position is near the tank position (the value 0.01 is for test, 0.0001 for high precision) :
+                if (
+                  // userLatLng.lat > tankLatLng.lat - 0.0001 &&
+                  // userLatLng.lat < tankLatLng.lat + 0.0001 &&
+                  // userLatLng.lng > tankLatLng.lng - 0.0001 &&
+                  // userLatLng.lng < tankLatLng.lng + 0.0001
+                  isUserWithinRadius(
+                    userLatLng.lat,
+                    userLatLng.lng,
+                    tankLatLng.lat,
+                    tankLatLng.lng
+                  )
+                ) {
+                  // If user cookie exist, that means he has posted recently
+                  if (cookies.userId) {
+                    setAlertPostedRecently(true);
+                  } else {
+                    setIsAddPostAllowed(true);
+                  }
                 } else {
-                  setIsAddPostAllowed(true);
+                  setMsgFarFromTank(true);
                 }
-              } else {
-                setMsgFarFromTank(true);
               }
-            }
-          })
-        )
-        .catch((error) => console.error(error))
-        .finally(() => setIsLoading(false));
-    }
+            })
+          )
+          .catch((error) => console.error(error))
+          .finally(() => setIsLoading(false));
+      }
+    }, 0);
   };
 
   const [isConfirmFillCistVisisble, setIsConfirmFillCistVisisble] =

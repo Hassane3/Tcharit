@@ -156,10 +156,8 @@ const Tank = (props: TankProps) => {
         // updateLastCheck(selectedTankData.id, diffTime);
         setOpenBottomNav(false);
         setLastPost(newPostData);
-        console.log("G");
         setIsSnackOpen(true);
         setSnackMessage(t("common.post.confirm_add"));
-        console.log("H");
       } catch (error) {
         alert(t("errors.someting_went_wrong"));
         setIsConfirmBoxOpen(false);
