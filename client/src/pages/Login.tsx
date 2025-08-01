@@ -185,7 +185,7 @@ const Login = (props: loginProps) => {
   function ForgotPasswordLink() {
     return (
       <Link
-        href="/resetPassword"
+        href="/reset-password"
         variant="body2"
         sx={{
           color: customTheme.palette.text.grey,

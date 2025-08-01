@@ -51,7 +51,6 @@ const MapTankBox = (props: mapTankBoxProps) => {
   const [isFavorite, setIsFavorite] = useState<boolean>(
     favorites?.includes(tank.id) ? true : false
   );
-  console.log("favorite " + favorites);
   // MUI SnackBar
   const [isSnackOpen, setIsSnackOpen] = useState<boolean>(false);
   const [snackMessage, setSnackMessage] = useState<string>("");
