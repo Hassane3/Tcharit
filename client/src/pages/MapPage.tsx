@@ -235,7 +235,7 @@ function MapPage(props: mapPageProps) {
           </React.Fragment>
         </TopSection>
         {/* QR CODE BUTTON */}
-        <Button
+        {/* <Button
           onClick={handleQrModalState(true)}
           variant="text"
           size="large"
@@ -248,7 +248,7 @@ function MapPage(props: mapPageProps) {
               color: customTheme.palette.background.defaultBlue,
             }}
           />
-        </Button>
+        </Button> */}
         <ModalPopUp
           isQrModalOpen={isQrModalOpen}
           qrModalStateHandler={handleQrModalState}
